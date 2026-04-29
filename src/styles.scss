@@ -1,0 +1,210 @@
+@use '@angular/material' as mat;
+
+/* Tema 2030: oscuro, neón profesional (cyan + violeta), tipografía tech */
+html {
+  color-scheme: dark;
+  @include mat.theme(
+    (
+      color: (
+        theme-type: dark,
+        primary: mat.$cyan-palette,
+        tertiary: mat.$violet-palette,
+      ),
+      typography: (
+        plain-family: 'Outfit',
+        brand-family: 'Sora',
+        bold-weight: 600,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: -1,
+    )
+  );
+}
+
+:root {
+  --hl-page-bg: #030712;
+  --hl-ink: #f8fafc;
+  --hl-ink-muted: #94a3b8;
+  --hl-accent-warm: #22d3ee;
+  --hl-accent-secondary: #a78bfa;
+  --hl-glass: rgba(15, 23, 42, 0.55);
+  --hl-glass-elevated: rgba(30, 41, 59, 0.72);
+  --hl-border-subtle: rgba(148, 163, 184, 0.12);
+  --hl-border-neon: rgba(34, 211, 238, 0.25);
+  --hl-shadow-soft: 0 28px 56px rgba(0, 0, 0, 0.55);
+  --hl-glow-cyan: 0 0 28px rgba(34, 211, 238, 0.22);
+  --hl-glow-violet: 0 0 32px rgba(167, 139, 250, 0.2);
+  --hl-radius-lg: 22px;
+  --hl-radius-md: 16px;
+  --hl-radius-pill: 999px;
+  --hl-max-read: 68ch;
+  --hl-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --hl-dur-fast: 0.22s;
+  --hl-dur-mid: 0.48s;
+  --hl-grad-hero: linear-gradient(125deg, #f8fafc 0%, #22d3ee 42%, #c084fc 78%, #f472b6 100%);
+  --hl-grad-surface: linear-gradient(145deg, rgba(34, 211, 238, 0.08) 0%, rgba(167, 139, 250, 0.06) 100%);
+}
+
+@keyframes hl-bg-drift {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(-3%, 2%) scale(1.06) rotate(1.5deg);
+  }
+}
+
+@keyframes hl-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hl-soft-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes hl-grid-fade {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.hl-animate-rise {
+  animation: hl-rise var(--hl-dur-mid) var(--hl-ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+
+  body::after {
+    animation: none;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  position: relative;
+  background-color: var(--hl-page-bg);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  isolation: isolate;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* Aurora orbital + profundidad */
+body::before {
+  width: 140%;
+  height: 140%;
+  top: -20%;
+  left: -20%;
+  background:
+    radial-gradient(ellipse 100% 80% at 10% -20%, rgba(34, 211, 238, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 95% 10%, rgba(167, 139, 250, 0.16) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 60% at 50% 110%, rgba(244, 114, 182, 0.1) 0%, transparent 48%),
+    radial-gradient(ellipse 50% 40% at 70% 45%, rgba(6, 182, 212, 0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #030712 0%, #0a0f1c 40%, #050810 100%);
+  animation: hl-bg-drift 36s ease-in-out infinite alternate;
+}
+
+/* Rejilla holográfica */
+body::after {
+  z-index: -1;
+  opacity: 0.45;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 85% 85% at 50% 40%, black 20%, transparent 72%);
+  animation: hl-grid-fade 10s ease-in-out infinite;
+}
+
+h1,
+h2,
+h3 {
+  font-family: Sora, Outfit, system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  color: var(--mat-sys-on-surface);
+  font-weight: 600;
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
+.mat-mdc-card {
+  --mdc-elevated-card-container-shape: var(--hl-radius-md);
+}
+
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #0f172a;
+  --mdc-snackbar-supporting-text-color: #e2e8f0;
+  --mat-snackbar-button-color: #22d3ee;
+}
+
+.mat-mdc-paginator {
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 3px;
+}
+
+.hl-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+}
+
+.hl-lede {
+  color: var(--hl-ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: var(--hl-max-read);
+}
+
+/* Superficie cristal reutilizable */
+.hl-glass-panel {
+  background: var(--hl-glass-elevated);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--hl-border-subtle);
+  box-shadow: var(--hl-shadow-soft);
+}

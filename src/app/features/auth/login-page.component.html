@@ -1,0 +1,43 @@
+<div class="login-shell">
+  <aside class="login-hero" aria-hidden="true">
+    <div class="login-hero__glow"></div>
+    <blockquote class="login-hero__quote">
+      <p>«Un buen hotel no es solo un techo: es el tono correcto, la luz y la tranquilidad.»</p>
+    </blockquote>
+    <p class="login-hero__credit">Hospitalidad europea · Desde 1924</p>
+  </aside>
+
+  <section class="login-panel" aria-labelledby="login-title">
+    <div class="login-panel__card">
+      <p class="login-panel__eyebrow">Acceso para huéspedes y personal</p>
+      <h1 id="login-title" class="login-panel__title">Bienvenido de nuevo</h1>
+      <p class="login-panel__sub">Introduce tus credenciales para gestionar reservas y tu perfil.</p>
+
+      <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="login-form__field">
+          <mat-label>Usuario</mat-label>
+          <input matInput formControlName="userName" autocomplete="username" />
+          <mat-icon matPrefix class="login-form__prefix">person</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="login-form__field">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" formControlName="password" autocomplete="current-password" />
+          <mat-icon matPrefix class="login-form__prefix">lock</mat-icon>
+        </mat-form-field>
+        <button
+          mat-flat-button
+          color="primary"
+          class="login-form__submit"
+          type="submit"
+          [disabled]="busy || form.invalid"
+        >
+          @if (busy) {
+            Accediendo…
+          } @else {
+            Continuar
+          }
+        </button>
+      </form>
+    </div>
+  </section>
+</div>

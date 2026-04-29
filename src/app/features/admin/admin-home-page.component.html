@@ -1,0 +1,54 @@
+<h1 class="admin-dash__title">Resumen operativo</h1>
+<p class="admin-dash__lede">
+  Gestiona inventario, habitaciones y reservas desde un único lugar. Cada módulo enlaza al flujo de trabajo correspondiente.
+</p>
+
+<div class="admin-dash__grid">
+  <mat-card class="admin-dash__card">
+    <mat-card-header>
+      <div mat-card-avatar class="admin-dash__avatar admin-dash__avatar--aloj">
+        <mat-icon>holiday_village</mat-icon>
+      </div>
+      <mat-card-title>Alojamientos</mat-card-title>
+      <mat-card-subtitle>Catálogo y datos maestros</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Alta, edición y consulta de propiedades publicadas hacia el marketplace.</p>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <a mat-flat-button color="primary" routerLink="/admin/alojamientos">Abrir módulo</a>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="admin-dash__card">
+    <mat-card-header>
+      <div mat-card-avatar class="admin-dash__avatar admin-dash__avatar--room">
+        <mat-icon>bed</mat-icon>
+      </div>
+      <mat-card-title>Habitaciones</mat-card-title>
+      <mat-card-subtitle>Tipos, tarifas y disponibilidad</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Mantén coherencia entre tipología de habitación y oferta mostrada al huésped.</p>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <a mat-flat-button color="primary" routerLink="/admin/habitaciones">Abrir módulo</a>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="admin-dash__card">
+    <mat-card-header>
+      <div mat-card-avatar class="admin-dash__avatar admin-dash__avatar--book">
+        <mat-icon>event_note</mat-icon>
+      </div>
+      <mat-card-title>Reservas</mat-card-title>
+      <mat-card-subtitle>Seguimiento y documentos</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Consulta reservas internas, estados y totales para coordinar recepción.</p>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <a mat-flat-button color="primary" routerLink="/admin/reservas">Abrir módulo</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

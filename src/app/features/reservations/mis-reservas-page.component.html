@@ -1,0 +1,86 @@
+<div class="mis-reservas hl-page">
+  <header class="mis-reservas__head">
+    <h1>Mis reservas</h1>
+    <p class="mis-reservas__lede">
+      Aquí aparecen las reservas asociadas a tu perfil de cliente. Si el sistema no reconoce tu identificador, puedes
+      indicar el que te entregó recepción para esta sesión.
+    </p>
+  </header>
+
+  <mat-card class="mis-reservas__panel">
+    <mat-card-header>
+      <mat-card-title>Identificación</mat-card-title>
+      <mat-card-subtitle>Vínculo con tu cuenta de huésped</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      @if (idClienteEfectivo != null) {
+        <p class="mis-reservas__status">
+          Cliente activo:
+          <strong>{{ idClienteEfectivo }}</strong>
+          @if (user.getStoredIdClienteOverride()) {
+            <span class="mis-reservas__badge">Guardado en este dispositivo</span>
+          }
+        </p>
+      }
+      <form class="mis-reservas__form" [formGroup]="formCliente" (ngSubmit)="guardarIdCliente()">
+        <mat-form-field appearance="outline" class="mis-reservas__field">
+          <mat-label>Id cliente</mat-label>
+          <input matInput type="number" formControlName="idCliente" />
+        </mat-form-field>
+        <div class="mis-reservas__form-actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="formCliente.invalid">Aplicar</button>
+          <button mat-button type="button" (click)="limpiarOverride()">Borrar id guardado</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  @if (user.getIdCliente() == null) {
+    <mat-card class="mis-reservas__empty">
+      <mat-card-content>
+        <p>Indica un identificador de cliente arriba para cargar tu historial.</p>
+      </mat-card-content>
+    </mat-card>
+  } @else if (loading) {
+    <div class="mis-reservas__center"><mat-spinner diameter="44" /></div>
+  } @else {
+    <div class="mis-reservas__table-wrap mat-elevation-z0">
+      <table mat-table [dataSource]="rows" class="mis-reservas__table">
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let r">{{ r.codigoReserva }}</td>
+        </ng-container>
+        <ng-container matColumnDef="sucursal">
+          <th mat-header-cell *matHeaderCellDef>Sucursal</th>
+          <td mat-cell *matCellDef="let r">{{ r.idSucursal }}</td>
+        </ng-container>
+        <ng-container matColumnDef="inicio">
+          <th mat-header-cell *matHeaderCellDef>Inicio</th>
+          <td mat-cell *matCellDef="let r">{{ r.fechaInicio | date: 'short' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="fin">
+          <th mat-header-cell *matHeaderCellDef>Fin</th>
+          <td mat-cell *matCellDef="let r">{{ r.fechaFin | date: 'short' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let r">{{ r.totalReserva | number: '1.2-2' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let r">{{ r.estadoReserva }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator
+      class="mis-reservas__paginator"
+      [length]="total"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPage($event)"
+    />
+  }
+</div>

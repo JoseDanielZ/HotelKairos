@@ -1,0 +1,71 @@
+.reserva-page__head {
+  margin-bottom: 1.75rem;
+}
+
+.reserva-page__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
+  background: var(--hl-grad-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.reserva-page__lede {
+  margin: 0;
+  color: var(--hl-ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 44rem;
+}
+
+.reserva-card {
+  max-width: 560px;
+  border-radius: var(--hl-radius-lg) !important;
+  border: 1px solid rgba(34, 211, 238, 0.15) !important;
+  background: var(--hl-glass-elevated) !important;
+  backdrop-filter: blur(14px);
+  box-shadow: var(--hl-shadow-soft) !important;
+}
+
+.reserva-note {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1rem;
+  background: rgba(34, 211, 238, 0.08);
+  border-radius: var(--hl-radius-md);
+  border: 1px solid rgba(34, 211, 238, 0.12);
+  color: var(--hl-ink-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.reserva-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reserva-form__field {
+  width: 100%;
+}
+
+.reserva-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  align-items: center;
+}
+
+.reserva-form__actions .mat-mdc-unelevated-button {
+  border-radius: var(--hl-radius-pill);
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(34, 211, 238, 0.22);
+}
+
+.reserva-center {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}

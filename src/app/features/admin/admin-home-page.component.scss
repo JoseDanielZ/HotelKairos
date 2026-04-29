@@ -1,0 +1,98 @@
+.admin-dash__title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.5rem, 2.5vw, 1.95rem);
+  font-weight: 700;
+  background: var(--hl-grad-hero);
+  background-size: 120% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.admin-dash__lede {
+  margin: 0 0 1.75rem;
+  color: var(--hl-ink-muted);
+  line-height: 1.6;
+  max-width: 48rem;
+}
+
+.admin-dash__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.35rem;
+}
+
+.admin-dash__card {
+  border-radius: var(--hl-radius-lg) !important;
+  border: 1px solid var(--hl-border-subtle) !important;
+  background: var(--hl-glass-elevated) !important;
+  backdrop-filter: blur(14px) !important;
+  box-shadow: var(--hl-shadow-soft) !important;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.3s var(--hl-ease-out),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.admin-dash__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 211, 238, 0.25) !important;
+  box-shadow:
+    var(--hl-shadow-soft),
+    0 0 36px rgba(34, 211, 238, 0.08) !important;
+}
+
+.admin-dash__card mat-card-content {
+  flex: 1;
+  color: var(--hl-ink-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+
+  p {
+    margin: 0;
+  }
+}
+
+.admin-dash__avatar {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px !important;
+  color: #fff;
+
+  mat-icon {
+    font-size: 1.35rem;
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+}
+
+.admin-dash__avatar--aloj {
+  background: linear-gradient(145deg, #0891b2, #7c3aed);
+}
+
+.admin-dash__avatar--room {
+  background: linear-gradient(145deg, #0d9488, #22d3ee);
+}
+
+.admin-dash__avatar--book {
+  background: linear-gradient(145deg, #c026d3, #ec4899);
+}
+
+.admin-dash__card .mat-mdc-card-actions {
+  padding: 0.5rem 1rem 1rem;
+}
+
+.admin-dash__card .mat-mdc-unelevated-button {
+  border-radius: var(--hl-radius-pill);
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(34, 211, 238, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-dash__card:hover {
+    transform: none;
+  }
+}

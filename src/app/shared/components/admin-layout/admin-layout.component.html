@@ -1,0 +1,49 @@
+<mat-sidenav-container class="admin-shell">
+  <mat-sidenav mode="side" opened class="admin-sidenav">
+    <div class="admin-sidenav__brand">
+      <span class="admin-sidenav__logo" aria-hidden="true"></span>
+      <div>
+        <span class="admin-sidenav__title">Luxemburgo</span>
+        <span class="admin-sidenav__role">Panel interno</span>
+      </div>
+    </div>
+    <mat-nav-list class="admin-nav">
+      <a mat-list-item routerLink="/admin" routerLinkActive="admin-nav__active" [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Inicio</span>
+      </a>
+      <a mat-list-item routerLink="/admin/alojamientos" routerLinkActive="admin-nav__active">
+        <mat-icon matListItemIcon>holiday_village</mat-icon>
+        <span matListItemTitle>Alojamientos</span>
+      </a>
+      <a mat-list-item routerLink="/admin/habitaciones" routerLinkActive="admin-nav__active">
+        <mat-icon matListItemIcon>bed</mat-icon>
+        <span matListItemTitle>Habitaciones</span>
+      </a>
+      <a mat-list-item routerLink="/admin/reservas" routerLinkActive="admin-nav__active">
+        <mat-icon matListItemIcon>event_note</mat-icon>
+        <span matListItemTitle>Reservas</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="admin-main">
+    <header class="admin-topbar mat-elevation-z0">
+      <div class="admin-topbar__inner">
+        <div class="admin-topbar__spacer"></div>
+        @if (auth.getLoginSnapshot(); as u) {
+          <div class="admin-topbar__user">
+            <mat-icon class="admin-topbar__user-icon" aria-hidden="true">account_circle</mat-icon>
+            <span class="admin-topbar__name">{{ u.nombreCompleto || u.userName }}</span>
+          </div>
+        }
+        <button mat-stroked-button type="button" class="admin-topbar__logout" (click)="auth.logout().subscribe()">
+          <mat-icon>logout</mat-icon>
+          Salir
+        </button>
+      </div>
+    </header>
+    <div class="admin-content">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
