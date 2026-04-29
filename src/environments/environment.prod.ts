@@ -1,10 +1,8 @@
 /**
- * Valor por defecto para `ng build` local. En Vercel usa:
- * Build Command: `npm run build:vercel`
- * y la variable API_PUBLIC_URL = tu API en HTTPS (ej. https://...).
- * `https://api.example.com` no existe → el navegador devuelve ERR_NAME_NOT_RESOLVED.
+ * Producción: base del API (sin barra final).
+ * En Vercel también puedes sobreescribir en el build con API_PUBLIC_URL + `npm run build:vercel`.
  */
 export const environment = {
   production: true,
-  apiUrl: 'https://api.example.com',
+  apiUrl: 'https://backend-kairos-production.up.railway.app',
 };
