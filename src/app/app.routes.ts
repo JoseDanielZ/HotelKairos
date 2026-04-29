@@ -118,6 +118,21 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'hoteles',
+        loadComponent: () =>
+          import('./features/admin/admin-hoteles-page.component').then((m) => m.AdminHotelesPageComponent),
+      },
+      {
+        path: 'hoteles/nuevo',
+        loadComponent: () =>
+          import('./features/admin/admin-hotel-edit-page.component').then((m) => m.AdminHotelEditPageComponent),
+      },
+      {
+        path: 'hoteles/:id',
+        loadComponent: () =>
+          import('./features/admin/admin-hotel-edit-page.component').then((m) => m.AdminHotelEditPageComponent),
+      },
+      {
         path: 'tipos-habitacion',
         loadComponent: () =>
           import('./features/admin/admin-tipos-habitacion-page.component').then((m) => m.AdminTiposHabitacionPageComponent),
