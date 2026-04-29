@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppRole } from '../../core/constants/roles';
 import { AuthService } from '../../core/services/auth.service';
 import { UserContextService } from '../../core/services/user-context.service';
 
@@ -47,11 +48,17 @@ export class LoginPageComponent {
       next: (res) => {
         this.busy = false;
         if (res.success) {
-          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
-          this.userCtx.refreshMe().subscribe({
-            next: () => void this.router.navigateByUrl(returnUrl),
-            error: () => void this.router.navigateByUrl(returnUrl),
-          });
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          const navigate = () => {
+            if (returnUrl) {
+              void this.router.navigateByUrl(returnUrl);
+            } else if (this.auth.hasAnyRole([AppRole.Admin, AppRole.Vendedor])) {
+              void this.router.navigate(['/admin']);
+            } else {
+              void this.router.navigate(['/']);
+            }
+          };
+          this.userCtx.refreshMe().subscribe({ next: navigate, error: navigate });
         } else {
           this.snack.open(res.message || 'No se pudo iniciar sesión', 'Cerrar');
         }

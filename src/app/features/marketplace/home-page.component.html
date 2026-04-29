@@ -10,16 +10,18 @@
       </p>
       <a mat-flat-button color="primary" routerLink="/alojamientos" class="portal-card__cta">Entrar al marketplace</a>
     </article>
-    <article class="portal-card portal-card--admin">
-      <div class="portal-card__icon portal-card__icon--admin" aria-hidden="true">
-        <mat-icon>admin_panel_settings</mat-icon>
-      </div>
-      <h2 class="portal-card__title">Consola administrativa</h2>
-      <p class="portal-card__text">
-        CRUD de clientes, alojamientos, sucursales, habitaciones, tipos y reservas. Requiere rol de personal autorizado.
-      </p>
-      <a mat-stroked-button routerLink="/admin" class="portal-card__cta portal-card__cta--outline">Abrir administración</a>
-    </article>
+    @if (showAdminPanel()) {
+      <article class="portal-card portal-card--admin">
+        <div class="portal-card__icon portal-card__icon--admin" aria-hidden="true">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </div>
+        <h2 class="portal-card__title">Consola administrativa</h2>
+        <p class="portal-card__text">
+          CRUD de clientes, alojamientos, sucursales, habitaciones, tipos y reservas. Requiere rol de personal autorizado.
+        </p>
+        <a mat-stroked-button routerLink="/admin" class="portal-card__cta portal-card__cta--outline">Abrir administración</a>
+      </article>
+    }
   </div>
 </section>
 
