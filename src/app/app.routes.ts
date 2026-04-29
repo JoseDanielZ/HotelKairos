@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppRole } from './core/constants/roles';
+import { adminRedirectGuard } from './core/guards/admin-redirect.guard';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
@@ -11,6 +12,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        canActivate: [adminRedirectGuard],
         loadComponent: () =>
           import('./features/marketplace/home-page.component').then((m) => m.HomePageComponent),
       },
@@ -121,11 +123,6 @@ export const routes: Routes = [
         path: 'hoteles',
         loadComponent: () =>
           import('./features/admin/admin-hoteles-page.component').then((m) => m.AdminHotelesPageComponent),
-      },
-      {
-        path: 'hoteles/nuevo',
-        loadComponent: () =>
-          import('./features/admin/admin-hotel-edit-page.component').then((m) => m.AdminHotelEditPageComponent),
       },
       {
         path: 'hoteles/:id',
