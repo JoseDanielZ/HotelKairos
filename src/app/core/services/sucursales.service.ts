@@ -7,6 +7,7 @@ import type {
   SucursalDTODataPageResultApiResponse,
   SucursalPublicDtoApiResponse,
   SucursalPublicDtoFromInternalApiResponse,
+  SucursalUpsertRequest,
 } from '../../shared/models';
 
 /**
@@ -50,5 +51,13 @@ export class SucursalesService {
       }
     });
     return this.http.get<SucursalDTODataPageResultApiResponse>(`${this.base}/internal/sucursales`, { params });
+  }
+
+  create(body: SucursalUpsertRequest): Observable<SucursalDTOApiResponse> {
+    return this.http.post<SucursalDTOApiResponse>(`${this.base}/internal/sucursales`, body);
+  }
+
+  update(guid: string, body: SucursalUpsertRequest): Observable<SucursalDTOApiResponse> {
+    return this.http.put<SucursalDTOApiResponse>(`${this.base}/internal/sucursales/${guid}`, body);
   }
 }

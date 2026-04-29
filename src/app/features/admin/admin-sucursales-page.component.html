@@ -1,6 +1,9 @@
 <mat-card class="mb">
   <mat-card-title>Sucursales</mat-card-title>
   <mat-card-subtitle>Listado interno: sedes enlazadas al marketplace y a inventario de habitaciones.</mat-card-subtitle>
+  <mat-card-actions>
+    <a mat-raised-button color="primary" routerLink="/admin/sucursales/nuevo">Nueva sucursal</a>
+  </mat-card-actions>
 </mat-card>
 
 @if (loading) {
@@ -26,7 +29,8 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let r">
-        <a mat-button [routerLink]="['/alojamientos', r.sucursalGuid]" target="_blank" rel="noopener">Ver en vista huésped</a>
+        <a mat-button [routerLink]="['/admin/sucursales', r.sucursalGuid]">Editar</a>
+        <a mat-button [routerLink]="['/alojamientos', r.sucursalGuid]" target="_blank" rel="noopener">Ver en marketplace</a>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
