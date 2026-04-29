@@ -34,27 +34,20 @@ const showAdminPanel = computed(() => auth.hasAnyRole([AppRole.Admin, AppRole.Ve
     </div>
   </section>
 
-  <section class="hero" aria-labelledby="hero-heading">
-    <div class="hero__content">
-      <p class="hero__eyebrow">KAIROS</p>
-      <h1 id="hero-heading" class="hero__title">Reservas con carácter. Estancias memorables.</h1>
-      <p class="hero__lede">
-        Explora nuestras sucursales, elige fechas y ocupa tu habitación en unos pocos pasos. Si ya tienes cuenta,
-        recupera tus reservas cuando quieras.
+  <section class="hero-kairos" aria-labelledby="hero-heading">
+    <div class="hero-kairos__inner">
+      <p class="hero-eyebrow">Hotel Kairos</p>
+      <h1 id="hero-heading">Encuentra tu <em>próximo</em> destino</h1>
+      <p>
+        Descubre propiedades exclusivas con hospitalidad europea. Explora el catálogo, elige fechas y gestiona tus
+        reservas en un solo lugar.
       </p>
       <div class="hero__actions">
-        <v-btn color="primary" to="/alojamientos" class="hero__primary">Explorar alojamientos</v-btn>
-        <v-btn v-if="auth.isAuthenticated()" variant="outlined" to="/mis-reservas" class="hero__secondary">
+        <v-btn color="primary" to="/alojamientos" class="hero__primary text-none" rounded="0">Explorar alojamientos</v-btn>
+        <v-btn v-if="auth.isAuthenticated()" variant="outlined" to="/mis-reservas" class="hero__secondary text-none btn-outline" rounded="0">
           Ver mis reservas
         </v-btn>
-        <v-btn v-else variant="outlined" to="/login" class="hero__secondary">Iniciar sesión</v-btn>
-      </div>
-    </div>
-    <div class="hero__visual" aria-hidden="true">
-      <div class="hero__frame">
-        <div class="hero__frame-inner">
-          <v-icon class="hero__frame-icon" icon="mdi-bed-king" size="x-large" />
-        </div>
+        <v-btn v-else variant="outlined" to="/login" class="hero__secondary text-none btn-outline" rounded="0">Iniciar sesión</v-btn>
       </div>
     </div>
   </section>

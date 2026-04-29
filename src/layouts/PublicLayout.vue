@@ -15,17 +15,13 @@ function logout(): void {
 </script>
 
 <template>
-  <header class="site-header">
-    <div class="site-header__inner">
-      <RouterLink to="/" class="site-header__brand" aria-label="KAIROS — inicio">
-        <span class="site-header__mark" aria-hidden="true" />
-        <span class="site-header__wordmark">
-          <span class="site-header__name">KAIROS</span>
-          <span class="site-header__tagline">Vista huésped — catálogo y reservas</span>
-        </span>
-      </RouterLink>
-
-      <nav class="site-header__nav" aria-label="Navegación pública">
+  <div class="client-wrap">
+    <nav class="client-nav" aria-label="Navegación principal">
+      <RouterLink to="/" class="client-logo">Kairos</RouterLink>
+      <div class="client-nav-links">
+        <RouterLink to="/" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" :class="{ 'is-active': isActive }" @click="navigate">Inicio</a>
+        </RouterLink>
         <RouterLink to="/alojamientos" custom v-slot="{ href, navigate, isActive }">
           <a :href="href" :class="{ 'is-active': isActive }" @click="navigate">Alojamientos</a>
         </RouterLink>
@@ -37,21 +33,22 @@ function logout(): void {
             <a :href="href" :class="{ 'is-active': isActive }" @click="navigate">Administración</a>
           </RouterLink>
         </template>
-      </nav>
-
-      <div class="site-header__actions">
-        <v-btn v-if="auth.isAuthenticated()" variant="outlined" class="site-header__cta" @click="logout">
-          <v-icon start>mdi-logout</v-icon>
-          Cerrar sesión
-        </v-btn>
-        <v-btn v-else color="primary" to="/login" class="site-header__cta site-header__cta--primary">Entrar</v-btn>
       </div>
-    </div>
-  </header>
+      <div class="nav-actions">
+        <span v-if="auth.isAuthenticated()" class="client-nav-user">{{
+          auth.getLoginSnapshot()?.userName
+        }}</span>
+        <v-btn v-if="auth.isAuthenticated()" variant="outlined" class="btn-outline text-none" @click="logout">
+          Salir
+        </v-btn>
+        <v-btn v-else to="/login" class="btn-outline text-none">Entrar</v-btn>
+      </div>
+    </nav>
 
-  <main class="site-main">
-    <RouterView />
-  </main>
+    <main class="client-main">
+      <RouterView />
+    </main>
+  </div>
 </template>
 
 <style scoped src="./public-layout.scss"></style>

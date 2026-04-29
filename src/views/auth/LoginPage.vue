@@ -17,6 +17,7 @@ const busy = ref(false);
 
 function submit(): void {
   if (!form.userName || !form.password) {
+    ui.showSnack('Ingresa usuario y contraseña', 5000, 'error');
     return;
   }
   busy.value = true;
@@ -36,7 +37,7 @@ function submit(): void {
           void router.push('/');
         }
       } else {
-        ui.showSnack(res.message || 'No se pudo iniciar sesión', 6000);
+        ui.showSnack(res.message || 'No se pudo iniciar sesión', 6000, 'error');
       }
     })
     .catch(() => {
@@ -46,45 +47,46 @@ function submit(): void {
 </script>
 
 <template>
-  <div class="login-shell">
-    <aside class="login-hero" aria-hidden="true">
-      <div class="login-hero__glow" />
-      <blockquote class="login-hero__quote">
-        <p>«Un buen hotel no es solo un techo: es el tono correcto, la luz y la tranquilidad.»</p>
-      </blockquote>
-      <p class="login-hero__credit">Hospitalidad europea · Desde 1924</p>
-    </aside>
-
-    <section class="login-panel" aria-labelledby="login-title">
-      <div class="login-panel__card">
-        <p class="login-panel__eyebrow">Acceso para huéspedes y personal</p>
-        <h1 id="login-title" class="login-panel__title">Bienvenido de nuevo</h1>
-        <p class="login-panel__sub">Introduce tus credenciales para gestionar reservas y tu perfil.</p>
-
-        <form class="login-form" @submit.prevent="submit()">
-          <v-text-field
-            v-model="form.userName"
-            class="login-form__field"
-            label="Usuario"
-            variant="outlined"
-            autocomplete="username"
-            prepend-inner-icon="mdi-account"
-          />
-          <v-text-field
-            v-model="form.password"
-            class="login-form__field"
-            label="Contraseña"
-            type="password"
-            variant="outlined"
-            autocomplete="current-password"
-            prepend-inner-icon="mdi-lock"
-          />
-          <v-btn color="primary" block class="login-form__submit" type="submit" :disabled="busy">
-            {{ busy ? 'Accediendo…' : 'Continuar' }}
-          </v-btn>
-        </form>
+  <div class="login-wrap">
+    <div class="login-left">
+      <div class="login-brand">
+        <div class="k">K</div>
+        <h1>Kairos</h1>
+        <p>Hospitalidad europea · Desde 1924</p>
       </div>
-    </section>
+    </div>
+    <div class="login-divider" aria-hidden="true" />
+    <div class="login-right">
+      <h2>Bienvenido</h2>
+      <p class="sub">Acceso para huéspedes y personal del hotel</p>
+
+      <form class="login-form" @submit.prevent="submit()">
+        <v-text-field
+          v-model="form.userName"
+          class="login-form__field"
+          label="Usuario"
+          variant="outlined"
+          density="comfortable"
+          hide-details="auto"
+          autocomplete="username"
+          @keyup.enter="submit()"
+        />
+        <v-text-field
+          v-model="form.password"
+          class="login-form__field"
+          label="Contraseña"
+          type="password"
+          variant="outlined"
+          density="comfortable"
+          hide-details="auto"
+          autocomplete="current-password"
+          @keyup.enter="submit()"
+        />
+        <v-btn class="login-form__submit" color="primary" block type="submit" :disabled="busy" :loading="busy">
+          {{ busy ? 'Ingresando...' : 'Continuar' }}
+        </v-btn>
+      </form>
+    </div>
   </div>
 </template>
 

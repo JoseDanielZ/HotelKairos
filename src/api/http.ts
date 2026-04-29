@@ -70,7 +70,7 @@ api.interceptors.response.use(
     }
     if (snackMessage) {
       try {
-        useUiStore().showSnack(snackMessage, 6000);
+        useUiStore().showSnack(snackMessage, 6000, 'error');
       } catch {
         /* pinia no lista aún */
       }
