@@ -1,69 +1,174 @@
 <div class="reserva-page hl-page">
   <header class="reserva-page__head">
-    <h1 class="reserva-page__title">Nueva reserva</h1>
+    <p class="reserva-page__eyebrow">Marketplace · checkout</p>
+    <h1 class="reserva-page__title">Reserva con habitación y pago simulado</h1>
     <p class="reserva-page__lede">
-      Completa los datos de tu estancia. Necesitas sesión iniciada; al crear la reserva podrás revisarla en
-      <a routerLink="/mis-reservas">Mis reservas</a>.
+      Flujo en pasos: fechas → habitación en la sucursal → pasarela de demostración → confirmación. La reserva queda
+      vinculada a tu <strong>id cliente</strong> y se lista en
+      <a routerLink="/mis-reservas">Mis reservas</a> con el número de habitación.
     </p>
   </header>
 
-  <mat-card class="reserva-card">
-    <mat-card-header>
-      <mat-card-title>Sucursal</mat-card-title>
-      <mat-card-subtitle>
-        @if (sucursalNombre) {
-          {{ sucursalNombre }}
-        } @else {
-          Obteniendo nombre de la sucursal…
-        }
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p class="reserva-note">
-        Los identificadores numéricos de cliente y sucursal se rellenan automáticamente cuando el sistema los
-        conoce. Si alguno falta, indícalo manualmente o confirma tu perfil con recepción.
-      </p>
+  @if (loading) {
+    <div class="reserva-center"><mat-spinner diameter="44" aria-label="Cargando" /></div>
+  } @else if (!sucursalGuid) {
+    <mat-card class="reserva-card">
+      <mat-card-content>Ruta inválida: falta UUID de sucursal.</mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-card class="reserva-card reserva-card--wide">
+      <mat-card-header>
+        <mat-card-title>{{ sucursalNombre ?? 'Sucursal' }}</mat-card-title>
+        <mat-card-subtitle>Identificadores internos se completan cuando el API lo permite.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-stepper linear #stepper="matStepper">
+          <mat-step [stepControl]="form" label="Estancia">
+            <form [formGroup]="form" class="reserva-form">
+              <div class="reserva-form__ids">
+                <mat-form-field appearance="outline" class="reserva-form__field">
+                  <mat-label>Id cliente</mat-label>
+                  <input matInput type="number" formControlName="idCliente" />
+                  @if (idClienteResuelto) {
+                    <mat-hint>Vinculado a tu sesión</mat-hint>
+                  }
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="reserva-form__field">
+                  <mat-label>Id sucursal</mat-label>
+                  <input matInput type="number" formControlName="idSucursal" />
+                  @if (idSucursalResuelto) {
+                    <mat-hint>Resuelto desde la sucursal</mat-hint>
+                  }
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" class="reserva-form__field">
+                <mat-label>Fecha inicio</mat-label>
+                <input matInput type="datetime-local" formControlName="fechaInicio" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="reserva-form__field">
+                <mat-label>Fecha fin</mat-label>
+                <input matInput type="datetime-local" formControlName="fechaFin" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="reserva-form__field">
+                <mat-label>Canal</mat-label>
+                <input matInput formControlName="origenCanalReserva" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="reserva-form__field">
+                <mat-label>Observaciones</mat-label>
+                <textarea matInput rows="2" formControlName="observaciones"></textarea>
+              </mat-form-field>
+              <div class="reserva-form__actions">
+                <button mat-flat-button color="primary" type="button" (click)="onDatesNext(stepper)">
+                  Continuar a habitación
+                </button>
+              </div>
+            </form>
+          </mat-step>
 
-      @if (loading) {
-        <div class="reserva-center"><mat-spinner diameter="40" aria-label="Cargando formulario" /></div>
-      } @else {
-        <form class="reserva-form" [formGroup]="form" (ngSubmit)="submit()">
-          <mat-form-field appearance="outline" class="reserva-form__field">
-            <mat-label>Id cliente</mat-label>
-            <input matInput type="number" formControlName="idCliente" />
-            @if (idClienteResuelto) {
-              <mat-hint>Detectado automáticamente</mat-hint>
+          <mat-step [stepControl]="roomForm" label="Habitación">
+            @if (loadingHab) {
+              <div class="reserva-center"><mat-spinner diameter="40" /></div>
+            } @else if (habitacionesRows.length === 0) {
+              <p class="reserva-note">No hay habitaciones disponibles en el catálogo para esta sucursal.</p>
+              <button mat-button type="button" matStepperPrevious>Volver</button>
+            } @else {
+              <form [formGroup]="roomForm" class="reserva-form">
+                <mat-radio-group formControlName="idHabitacion" class="hab-grid">
+                  @for (h of habitacionesRows; track h.habitacionGuid) {
+                    <mat-radio-button class="hab-option" [value]="h.idHabitacion">
+                      <span class="hab-option__title"
+                        >Habitación {{ h.numeroHabitacion ?? h.idHabitacion }}</span
+                      >
+                      <span class="hab-option__meta"
+                        >Cap. {{ h.capacidadHabitacion }} · desde {{ h.precioBase | number: '1.2-2' }}</span
+                      >
+                    </mat-radio-button>
+                  }
+                </mat-radio-group>
+                <div class="reserva-form__actions">
+                  <button mat-button type="button" matStepperPrevious>Volver</button>
+                  <button mat-flat-button color="primary" type="button" (click)="onRoomNext(stepper)">
+                    Ir a pago simulado
+                  </button>
+                </div>
+              </form>
             }
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="reserva-form__field">
-            <mat-label>Id sucursal</mat-label>
-            <input matInput type="number" formControlName="idSucursal" />
-            @if (idSucursalResuelto) {
-              <mat-hint>Detectado automáticamente</mat-hint>
-            }
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="reserva-form__field">
-            <mat-label>Fecha inicio</mat-label>
-            <input matInput type="datetime-local" formControlName="fechaInicio" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="reserva-form__field">
-            <mat-label>Fecha fin</mat-label>
-            <input matInput type="datetime-local" formControlName="fechaFin" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="reserva-form__field">
-            <mat-label>Origen del canal</mat-label>
-            <input matInput formControlName="origenCanalReserva" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="reserva-form__field">
-            <mat-label>Observaciones</mat-label>
-            <textarea matInput rows="3" formControlName="observaciones"></textarea>
-          </mat-form-field>
-          <div class="reserva-form__actions">
-            <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Confirmar reserva</button>
-            <a mat-button routerLink="/mis-reservas">Ir a mis reservas</a>
-          </div>
-        </form>
-      }
-    </mat-card-content>
-  </mat-card>
+          </mat-step>
+
+          <mat-step [stepControl]="payForm" label="Pago (simulado)">
+            <p class="reserva-note">
+              Datos ficticios: no se procesa una tarjeta real. Sirve para demostrar el cierre del marketplace.
+            </p>
+            <form [formGroup]="payForm" class="reserva-form">
+              <mat-form-field appearance="outline" class="reserva-form__field">
+                <mat-label>Titular de la tarjeta</mat-label>
+                <input matInput formControlName="titular" autocomplete="off" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="reserva-form__field">
+                <mat-label>Número de tarjeta</mat-label>
+                <input matInput formControlName="pan" placeholder="0000 0000 0000 0000" autocomplete="off" />
+              </mat-form-field>
+              <div class="reserva-form__ids">
+                <mat-form-field appearance="outline" class="reserva-form__field">
+                  <mat-label>Vencimiento (MM/AA)</mat-label>
+                  <input matInput formControlName="expira" placeholder="12/28" autocomplete="off" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="reserva-form__field">
+                  <mat-label>CVV</mat-label>
+                  <input matInput type="password" formControlName="cvv" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <p class="reserva-pay-total">
+                Total estimado (precio base habitación):
+                <strong>{{ precioEstimado() | number: '1.2-2' }}</strong>
+              </p>
+              <mat-checkbox formControlName="acepto" class="reserva-check">
+                Acepto que simulo el cargo para efectos académicos / demo
+              </mat-checkbox>
+              <div class="reserva-form__actions">
+                <button mat-button type="button" matStepperPrevious>Volver</button>
+                <button mat-stroked-button color="primary" type="button" (click)="onPayNext(stepper)">
+                  Marcar pago como aprobado
+                </button>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step label="Confirmar">
+            <div class="reserva-summary">
+              <p>
+                <strong>Habitación:</strong>
+                {{ habitacionSeleccionada()?.numeroHabitacion ?? habitacionSeleccionada()?.idHabitacion }}
+              </p>
+              <p>
+                <strong>Cliente:</strong>
+                {{ form.getRawValue().idCliente }} · <strong>Sucursal:</strong>
+                {{ form.getRawValue().idSucursal }}
+              </p>
+              <p>
+                <strong>Estancia:</strong>
+                {{ form.getRawValue().fechaInicio }} → {{ form.getRawValue().fechaFin }}
+              </p>
+            </div>
+            <div class="reserva-form__actions">
+              <button mat-button type="button" matStepperPrevious>Volver</button>
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                (click)="submit()"
+                [disabled]="submitiendo || form.invalid || roomForm.invalid"
+              >
+                @if (submitiendo) {
+                  Enviando…
+                } @else {
+                  Confirmar reserva en el sistema
+                }
+              </button>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </mat-card-content>
+    </mat-card>
+  }
 </div>

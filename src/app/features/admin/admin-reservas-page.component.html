@@ -1,7 +1,85 @@
-<mat-card class="mb">
-  <mat-card-title>Reservas (admin)</mat-card-title>
-  <mat-card-subtitle>Listado centralizado de reservas y estados para seguimiento de recepción.</mat-card-subtitle>
-</mat-card>
+<div class="admin-reservas-dash">
+  <mat-card class="mb dash-card">
+    <mat-card-title>Registrar reserva para un huésped</mat-card-title>
+    <mat-card-subtitle>
+      La reserva se guarda en el mismo modelo que usa el sitio público. El cliente la verá en
+      <strong>Mis reservas</strong> con su cuenta (mismo <code>idCliente</code>).
+    </mat-card-subtitle>
+    <mat-card-content>
+      @if (catalogLoading) {
+        <div class="center"><mat-spinner diameter="36" /></div>
+      } @else {
+        <form class="crear-grid" [formGroup]="crearForm" (ngSubmit)="crearReservaHuesped()">
+          <mat-form-field appearance="outline">
+            <mat-label>Cliente (huésped)</mat-label>
+            <mat-select formControlName="idCliente" required>
+              @for (c of clientesSelect; track c.id) {
+                <mat-option [value]="c.id">{{ c.label }}</mat-option>
+              }
+            </mat-select>
+            @if (clientesSelect.length === 0) {
+              <mat-hint>No hay clientes en la primera página. Crea clientes en el API o amplía el listado.</mat-hint>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Sucursal</mat-label>
+            <mat-select formControlName="idSucursal" required>
+              @for (s of sucursalesSelect; track s.id) {
+                <mat-option [value]="s.id">{{ s.label || '—' }} (#{{ s.id }})</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Check-in</mat-label>
+            <input matInput type="datetime-local" formControlName="fechaInicio" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Check-out</mat-label>
+            <input matInput type="datetime-local" formControlName="fechaFin" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Origen del canal</mat-label>
+            <mat-select formControlName="origenCanalReserva">
+              @for (ch of canalesOrigen; track ch.value) {
+                <mat-option [value]="ch.value">{{ ch.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Observaciones (opcional)</mat-label>
+            <textarea matInput rows="2" formControlName="observaciones"></textarea>
+          </mat-form-field>
+
+          <div class="crear-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="crearEnviando || crearForm.invalid || clientesSelect.length === 0 || sucursalesSelect.length === 0"
+            >
+              @if (crearEnviando) {
+                Guardando…
+              } @else {
+                Guardar reserva
+              }
+            </button>
+            <button mat-button type="button" (click)="loadCatalogos()" [disabled]="catalogLoading">Recargar listas</button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mb">
+    <mat-card-title>Reservas (panel)</mat-card-title>
+    <mat-card-subtitle>Listado centralizado: confirmación, eliminación y seguimiento.</mat-card-subtitle>
+  </mat-card>
+</div>
 
 @if (loading) {
   <div class="center"><mat-spinner diameter="40" /></div>

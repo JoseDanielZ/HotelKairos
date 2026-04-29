@@ -55,6 +55,22 @@
 
   <mat-card class="admin-dash__card">
     <mat-card-header>
+      <div mat-card-avatar class="admin-dash__avatar admin-dash__avatar--people">
+        <mat-icon>groups</mat-icon>
+      </div>
+      <mat-card-title>Clientes</mat-card-title>
+      <mat-card-subtitle>CRUD de huéspedes</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Alta y edición de clientes; las reservas del marketplace quedan vinculadas por id cliente.</p>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <a mat-flat-button color="primary" routerLink="/admin/clientes">Abrir módulo</a>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="admin-dash__card">
+    <mat-card-header>
       <div mat-card-avatar class="admin-dash__avatar admin-dash__avatar--site">
         <mat-icon>domain</mat-icon>
       </div>

@@ -9,6 +9,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { habitacionDesdeObservaciones } from '../../shared/utils/reserva-display.util';
 import { ReservasService } from '../../core/services/reservas.service';
 import { UserContextService } from '../../core/services/user-context.service';
 import type { ReservaDTO } from '../../shared/models';
@@ -38,7 +39,7 @@ export class MisReservasPageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly snack = inject(MatSnackBar);
 
-  displayedColumns: string[] = ['codigo', 'sucursal', 'inicio', 'fin', 'total', 'estado'];
+  displayedColumns: string[] = ['codigo', 'habitacion', 'sucursal', 'inicio', 'fin', 'total', 'estado'];
   rows: ReservaDTO[] = [];
   total = 0;
   pageIndex = 0;
@@ -123,5 +124,9 @@ export class MisReservasPageComponent implements OnInit {
     this.pageIndex = e.pageIndex;
     this.pageSize = e.pageSize;
     this.load();
+  }
+
+  habitacionEtiqueta(r: ReservaDTO): string {
+    return habitacionDesdeObservaciones(r.observaciones) ?? '—';
   }
 }

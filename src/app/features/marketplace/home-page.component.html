@@ -1,3 +1,28 @@
+<section class="portal-fronts" aria-label="Elegir aplicación">
+  <div class="portal-fronts__inner">
+    <article class="portal-card portal-card--market">
+      <div class="portal-card__icon" aria-hidden="true">
+        <mat-icon>shopping_bag</mat-icon>
+      </div>
+      <h2 class="portal-card__title">Marketplace KAIROS</h2>
+      <p class="portal-card__text">
+        Catálogo público, checkout con pago simulado, elección de habitación y reservas ligadas a tu perfil de cliente.
+      </p>
+      <a mat-flat-button color="primary" routerLink="/alojamientos" class="portal-card__cta">Entrar al marketplace</a>
+    </article>
+    <article class="portal-card portal-card--admin">
+      <div class="portal-card__icon portal-card__icon--admin" aria-hidden="true">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </div>
+      <h2 class="portal-card__title">Consola administrativa</h2>
+      <p class="portal-card__text">
+        CRUD de clientes, alojamientos, sucursales, habitaciones, tipos y reservas. Requiere rol de personal autorizado.
+      </p>
+      <a mat-stroked-button routerLink="/admin" class="portal-card__cta portal-card__cta--outline">Abrir administración</a>
+    </article>
+  </div>
+</section>
+
 <section class="hero" aria-labelledby="hero-heading">
   <div class="hero__content">
     <p class="hero__eyebrow">KAIROS</p>

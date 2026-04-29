@@ -6,3 +6,4 @@ export * from './habitacion.models';
 export * from './reserva.models';
 export * from './tipo-habitacion.models';
 export * from './sucursal-internal.models';
+export * from './cliente.models';

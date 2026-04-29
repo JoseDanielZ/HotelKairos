@@ -42,14 +42,14 @@ export class HabitacionesService {
       PageNumber?: number;
       PageSize?: number;
     } = {},
-  ): Observable<unknown> {
+  ): Observable<HabitacionDTODataPageResultApiResponse> {
     let params = new HttpParams();
     Object.entries(p).forEach(([k, v]) => {
       if (v != null && v !== '') {
         params = params.set(k, String(v));
       }
     });
-    return this.http.get(`${this.base}/publico`, { params });
+    return this.http.get<HabitacionDTODataPageResultApiResponse>(`${this.base}/publico`, { params });
   }
 
   getByGuid(guid: string): Observable<HabitacionDetalleResponseApiResponse> {
