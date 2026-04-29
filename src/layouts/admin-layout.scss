@@ -1,0 +1,104 @@
+.admin-shell {
+  min-height: 100vh;
+  background: var(--hl-page-bg);
+}
+
+.admin-sidenav {
+  width: 268px !important;
+  border-right: 1px solid var(--hl-border-subtle);
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(16px);
+}
+
+.admin-sidenav__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem 1rem;
+  border-bottom: 1px solid var(--hl-border-subtle);
+}
+
+.admin-sidenav__logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  box-shadow: var(--hl-glow-cyan);
+  flex-shrink: 0;
+}
+
+.admin-sidenav__title {
+  display: block;
+  font-family: Sora, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--hl-ink);
+}
+
+.admin-sidenav__role {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #22d3ee;
+  margin-top: 0.15rem;
+}
+
+.admin-nav__active {
+  background: rgba(34, 211, 238, 0.12) !important;
+  border-radius: 0 999px 999px 0;
+  margin-right: 0.5rem;
+  border: 1px solid rgba(34, 211, 238, 0.22);
+}
+
+.admin-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, var(--hl-page-bg) 45%);
+}
+
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: rgba(3, 7, 18, 0.75);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--hl-border-subtle);
+}
+
+.admin-topbar__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.65rem 1.25rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.admin-topbar__spacer {
+  flex: 1;
+}
+
+.admin-topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--hl-ink-muted);
+  font-size: 0.9rem;
+}
+
+.admin-topbar__name {
+  font-weight: 500;
+  color: var(--hl-ink);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 1.5rem 1.25rem 2.5rem;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
