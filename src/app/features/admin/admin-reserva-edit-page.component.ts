@@ -88,8 +88,8 @@ export class AdminReservaEditPageComponent implements OnInit {
     const v = this.form.getRawValue();
     this.reservas
       .update(this.guid, {
-        fechaInicio: new Date(v.fechaInicio).toISOString(),
-        fechaFin: new Date(v.fechaFin).toISOString(),
+        fechaInicio: new Date(v.fechaInicio!).toISOString(),
+        fechaFin: new Date(v.fechaFin!).toISOString(),
         estadoReserva: v.estadoReserva || undefined,
         observaciones: v.observaciones || undefined,
       })
