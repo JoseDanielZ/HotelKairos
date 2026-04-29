@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.4",
     "info": {
-      "title": "Hotel Luxemburgo — Booking API",
-      "description": "API REST v1 para gestión de reservas y hospedaje — Hotel Luxemburgo",
+      "title": "KAIROS — Booking API",
+      "description": "API REST v1 para gestión de reservas y hospedaje — KAIROS",
       "version": "v1"
     },
     "paths": {
