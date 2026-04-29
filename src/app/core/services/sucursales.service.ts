@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type {
   SucursalDTOApiResponse,
+  SucursalDTODataPageResultApiResponse,
   SucursalPublicDtoApiResponse,
   SucursalPublicDtoFromInternalApiResponse,
 } from '../../shared/models';
@@ -41,13 +42,13 @@ export class SucursalesService {
       PageNumber?: number;
       PageSize?: number;
     } = {},
-  ): Observable<unknown> {
+  ): Observable<SucursalDTODataPageResultApiResponse> {
     let params = new HttpParams();
     Object.entries(p).forEach(([k, v]) => {
       if (v != null && v !== '') {
         params = params.set(k, String(v));
       }
     });
-    return this.http.get(`${this.base}/internal/sucursales`, { params });
+    return this.http.get<SucursalDTODataPageResultApiResponse>(`${this.base}/internal/sucursales`, { params });
   }
 }

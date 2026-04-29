@@ -79,7 +79,18 @@ export const routes: Routes = [
       },
       {
         path: 'reservas',
-        loadComponent: () => import('./features/admin/admin-reservas-page.component').then((m) => m.AdminReservasPageComponent),
+        loadComponent: () =>
+          import('./features/admin/admin-reservas-page.component').then((m) => m.AdminReservasPageComponent),
+      },
+      {
+        path: 'sucursales',
+        loadComponent: () =>
+          import('./features/admin/admin-sucursales-page.component').then((m) => m.AdminSucursalesPageComponent),
+      },
+      {
+        path: 'tipos-habitacion',
+        loadComponent: () =>
+          import('./features/admin/admin-tipos-habitacion-page.component').then((m) => m.AdminTiposHabitacionPageComponent),
       },
     ],
   },

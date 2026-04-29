@@ -4,7 +4,7 @@
       <span class="admin-sidenav__logo" aria-hidden="true"></span>
       <div>
         <span class="admin-sidenav__title">KAIROS</span>
-        <span class="admin-sidenav__role">Panel interno</span>
+        <span class="admin-sidenav__role">Administración</span>
       </div>
     </div>
     <mat-nav-list class="admin-nav">
@@ -24,11 +24,23 @@
         <mat-icon matListItemIcon>event_note</mat-icon>
         <span matListItemTitle>Reservas</span>
       </a>
+      <a mat-list-item routerLink="/admin/sucursales" routerLinkActive="admin-nav__active">
+        <mat-icon matListItemIcon>domain</mat-icon>
+        <span matListItemTitle>Sucursales</span>
+      </a>
+      <a mat-list-item routerLink="/admin/tipos-habitacion" routerLinkActive="admin-nav__active">
+        <mat-icon matListItemIcon>category</mat-icon>
+        <span matListItemTitle>Tipos de habitación</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="admin-main">
     <header class="admin-topbar mat-elevation-z0">
       <div class="admin-topbar__inner">
+        <a mat-stroked-button routerLink="/" class="admin-topbar__guest">
+          <mat-icon>storefront</mat-icon>
+          Vista huésped
+        </a>
         <div class="admin-topbar__spacer"></div>
         @if (auth.getLoginSnapshot(); as u) {
           <div class="admin-topbar__user">

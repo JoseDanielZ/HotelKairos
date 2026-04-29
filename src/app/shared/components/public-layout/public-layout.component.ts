@@ -16,7 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class PublicLayoutComponent {
   readonly auth = inject(AuthService);
 
-  /** Panel interno solo para staff. */
+  /** Enlace al panel de administración (roles staff). */
   showAdminPanel(): boolean {
     return this.auth.hasAnyRole([AppRole.Admin, AppRole.Vendedor]);
   }
