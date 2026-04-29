@@ -49,16 +49,14 @@ export class LoginPageComponent {
         this.busy = false;
         if (res.success) {
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-          const navigate = () => {
-            if (returnUrl) {
-              void this.router.navigateByUrl(returnUrl);
-            } else if (this.auth.hasAnyRole([AppRole.Admin, AppRole.Vendedor])) {
-              void this.router.navigate(['/admin']);
-            } else {
-              void this.router.navigate(['/']);
-            }
-          };
-          this.userCtx.refreshMe().subscribe({ next: navigate, error: navigate });
+          if (returnUrl) {
+            void this.router.navigateByUrl(returnUrl);
+          } else if (this.auth.hasAnyRole([AppRole.Admin, AppRole.Vendedor])) {
+            void this.router.navigate(['/admin']);
+          } else {
+            void this.router.navigate(['/']);
+          }
+          this.userCtx.refreshMe().subscribe();
         } else {
           this.snack.open(res.message || 'No se pudo iniciar sesión', 'Cerrar');
         }
