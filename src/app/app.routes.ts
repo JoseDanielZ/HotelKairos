@@ -98,19 +98,24 @@ export const routes: Routes = [
           import('./features/admin/admin-clientes-page.component').then((m) => m.AdminClientesPageComponent),
       },
       {
-        path: 'sucursales/nuevo',
-        loadComponent: () =>
-          import('./features/admin/admin-sucursal-edit-page.component').then((m) => m.AdminSucursalEditPageComponent),
-      },
-      {
-        path: 'sucursales/:guid',
-        loadComponent: () =>
-          import('./features/admin/admin-sucursal-edit-page.component').then((m) => m.AdminSucursalEditPageComponent),
-      },
-      {
         path: 'sucursales',
-        loadComponent: () =>
-          import('./features/admin/admin-sucursales-page.component').then((m) => m.AdminSucursalesPageComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/admin/admin-sucursales-page.component').then((m) => m.AdminSucursalesPageComponent),
+          },
+          {
+            path: 'nuevo',
+            loadComponent: () =>
+              import('./features/admin/admin-sucursal-edit-page.component').then((m) => m.AdminSucursalEditPageComponent),
+          },
+          {
+            path: ':guid',
+            loadComponent: () =>
+              import('./features/admin/admin-sucursal-edit-page.component').then((m) => m.AdminSucursalEditPageComponent),
+          },
+        ],
       },
       {
         path: 'tipos-habitacion',

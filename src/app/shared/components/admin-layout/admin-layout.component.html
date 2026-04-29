@@ -28,9 +28,13 @@
         <mat-icon matListItemIcon>groups</mat-icon>
         <span matListItemTitle>Clientes (CRUD)</span>
       </a>
-      <a mat-list-item routerLink="/admin/sucursales" routerLinkActive="admin-nav__active">
+      <a mat-list-item routerLink="/admin/sucursales" routerLinkActive="admin-nav__active" [routerLinkActiveOptions]="{ exact: true }">
         <mat-icon matListItemIcon>domain</mat-icon>
         <span matListItemTitle>Sucursales</span>
+      </a>
+      <a mat-list-item routerLink="/admin/sucursales/nuevo" routerLinkActive="admin-nav__active">
+        <mat-icon matListItemIcon>add_business</mat-icon>
+        <span matListItemTitle>Nueva sucursal</span>
       </a>
       <a mat-list-item routerLink="/admin/tipos-habitacion" routerLinkActive="admin-nav__active">
         <mat-icon matListItemIcon>category</mat-icon>

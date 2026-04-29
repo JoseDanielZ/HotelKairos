@@ -71,7 +71,8 @@ export class AdminSucursalEditPageComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (this.route.snapshot.routeConfig?.path === 'sucursales/nuevo') {
+    const path = this.route.snapshot.routeConfig?.path ?? '';
+    if (path === 'nuevo') {
       this.isCreate = true;
       this.loading = false;
       return;

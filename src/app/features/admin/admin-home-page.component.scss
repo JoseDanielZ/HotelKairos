@@ -97,6 +97,13 @@
   padding: 0.5rem 1rem 1rem;
 }
 
+.admin-dash__dual-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
 .admin-dash__card .mat-mdc-unelevated-button {
   border-radius: var(--hl-radius-pill);
   font-weight: 600;
