@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type {
+  ApiResponse,
   ClienteCreateRequest,
   ClienteDTOApiResponse,
   ClienteDTODataPageResultApiResponse,
@@ -40,5 +41,9 @@ export class ClientesService {
 
   update(guid: string, body: ClienteUpdateRequest): Observable<ClienteDTOApiResponse> {
     return this.http.put<ClienteDTOApiResponse>(`${this.base}/${guid}`, body);
+  }
+
+  delete(guid: string): Observable<ApiResponse<boolean>> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.base}/${guid}`);
   }
 }

@@ -85,6 +85,11 @@ export const routes: Routes = [
           import('./features/admin/admin-reservas-page.component').then((m) => m.AdminReservasPageComponent),
       },
       {
+        path: 'reservas/:guid',
+        loadComponent: () =>
+          import('./features/admin/admin-reserva-edit-page.component').then((m) => m.AdminReservaEditPageComponent),
+      },
+      {
         path: 'clientes/nuevo',
         loadComponent: () =>
           import('./features/admin/admin-cliente-edit-page.component').then((m) => m.AdminClienteEditPageComponent),

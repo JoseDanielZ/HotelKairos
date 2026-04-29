@@ -28,9 +28,17 @@
     </ng-container>
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let r">
-        <a mat-button [routerLink]="['/admin/sucursales', r.sucursalGuid]">Editar</a>
-        <a mat-button [routerLink]="['/alojamientos', r.sucursalGuid]" target="_blank" rel="noopener">Ver en marketplace</a>
+      <td mat-cell *matCellDef="let r" class="acciones-cell">
+        <a mat-icon-button [routerLink]="['/admin/sucursales', r.sucursalGuid]" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </a>
+        <a mat-icon-button [routerLink]="['/alojamientos', r.sucursalGuid]" target="_blank" rel="noopener" matTooltip="Ver en marketplace">
+          <mat-icon>open_in_new</mat-icon>
+        </a>
+        <button mat-icon-button color="warn" type="button" matTooltip="Eliminar"
+          (click)="remove(r.sucursalGuid, r.nombreSucursal ?? '')">
+          <mat-icon>delete</mat-icon>
+        </button>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

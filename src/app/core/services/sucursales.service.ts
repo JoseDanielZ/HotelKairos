@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type {
+  ApiResponse,
   SucursalDTOApiResponse,
   SucursalDTODataPageResultApiResponse,
   SucursalPublicDtoApiResponse,
@@ -59,5 +60,9 @@ export class SucursalesService {
 
   update(guid: string, body: SucursalUpsertRequest): Observable<SucursalDTOApiResponse> {
     return this.http.put<SucursalDTOApiResponse>(`${this.base}/internal/sucursales/${guid}`, body);
+  }
+
+  delete(guid: string): Observable<ApiResponse<boolean>> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.base}/internal/sucursales/${guid}`);
   }
 }
