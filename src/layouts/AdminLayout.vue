@@ -20,16 +20,31 @@ function logout(): void {
           <span class="admin-sidenav__role">Administración</span>
         </div>
       </div>
+
       <v-list nav density="comfortable" class="admin-nav">
         <v-list-item to="/admin" exact title="Inicio" prepend-icon="mdi-view-dashboard" rounded="xl" />
-        <v-list-item to="/admin/hoteles" title="Hoteles" prepend-icon="mdi-bed" rounded="xl" />
-        <v-list-item to="/admin/alojamientos" title="Alojamientos" prepend-icon="mdi-home-city" rounded="xl" />
+
+        <v-list-subheader>MAESTROS</v-list-subheader>
+        <v-list-item to="/admin/sucursales" title="Sucursales" prepend-icon="mdi-domain" rounded="xl" />
+        <v-list-item to="/admin/tipos-habitacion" title="Tipos habitación" prepend-icon="mdi-shape" rounded="xl" />
         <v-list-item to="/admin/habitaciones" title="Habitaciones" prepend-icon="mdi-bed-king" rounded="xl" />
+        <v-list-item to="/admin/tarifas" title="Tarifas" prepend-icon="mdi-tag-multiple" rounded="xl" />
+        <v-list-item to="/admin/catalogo-servicios" title="Catálogo servicios" prepend-icon="mdi-room-service" rounded="xl" />
+
+        <v-divider class="my-1" />
+        <v-list-subheader>OPERACIONES</v-list-subheader>
+        <v-list-item to="/admin/clientes" title="Clientes" prepend-icon="mdi-account-group" rounded="xl" />
         <v-list-item to="/admin/reservas" title="Reservas" prepend-icon="mdi-calendar-edit" rounded="xl" />
-        <v-list-item to="/admin/clientes" title="Clientes (CRUD)" prepend-icon="mdi-account-group" rounded="xl" />
-        <v-list-item to="/admin/sucursales" exact title="Sucursales" prepend-icon="mdi-domain" rounded="xl" />
-        <v-list-item to="/admin/sucursales/nuevo" title="Nueva sucursal" prepend-icon="mdi-store-plus" rounded="xl" />
-        <v-list-item to="/admin/tipos-habitacion" title="Tipos de habitación" prepend-icon="mdi-shape" rounded="xl" />
+        <v-list-item to="/admin/estadias" title="Estadías" prepend-icon="mdi-key-chain" rounded="xl" />
+        <v-list-item to="/admin/facturas" title="Facturas" prepend-icon="mdi-file-document-outline" rounded="xl" />
+        <v-list-item to="/admin/pagos" title="Pagos" prepend-icon="mdi-credit-card-outline" rounded="xl" />
+        <v-list-item to="/admin/valoraciones" title="Valoraciones" prepend-icon="mdi-star-half-full" rounded="xl" />
+
+        <v-divider class="my-1" />
+        <v-list-subheader>SISTEMA</v-list-subheader>
+        <v-list-item to="/admin/usuarios" title="Usuarios" prepend-icon="mdi-account-cog" rounded="xl" />
+        <v-list-item to="/admin/roles" title="Roles" prepend-icon="mdi-shield-account" rounded="xl" />
+        <v-list-item to="/admin/auditoria" title="Auditoría" prepend-icon="mdi-history" rounded="xl" />
       </v-list>
     </v-navigation-drawer>
 

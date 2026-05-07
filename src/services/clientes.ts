@@ -41,3 +41,11 @@ export async function clientesDelete(guid: string): Promise<ApiResponse<boolean>
   const { data } = await api.delete<ApiResponse<boolean>>(`${base}/${guid}`);
   return data;
 }
+
+export async function clientesInhabilitar(
+  guid: string,
+  body: { motivo: string },
+): Promise<ApiResponse<boolean>> {
+  const { data } = await api.patch<ApiResponse<boolean>>(`${base}/${guid}/inhabilitar`, body);
+  return data;
+}

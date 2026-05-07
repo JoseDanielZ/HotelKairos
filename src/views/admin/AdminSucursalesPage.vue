@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { sucursalesDelete, sucursalesGetInternalPage } from '@/services/sucursales';
 import { useUiStore } from '@/stores/ui';
+import { statusColor } from '@/utils/status.util';
 import type { SucursalDTO } from '@/models';
 
 const ui = useUiStore();
@@ -10,11 +11,16 @@ const total = ref(0);
 const pageIndex = ref(0);
 const pageSize = ref(10);
 const loading = ref(false);
+const filtroTexto = ref('');
 
 async function load(): Promise<void> {
   loading.value = true;
   try {
-    const r = await sucursalesGetInternalPage({ PageNumber: pageIndex.value + 1, PageSize: pageSize.value });
+    const r = await sucursalesGetInternalPage({
+      FiltroTexto: filtroTexto.value || undefined,
+      PageNumber: pageIndex.value + 1,
+      PageSize: pageSize.value,
+    });
     rows.value = r.data?.data ?? [];
     total.value = r.data?.totalRecords ?? 0;
   } finally {
@@ -44,30 +50,61 @@ onMounted(() => void load());
   <v-card class="mb-4">
     <v-card-title>Sucursales</v-card-title>
     <v-card-actions>
-      <v-btn color="primary" to="/admin/sucursales/nuevo">Nueva</v-btn>
+      <v-text-field
+        v-model="filtroTexto"
+        placeholder="Buscar…"
+        variant="outlined"
+        density="compact"
+        hide-details
+        clearable
+        class="mr-2"
+        style="max-width:260px"
+        @keyup.enter="load"
+        @click:clear="() => { filtroTexto = ''; void load(); }"
+      />
+      <v-btn variant="outlined" @click="load">Buscar</v-btn>
+      <v-spacer />
+      <v-btn color="primary" prepend-icon="mdi-plus" to="/admin/sucursales/nuevo">Nueva</v-btn>
     </v-card-actions>
   </v-card>
+
   <div v-if="loading" class="center"><v-progress-circular indeterminate /></div>
   <template v-else>
     <v-table>
       <thead>
         <tr>
-          <th>Id</th>
+          <th>Código</th>
           <th>Nombre</th>
+          <th>Tipo</th>
           <th>Ciudad</th>
+          <th>Estrellas</th>
           <th>Estado</th>
           <th />
         </tr>
       </thead>
       <tbody>
         <tr v-for="r in rows" :key="r.sucursalGuid">
-          <td>{{ r.idSucursal }}</td>
+          <td><code>{{ r.codigoSucursal }}</code></td>
           <td>{{ r.nombreSucursal }}</td>
+          <td>{{ r.tipoAlojamiento }}</td>
           <td>{{ r.ciudad }}</td>
-          <td>{{ r.estadoSucursal }}</td>
           <td>
-            <v-btn size="small" variant="text" :to="'/admin/sucursales/' + r.sucursalGuid">Editar</v-btn>
-            <v-btn size="small" variant="text" color="error" @click="remove(r)">Eliminar</v-btn>
+            <v-rating
+              v-if="r.estrellas"
+              :model-value="r.estrellas"
+              density="compact"
+              readonly
+              size="x-small"
+              color="amber"
+            />
+            <span v-else>—</span>
+          </td>
+          <td>
+            <v-chip :color="statusColor(r.estadoSucursal)" size="small" label>{{ r.estadoSucursal }}</v-chip>
+          </td>
+          <td class="text-no-wrap">
+            <v-btn size="small" variant="text" icon="mdi-pencil" :to="'/admin/sucursales/' + r.sucursalGuid" />
+            <v-btn size="small" variant="text" color="error" icon="mdi-delete" @click="remove(r)" />
           </td>
         </tr>
       </tbody>
@@ -83,12 +120,6 @@ onMounted(() => void load());
 </template>
 
 <style scoped>
-.mb-4 {
-  margin-bottom: 1rem;
-}
-.center {
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem;
-}
+.mb-4 { margin-bottom: 1rem; }
+.center { display: flex; justify-content: center; padding: 1.5rem; }
 </style>
