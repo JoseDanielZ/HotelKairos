@@ -7,18 +7,9 @@ import type {
   SucursalPublicDtoApiResponse,
   SucursalUpsertRequest,
 } from '@/models';
+import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1`;
-
-function toParams(p: Record<string, string | number | undefined | null>) {
-  const params: Record<string, string> = {};
-  Object.entries(p).forEach(([k, v]) => {
-    if (v != null && v !== '') {
-      params[k] = String(v);
-    }
-  });
-  return params;
-}
 
 export async function sucursalesGetPublicoByGuid(sucursalGuid: string): Promise<SucursalPublicDtoApiResponse> {
   const { data } = await api.get<SucursalPublicDtoApiResponse>(`${base}/public/sucursales/${sucursalGuid}`);

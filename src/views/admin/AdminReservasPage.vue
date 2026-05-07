@@ -16,6 +16,9 @@ const loading = ref(false);
 
 const catalogLoading = ref(false);
 const crearEnviando = ref(false);
+const deleteDialog = ref(false);
+const deleteGuid = ref<string | null>(null);
+const deleteBusy = ref(false);
 const clientesSelect = ref<{ id: number; label: string }[]>([]);
 const sucursalesSelect = ref<{ id: number; label: string }[]>([]);
 
@@ -143,10 +146,22 @@ async function confirmar(guid: string | null | undefined): Promise<void> {
   await load();
 }
 
-async function remove(guid: string | null | undefined): Promise<void> {
-  if (!guid || !confirm('¿Eliminar reserva?')) return;
-  await reservasDelete(guid);
-  await load();
+function openDelete(guid: string | null | undefined): void {
+  if (!guid) return;
+  deleteGuid.value = guid;
+  deleteDialog.value = true;
+}
+
+async function remove(): Promise<void> {
+  if (!deleteGuid.value) return;
+  deleteBusy.value = true;
+  try {
+    await reservasDelete(deleteGuid.value);
+    deleteDialog.value = false;
+    await load();
+  } finally {
+    deleteBusy.value = false;
+  }
 }
 
 function fmt(iso: string | null | undefined): string {
@@ -246,7 +261,7 @@ onMounted(() => {
           <td>
             <v-btn size="small" variant="text" icon="mdi-pencil" :to="'/admin/reservas/' + r.guidReserva" />
             <v-btn size="small" variant="text" color="primary" icon="mdi-check-circle" @click="confirmar(r.guidReserva)" />
-            <v-btn size="small" variant="text" color="error" icon="mdi-delete" @click="remove(r.guidReserva)" />
+            <v-btn size="small" variant="text" color="error" icon="mdi-delete" @click="openDelete(r.guidReserva)" />
           </td>
         </tr>
       </tbody>
@@ -259,6 +274,18 @@ onMounted(() => {
       @update:model-value="onPage"
     />
   </template>
+
+  <v-dialog v-model="deleteDialog" max-width="400">
+    <v-card>
+      <v-card-title>Eliminar reserva</v-card-title>
+      <v-card-text>¿Confirmas que deseas eliminar esta reserva? Esta acción no se puede deshacer.</v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn variant="text" @click="deleteDialog = false">Cancelar</v-btn>
+        <v-btn color="error" :loading="deleteBusy" @click="remove">Eliminar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>

@@ -29,7 +29,7 @@ export const useUserContextStore = defineStore('userContext', () => {
 
   async function refreshMe(): Promise<unknown | null> {
     const auth = useAuthStore();
-    if (!auth.isAuthenticated()) {
+    if (!auth.isAuthenticated) {
       mePayload.value = null;
       return null;
     }

@@ -9,18 +9,9 @@ import type {
   HabitacionUpdateRequest,
   InhabilitarRequest,
 } from '@/models';
+import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1/internal/habitaciones`;
-
-function toParams(p: Record<string, string | number | undefined | null>) {
-  const params: Record<string, string> = {};
-  Object.entries(p).forEach(([k, v]) => {
-    if (v != null && v !== '') {
-      params[k] = String(v);
-    }
-  });
-  return params;
-}
 
 export async function habitacionesList(p: {
   SucursalGuid?: string;

@@ -29,7 +29,6 @@ const form = ref({
   idSucursal: null as number | null,
   fechaInicio: '',
   fechaFin: '',
-  origenCanalReserva: 'WEB',
   observaciones: '',
 });
 const roomForm = ref({ idHabitacion: null as number | null });
@@ -79,8 +78,12 @@ async function loadHabitaciones(): Promise<void> {
 }
 
 function onDatesNext(): void {
-  if (!form.value.idCliente || !form.value.idSucursal || !form.value.fechaInicio || !form.value.fechaFin) {
-    ui.showSnack('Completa fechas e identificadores.', 4000);
+  if (!form.value.fechaInicio || !form.value.fechaFin) {
+    ui.showSnack('Selecciona las fechas de estancia.', 4000);
+    return;
+  }
+  if (new Date(form.value.fechaFin) <= new Date(form.value.fechaInicio)) {
+    ui.showSnack('La fecha de salida debe ser posterior a la de entrada.', 4000);
     return;
   }
   void loadHabitaciones().then(() => {
@@ -124,7 +127,7 @@ async function submit(): Promise<void> {
       idSucursal: v.idSucursal!,
       fechaInicio: new Date(v.fechaInicio).toISOString(),
       fechaFin: new Date(v.fechaFin).toISOString(),
-      origenCanalReserva: v.origenCanalReserva,
+      origenCanalReserva: 'WEB',
       observaciones,
       habitaciones: [{ idHabitacion: hab.idHabitacion }],
       esWalkin: 0,
@@ -213,30 +216,31 @@ onMounted(async () => {
           <v-stepper-window>
             <v-stepper-window-item :value="1">
               <div class="reserva-form">
-                <div class="reserva-form__ids">
-                  <v-text-field
-                    v-model.number="form.idCliente"
-                    label="Id cliente"
-                    type="number"
-                    variant="outlined"
-                    :hint="idClienteResuelto ? 'Vinculado a tu sesión' : undefined"
-                    persistent-hint
-                  />
-                  <v-text-field
-                    v-model.number="form.idSucursal"
-                    label="Id sucursal"
-                    type="number"
-                    variant="outlined"
-                    :hint="idSucursalResuelto ? 'Resuelto desde la sucursal' : undefined"
-                    persistent-hint
-                  />
-                </div>
+                <v-alert
+                  v-if="!idClienteResuelto || !idSucursalResuelto"
+                  type="warning"
+                  variant="tonal"
+                  class="mb-4"
+                  density="compact"
+                >
+                  <span v-if="!idClienteResuelto">No se pudo vincular tu cuenta de cliente. Inicia sesión de nuevo o contacta recepción. </span>
+                  <span v-if="!idSucursalResuelto">No se pudo resolver la sucursal desde la URL.</span>
+                </v-alert>
+                <v-alert v-else type="success" variant="tonal" class="mb-4" density="compact">
+                  Sesión vinculada · {{ sucursalNombre }}
+                </v-alert>
                 <v-text-field v-model="form.fechaInicio" label="Fecha inicio" type="datetime-local" variant="outlined" />
                 <v-text-field v-model="form.fechaFin" label="Fecha fin" type="datetime-local" variant="outlined" />
-                <v-text-field v-model="form.origenCanalReserva" label="Canal" variant="outlined" />
                 <v-textarea v-model="form.observaciones" label="Observaciones" rows="2" variant="outlined" />
                 <div class="reserva-form__actions">
-                  <v-btn color="primary" type="button" @click="onDatesNext">Continuar a habitación</v-btn>
+                  <v-btn
+                    color="primary"
+                    type="button"
+                    :disabled="!idClienteResuelto || !idSucursalResuelto"
+                    @click="onDatesNext"
+                  >
+                    Continuar a habitación
+                  </v-btn>
                 </div>
               </div>
             </v-stepper-window-item>

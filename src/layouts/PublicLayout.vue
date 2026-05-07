@@ -25,7 +25,7 @@ function logout(): void {
         <RouterLink to="/alojamientos" custom v-slot="{ href, navigate, isActive }">
           <a :href="href" :class="{ 'is-active': isActive }" @click="navigate">Alojamientos</a>
         </RouterLink>
-        <template v-if="auth.isAuthenticated()">
+        <template v-if="auth.isAuthenticated">
           <RouterLink to="/mis-reservas" custom v-slot="{ href, navigate, isActive }">
             <a :href="href" :class="{ 'is-active': isActive }" @click="navigate">Mis reservas</a>
           </RouterLink>
@@ -35,10 +35,10 @@ function logout(): void {
         </template>
       </div>
       <div class="nav-actions">
-        <span v-if="auth.isAuthenticated()" class="client-nav-user">{{
+        <span v-if="auth.isAuthenticated" class="client-nav-user">{{
           auth.getLoginSnapshot()?.userName
         }}</span>
-        <v-btn v-if="auth.isAuthenticated()" variant="outlined" class="btn-outline text-none" @click="logout">
+        <v-btn v-if="auth.isAuthenticated" variant="outlined" class="btn-outline text-none" @click="logout">
           Salir
         </v-btn>
         <v-btn v-else to="/login" class="btn-outline text-none">Entrar</v-btn>

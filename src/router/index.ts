@@ -10,6 +10,10 @@ const router = createRouter({
       component: () => import('@/views/auth/LoginPage.vue'),
     },
     {
+      path: '/registro',
+      component: () => import('@/views/auth/RegisterPage.vue'),
+    },
+    {
       path: '/',
       component: () => import('@/layouts/PublicLayout.vue'),
       children: [
@@ -18,7 +22,7 @@ const router = createRouter({
           component: () => import('@/views/marketplace/HomePage.vue'),
           beforeEnter: (_to, _from, next) => {
             const auth = useAuthStore();
-            if (auth.isAuthenticated() && auth.hasAnyRole([AppRole.Admin, AppRole.Vendedor])) {
+            if (auth.isAuthenticated && auth.hasAnyRole([AppRole.Admin, AppRole.Vendedor])) {
               next({ path: '/admin' });
             } else {
               next();
@@ -121,11 +125,11 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const auth = useAuthStore();
-  if (to.meta.requiresAuth && !auth.isAuthenticated()) {
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { path: '/login', query: { returnUrl: to.fullPath } };
   }
   if (to.path.startsWith('/admin')) {
-    if (!auth.isAuthenticated()) {
+    if (!auth.isAuthenticated) {
       return { path: '/login', query: { returnUrl: to.fullPath } };
     }
     if (!auth.hasAnyRole([AppRole.Admin, AppRole.Vendedor])) {

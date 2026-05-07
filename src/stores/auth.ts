@@ -8,16 +8,33 @@ const TOKEN_KEY = 'booking.jwt';
 const LOGIN_KEY = 'booking.login';
 
 export const useAuthStore = defineStore('auth', () => {
+  const token = ref<string | null>(localStorage.getItem(TOKEN_KEY));
+  const loginData = ref<LoginResponse | null>(_readLoginFromStorage());
+
+  function _readLoginFromStorage(): LoginResponse | null {
+    const raw = localStorage.getItem(LOGIN_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as LoginResponse;
+    } catch {
+      return null;
+    }
+  }
+
   function persistSession(data: LoginResponse): void {
     if (data.token) {
       localStorage.setItem(TOKEN_KEY, data.token);
+      token.value = data.token;
     }
     localStorage.setItem(LOGIN_KEY, JSON.stringify(data));
+    loginData.value = data;
   }
 
   function clearSession(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(LOGIN_KEY);
+    token.value = null;
+    loginData.value = null;
   }
 
   const base = `${environment.apiUrl}/api/v1/internal/auth`;
@@ -39,26 +56,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function getToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
+    return token.value;
   }
 
-  function isAuthenticated(): boolean {
-    return !!getToken();
-  }
+  const isAuthenticated = computed(() => !!token.value);
 
   function getLoginSnapshot(): LoginResponse | null {
-    const raw = localStorage.getItem(LOGIN_KEY);
-    if (!raw) return null;
-    try {
-      return JSON.parse(raw) as LoginResponse;
-    } catch {
-      return null;
-    }
+    return loginData.value;
   }
 
   function getRoles(): string[] {
-    const parsed = getLoginSnapshot();
-    return parsed?.roles?.filter((r): r is string => !!r) ?? [];
+    return loginData.value?.roles?.filter((r): r is string => !!r) ?? [];
   }
 
   function hasAnyRole(expected: string[]): boolean {
@@ -67,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
     return expected.some((e) => have.includes(e.toLowerCase()));
   }
 
-  const loginSnapshot = computed(() => getLoginSnapshot());
+  const loginSnapshot = computed(() => loginData.value);
 
   return {
     login,

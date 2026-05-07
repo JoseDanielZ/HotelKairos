@@ -44,7 +44,7 @@ const showAdminPanel = computed(() => auth.hasAnyRole([AppRole.Admin, AppRole.Ve
       </p>
       <div class="hero__actions">
         <v-btn color="primary" to="/alojamientos" class="hero__primary text-none" rounded="0">Explorar alojamientos</v-btn>
-        <v-btn v-if="auth.isAuthenticated()" variant="outlined" to="/mis-reservas" class="hero__secondary text-none btn-outline" rounded="0">
+        <v-btn v-if="auth.isAuthenticated" variant="outlined" to="/mis-reservas" class="hero__secondary text-none btn-outline" rounded="0">
           Ver mis reservas
         </v-btn>
         <v-btn v-else variant="outlined" to="/login" class="hero__secondary text-none btn-outline" rounded="0">Iniciar sesión</v-btn>

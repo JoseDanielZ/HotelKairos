@@ -85,6 +85,10 @@ function submit(): void {
         <v-btn class="login-form__submit" color="primary" block type="submit" :disabled="busy" :loading="busy">
           {{ busy ? 'Ingresando...' : 'Continuar' }}
         </v-btn>
+        <p class="login-register-link">
+          ¿No tienes cuenta?
+          <router-link to="/registro">Regístrate aquí</router-link>
+        </p>
       </form>
     </div>
   </div>

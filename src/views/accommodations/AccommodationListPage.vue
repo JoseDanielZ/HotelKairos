@@ -9,6 +9,7 @@ const total = ref(0);
 const pageSize = ref(10);
 const pageIndex = ref(0);
 const loading = ref(false);
+const loadError = ref(false);
 const destino = ref('');
 
 const minDate = new Date();
@@ -105,6 +106,7 @@ function toDateTimeLocal(d: Date, hours: number, minutes: number): string {
 
 async function load(): Promise<void> {
   loading.value = true;
+  loadError.value = false;
   const d = destino.value.trim();
   try {
     const res = await accommodationsSearch({
@@ -115,6 +117,8 @@ async function load(): Promise<void> {
     });
     rows.value = res.data?.data ?? [];
     total.value = res.data?.totalRecords ?? 0;
+  } catch {
+    loadError.value = true;
   } finally {
     loading.value = false;
   }
@@ -240,6 +244,12 @@ onMounted(() => {
       <div v-if="loading" class="center">
         <v-progress-circular indeterminate />
       </div>
+      <v-alert v-else-if="loadError" type="error" variant="tonal" class="my-4">
+        No se pudieron cargar los alojamientos. Verifica tu conexión e intenta de nuevo.
+        <template #append>
+          <v-btn variant="text" @click="load">Reintentar</v-btn>
+        </template>
+      </v-alert>
       <v-card v-else-if="rows.length === 0" class="empty-card pa-4">
         <p>No hay alojamientos con esos criterios. Prueba con otro destino o amplía la búsqueda.</p>
       </v-card>
