@@ -86,8 +86,8 @@ onMounted(() => void load());
           </td>
           <td class="text-caption">{{ r.usuarioEjecutor ?? '—' }}</td>
           <td class="text-caption">{{ r.ipOrigen ?? '—' }}</td>
-          <td class="text-caption valor-cell">{{ r.valorAnterior ?? '—' }}</td>
-          <td class="text-caption valor-cell">{{ r.valorNuevo ?? '—' }}</td>
+          <td class="text-caption valor-cell">{{ r.datosAnteriores ?? '—' }}</td>
+          <td class="text-caption valor-cell">{{ r.datosNuevos ?? '—' }}</td>
         </tr>
       </tbody>
     </v-table>

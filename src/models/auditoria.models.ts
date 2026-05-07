@@ -7,8 +7,10 @@ export interface AuditoriaDTO {
   operacion?: string | null;
   usuarioEjecutor?: string | null;
   ipOrigen?: string | null;
-  valorAnterior?: string | null;
-  valorNuevo?: string | null;
+  idRegistroAfectado?: string | null;
+  datosAnteriores?: string | null;
+  datosNuevos?: string | null;
+  activo?: number | null;
   fechaEventoUtc: string;
 }
 

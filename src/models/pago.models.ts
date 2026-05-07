@@ -37,8 +37,10 @@ export interface PagoCreateRequest {
 }
 
 export interface PagoUpdateRequest {
-  estadoPago: string;
-  observaciones?: string | null;
+  estadoPago?: string | null;
+  codigoAutorizacion?: string | null;
+  transaccionExterna?: string | null;
+  respuestaPasarela?: string | null;
 }
 
 export type PagoDTOApiResponse = ApiResponse<PagoDTO>;

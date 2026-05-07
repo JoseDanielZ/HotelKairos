@@ -1,16 +1,20 @@
 import type { ApiResponse, DataPageResult } from './api.types';
 
 export interface CargoEstadiaDTO {
-  idCargo: number;
+  idCargoEstadia: number;
   cargoGuid: string;
   idEstadia: number;
   idCatalogo?: number | null;
   descripcionCargo: string;
   cantidad: number;
   precioUnitario: number;
-  total: number;
-  creadoPorUsuario: string;
+  subtotal?: number | null;
+  valorIva?: number | null;
+  totalCargo: number;
+  fechaConsumoUtc?: string | null;
+  estadoCargo?: string | null;
   fechaRegistroUtc: string;
+  creadoPorUsuario: string;
 }
 
 export interface EstadiaDTO {
@@ -31,7 +35,9 @@ export interface EstadiaDTO {
 }
 
 export interface EstadiaCheckinRequest {
-  observaciones?: string | null;
+  idCliente: number;
+  idHabitacion: number;
+  observacionesCheckin?: string | null;
 }
 
 export interface EstadiaCheckoutRequest {

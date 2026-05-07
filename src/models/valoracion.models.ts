@@ -28,8 +28,8 @@ export interface ValoracionDTO {
 }
 
 export interface ValoracionModerarRequest {
-  nuevoEstado: string;
-  publicarEnPortal?: number;
+  estadoValoracion: string;
+  publicadaEnPortal?: number;
   motivoModeracion?: string | null;
 }
 

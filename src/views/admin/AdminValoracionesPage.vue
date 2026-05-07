@@ -48,8 +48,8 @@ async function doModerar(): Promise<void> {
   moderarBusy.value = true;
   try {
     const res = await valoracionesModerar(moderarGuid.value, {
-      nuevoEstado: moderarEstado.value,
-      publicarEnPortal: moderarPublicar.value,
+      estadoValoracion: moderarEstado.value,
+      publicadaEnPortal: moderarPublicar.value,
       motivoModeracion: moderarMotivo.value || null,
     });
     if (res.success) {

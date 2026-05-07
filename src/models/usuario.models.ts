@@ -34,7 +34,6 @@ export interface UsuarioUpdateRequest {
   nombres?: string | null;
   apellidos?: string | null;
   estadoUsuario?: string | null;
-  idRoles?: number[] | null;
 }
 
 export type UsuarioDTOApiResponse = ApiResponse<UsuarioDTO>;
