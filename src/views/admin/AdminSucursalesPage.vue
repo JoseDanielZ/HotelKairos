@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { sucursalesDelete, sucursalesGetInternalPage } from '@/services/sucursales';
 import { useUiStore } from '@/stores/ui';
 import { statusColor } from '@/utils/status.util';
-import type { SucursalDTO } from '@/models';
+import type { SucursalResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<SucursalDTO[]>([]);
+const rows = ref<SucursalResponse[]>([]);
 const total = ref(0);
 const pageIndex = ref(0);
 const pageSize = ref(10);
@@ -21,8 +21,8 @@ async function load(): Promise<void> {
       PageNumber: pageIndex.value + 1,
       PageSize: pageSize.value,
     });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -33,9 +33,9 @@ function onPage(p: number): void {
   void load();
 }
 
-async function remove(s: SucursalDTO): Promise<void> {
+async function remove(s: SucursalResponse): Promise<void> {
   const nombre = s.nombreSucursal ?? s.sucursalGuid;
-  if (!confirm(`¿Eliminar la sucursal "${nombre}"?`)) return;
+  if (!confirm(`Â¿Eliminar la sucursal "${nombre}"?`)) return;
   const res = await sucursalesDelete(s.sucursalGuid);
   if (res.success) {
     ui.showSnack('Sucursal eliminada', 3000);
@@ -52,7 +52,7 @@ onMounted(() => void load());
     <v-card-actions>
       <v-text-field
         v-model="filtroTexto"
-        placeholder="Buscar…"
+        placeholder="Buscarâ€¦"
         variant="outlined"
         density="compact"
         hide-details
@@ -73,7 +73,7 @@ onMounted(() => void load());
     <v-table>
       <thead>
         <tr>
-          <th>Código</th>
+          <th>CÃ³digo</th>
           <th>Nombre</th>
           <th>Tipo</th>
           <th>Ciudad</th>
@@ -97,7 +97,7 @@ onMounted(() => void load());
               size="x-small"
               color="amber"
             />
-            <span v-else>—</span>
+            <span v-else>â€”</span>
           </td>
           <td>
             <v-chip :color="statusColor(r.estadoSucursal)" size="small" label>{{ r.estadoSucursal }}</v-chip>

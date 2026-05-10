@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface FacturaDetalleDTO {
+export interface FacturaDetalleResponse {
   idDetalle: number;
   descripcion: string;
   cantidad: number;
@@ -8,7 +8,7 @@ export interface FacturaDetalleDTO {
   subtotal: number;
 }
 
-export interface FacturaDTO {
+export interface FacturaResponse {
   idFactura: number;
   guidFactura: string;
   idCliente: number;
@@ -30,10 +30,10 @@ export interface FacturaDTO {
   esEliminado: number;
   creadoPorUsuario: string;
   fechaRegistroUtc: string;
-  detalles: FacturaDetalleDTO[];
+  detalles: FacturaDetalleResponse[];
 }
 
-export interface FacturaCreateRequest {
+export interface GenerarFacturaBody {
   idReserva: number;
   idCliente: number;
   idSucursal: number;
@@ -42,11 +42,11 @@ export interface FacturaCreateRequest {
   origenCanalFactura?: string | null;
 }
 
-export interface FacturaUpdateRequest {
+export interface ActualizarFacturaRequest {
   estado?: string | null;
   saldoPendiente?: number | null;
   observacionesFactura?: string | null;
 }
 
-export type FacturaDTOApiResponse = ApiResponse<FacturaDTO>;
-export type FacturaDTODataPageResultApiResponse = ApiResponse<DataPageResult<FacturaDTO>>;
+export type FacturaResponseApiResponse = ApiResponse<FacturaResponse>;
+export type FacturaResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<FacturaResponse>>;

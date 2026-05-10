@@ -1,11 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { habitacionesList } from '@/services/habitaciones';
 import { pagosList } from '@/services/pagos';
 import { reservasList } from '@/services/reservas';
 import { estadiasList } from '@/services/estadias';
 import { statusColor, fmtDate, fmtMoney } from '@/utils/status.util';
-import type { ReservaDTO } from '@/models';
+import type { ReservaResponse } from '@/models';
 
 const loading = ref(true);
 
@@ -18,7 +18,7 @@ const kpis = ref({
   pagosPendientes: 0,
 });
 
-const recentReservas = ref<ReservaDTO[]>([]);
+const recentReservas = ref<ReservaResponse[]>([]);
 
 const hoy = new Date().toLocaleDateString('es-ES', {
   weekday: 'long',
@@ -40,13 +40,13 @@ async function load(): Promise<void> {
       reservasList({ PageSize: 8 }),
     ]);
 
-    if (resPend.status === 'fulfilled') kpis.value.reservasPendientes = resPend.value.data?.totalRecords ?? 0;
-    if (resConf.status === 'fulfilled') kpis.value.reservasConfirmadas = resConf.value.data?.totalRecords ?? 0;
-    if (habDisp.status === 'fulfilled') kpis.value.habitacionesDisponibles = habDisp.value.data?.totalRecords ?? 0;
-    if (habOcup.status === 'fulfilled') kpis.value.habitacionesOcupadas = habOcup.value.data?.totalRecords ?? 0;
-    if (estAll.status === 'fulfilled') kpis.value.estadiasTotal = estAll.value.data?.totalRecords ?? 0;
-    if (pagPend.status === 'fulfilled') kpis.value.pagosPendientes = pagPend.value.data?.totalRecords ?? 0;
-    if (recents.status === 'fulfilled') recentReservas.value = recents.value.data?.data ?? [];
+    if (resPend.status === 'fulfilled') kpis.value.reservasPendientes = resPend.value.data?.totalResultados ?? 0;
+    if (resConf.status === 'fulfilled') kpis.value.reservasConfirmadas = resConf.value.data?.totalResultados ?? 0;
+    if (habDisp.status === 'fulfilled') kpis.value.habitacionesDisponibles = habDisp.value.data?.totalResultados ?? 0;
+    if (habOcup.status === 'fulfilled') kpis.value.habitacionesOcupadas = habOcup.value.data?.totalResultados ?? 0;
+    if (estAll.status === 'fulfilled') kpis.value.estadiasTotal = estAll.value.data?.totalResultados ?? 0;
+    if (pagPend.status === 'fulfilled') kpis.value.pagosPendientes = pagPend.value.data?.totalResultados ?? 0;
+    if (recents.status === 'fulfilled') recentReservas.value = recents.value.data?.items ?? [];
   } finally {
     loading.value = false;
   }
@@ -79,7 +79,7 @@ onMounted(() => void load());
         <v-card-text>
           <div class="kpi-label">Reservas pendientes</div>
           <div class="kpi-value">{{ kpis.reservasPendientes }}</div>
-          <div class="kpi-sub">Esperando confirmación</div>
+          <div class="kpi-sub">Esperando confirmaciÃ³n</div>
         </v-card-text>
         <v-card-actions>
           <v-btn variant="text" size="small" to="/admin/reservas">Ver todas</v-btn>
@@ -112,16 +112,16 @@ onMounted(() => void load());
         <v-card-text>
           <div class="kpi-label">Habitaciones ocupadas</div>
           <div class="kpi-value">{{ kpis.habitacionesOcupadas }}</div>
-          <div class="kpi-sub">Con huésped activo</div>
+          <div class="kpi-sub">Con huÃ©sped activo</div>
         </v-card-text>
         <v-card-actions>
-          <v-btn variant="text" size="small" to="/admin/estadias">Ver estadías</v-btn>
+          <v-btn variant="text" size="small" to="/admin/estadias">Ver estadÃ­as</v-btn>
         </v-card-actions>
       </v-card>
 
       <v-card class="kpi-card kpi-neutral">
         <v-card-text>
-          <div class="kpi-label">Estadías registradas</div>
+          <div class="kpi-label">EstadÃ­as registradas</div>
           <div class="kpi-value">{{ kpis.estadiasTotal }}</div>
           <div class="kpi-sub">Check-ins realizados</div>
         </v-card-text>
@@ -142,10 +142,10 @@ onMounted(() => void load());
       </v-card>
     </div>
 
-    <!-- Últimas reservas -->
+    <!-- Ãšltimas reservas -->
     <v-card class="mt-section">
       <v-card-item>
-        <v-card-title>Últimas reservas</v-card-title>
+        <v-card-title>Ãšltimas reservas</v-card-title>
         <template #append>
           <v-btn variant="outlined" size="small" to="/admin/reservas">Ver todas</v-btn>
         </template>
@@ -153,7 +153,7 @@ onMounted(() => void load());
       <v-table v-if="recentReservas.length">
         <thead>
           <tr>
-            <th>Código</th>
+            <th>CÃ³digo</th>
             <th>Cliente</th>
             <th>Sucursal</th>
             <th>Check-in</th>
@@ -166,13 +166,13 @@ onMounted(() => void load());
         </thead>
         <tbody>
           <tr v-for="r in recentReservas" :key="r.guidReserva ?? r.codigoReserva">
-            <td><code class="text-caption">{{ r.codigoReserva ?? '—' }}</code></td>
+            <td><code class="text-caption">{{ r.codigoReserva ?? 'â€”' }}</code></td>
             <td>{{ r.idCliente }}</td>
             <td>{{ r.idSucursal }}</td>
             <td class="text-no-wrap text-caption">{{ fmtDate(r.fechaInicio) }}</td>
             <td class="text-no-wrap text-caption">{{ fmtDate(r.fechaFin) }}</td>
             <td class="text-no-wrap">{{ fmtMoney(r.totalReserva) }}</td>
-            <td><code class="text-caption">{{ r.origenCanalReserva ?? '—' }}</code></td>
+            <td><code class="text-caption">{{ r.origenCanalReserva ?? 'â€”' }}</code></td>
             <td>
               <v-chip :color="statusColor(r.estadoReserva)" size="x-small" label>{{ r.estadoReserva }}</v-chip>
             </td>
@@ -183,12 +183,12 @@ onMounted(() => void load());
         </tbody>
       </v-table>
       <v-card-text v-else class="text-center text-medium-emphasis">
-        No hay reservas registradas aún.
+        No hay reservas registradas aÃºn.
       </v-card-text>
     </v-card>
 
-    <!-- Acceso rápido -->
-    <p class="section-label mt-section">Acceso rápido</p>
+    <!-- Acceso rÃ¡pido -->
+    <p class="section-label mt-section">Acceso rÃ¡pido</p>
     <div class="admin-dash__grid">
       <v-card class="admin-dash__card" to="/admin/habitaciones">
         <v-card-item>
@@ -202,7 +202,7 @@ onMounted(() => void load());
         <v-card-item>
           <template #prepend><v-avatar color="indigo" icon="mdi-domain" /></template>
           <v-card-title>Sucursales</v-card-title>
-          <v-card-subtitle>Sedes y publicación</v-card-subtitle>
+          <v-card-subtitle>Sedes y publicaciÃ³n</v-card-subtitle>
         </v-card-item>
       </v-card>
 
@@ -210,14 +210,14 @@ onMounted(() => void load());
         <v-card-item>
           <template #prepend><v-avatar color="purple" icon="mdi-account-group" /></template>
           <v-card-title>Clientes</v-card-title>
-          <v-card-subtitle>Alta y gestión de huéspedes</v-card-subtitle>
+          <v-card-subtitle>Alta y gestiÃ³n de huÃ©spedes</v-card-subtitle>
         </v-card-item>
       </v-card>
 
       <v-card class="admin-dash__card" to="/admin/estadias">
         <v-card-item>
           <template #prepend><v-avatar color="green-darken-1" icon="mdi-key-chain" /></template>
-          <v-card-title>Estadías</v-card-title>
+          <v-card-title>EstadÃ­as</v-card-title>
           <v-card-subtitle>Check-in / check-out</v-card-subtitle>
         </v-card-item>
       </v-card>
@@ -226,7 +226,7 @@ onMounted(() => void load());
         <v-card-item>
           <template #prepend><v-avatar color="blue-grey" icon="mdi-file-document-outline" /></template>
           <v-card-title>Facturas</v-card-title>
-          <v-card-subtitle>Facturación y anulaciones</v-card-subtitle>
+          <v-card-subtitle>FacturaciÃ³n y anulaciones</v-card-subtitle>
         </v-card-item>
       </v-card>
 
@@ -234,7 +234,7 @@ onMounted(() => void load());
         <v-card-item>
           <template #prepend><v-avatar color="amber" icon="mdi-star-half-full" /></template>
           <v-card-title>Valoraciones</v-card-title>
-          <v-card-subtitle>Moderación de reseñas</v-card-subtitle>
+          <v-card-subtitle>ModeraciÃ³n de reseÃ±as</v-card-subtitle>
         </v-card-item>
       </v-card>
     </div>

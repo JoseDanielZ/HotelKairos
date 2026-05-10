@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface TarifaDTO {
+export interface TarifaResponse {
   idTarifa: number;
   tarifaGuid: string;
   codigoTarifa: string;
@@ -24,7 +24,7 @@ export interface TarifaDTO {
   creadoPorUsuario: string;
 }
 
-export interface TarifaUpsertRequest {
+export interface CrearTarifaRequest {
   codigoTarifa: string;
   idSucursal: number;
   idTipoHabitacion: number;
@@ -41,5 +41,5 @@ export interface TarifaUpsertRequest {
   estadoTarifa?: string;
 }
 
-export type TarifaDTOApiResponse = ApiResponse<TarifaDTO>;
-export type TarifaDTODataPageResultApiResponse = ApiResponse<DataPageResult<TarifaDTO>>;
+export type TarifaResponseApiResponse = ApiResponse<TarifaResponse>;
+export type TarifaResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<TarifaResponse>>;

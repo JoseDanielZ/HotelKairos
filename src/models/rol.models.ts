@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface RolDTO {
+export interface RolResponse {
   idRol: number;
   rolGuid: string;
   nombreRol: string;
@@ -12,11 +12,11 @@ export interface RolDTO {
   creadoPorUsuario: string;
 }
 
-export interface RolUpsertRequest {
+export interface CrearRolRequest {
   nombreRol: string;
   descripcionRol?: string | null;
   estadoRol?: string;
 }
 
-export type RolDTOApiResponse = ApiResponse<RolDTO>;
-export type RolDTODataPageResultApiResponse = ApiResponse<DataPageResult<RolDTO>>;
+export type RolResponseApiResponse = ApiResponse<RolResponse>;
+export type RolResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<RolResponse>>;

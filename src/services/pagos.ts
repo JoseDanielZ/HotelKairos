@@ -1,10 +1,10 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
-  PagoCreateRequest,
-  PagoDTOApiResponse,
-  PagoDTODataPageResultApiResponse,
-  PagoUpdateRequest,
+  CrearPagoRequest,
+  PagoResponseApiResponse,
+  PagoResponsePaginatedResponseApiResponse,
+  CambiarEstadoPagoBody,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -16,25 +16,25 @@ export async function pagosList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<PagoDTODataPageResultApiResponse> {
-  const { data } = await api.get<PagoDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<PagoResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<PagoResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function pagosGetByGuid(guid: string): Promise<PagoDTOApiResponse> {
-  const { data } = await api.get<PagoDTOApiResponse>(`${base}/${guid}`);
+export async function pagosGetByGuid(guid: string): Promise<PagoResponseApiResponse> {
+  const { data } = await api.get<PagoResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function pagosCreate(body: PagoCreateRequest): Promise<PagoDTOApiResponse> {
-  const { data } = await api.post<PagoDTOApiResponse>(base, body);
+export async function pagosCreate(body: CrearPagoRequest): Promise<PagoResponseApiResponse> {
+  const { data } = await api.post<PagoResponseApiResponse>(base, body);
   return data;
 }
 
 export async function pagosActualizarEstado(
   guid: string,
-  body: PagoUpdateRequest,
-): Promise<PagoDTOApiResponse> {
-  const { data } = await api.patch<PagoDTOApiResponse>(`${base}/${guid}/estado`, body);
+  body: CambiarEstadoPagoBody,
+): Promise<PagoResponseApiResponse> {
+  const { data } = await api.patch<PagoResponseApiResponse>(`${base}/${guid}/estado`, body);
   return data;
 }

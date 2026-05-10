@@ -1,8 +1,8 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 import type { SucursalPublicDto } from './sucursal.models';
 
-/** `SucursalDTO` (admin GET; ampliado para formularios). */
-export interface SucursalDTO {
+/** `SucursalResponse` (admin GET; ampliado para formularios). */
+export interface SucursalResponse {
   idSucursal: number;
   sucursalGuid: string;
   codigoSucursal?: string | null;
@@ -33,11 +33,11 @@ export interface SucursalDTO {
   estadoSucursal?: string | null;
 }
 
-export type SucursalDTOApiResponse = ApiResponse<SucursalDTO>;
-export type SucursalDTODataPageResultApiResponse = ApiResponse<DataPageResult<SucursalDTO>>;
+export type SucursalResponseApiResponse = ApiResponse<SucursalResponse>;
+export type SucursalResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<SucursalResponse>>;
 
-/** Cuerpo POST/PUT `/internal/sucursales` (OpenAPI `SucursalUpsertRequest`). */
-export interface SucursalUpsertRequest {
+/** Cuerpo POST/PUT `/internal/sucursales` (OpenAPI `CrearSucursalRequest`). */
+export interface CrearSucursalRequest {
   codigoSucursal: string;
   nombreSucursal: string;
   descripcionSucursal?: string | null;

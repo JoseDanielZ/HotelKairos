@@ -2,15 +2,13 @@
 import { onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { accommodationsGetByGuid } from '@/services/accommodations';
-import { alojamientosGetById } from '@/services/alojamientos';
-import { isPositiveIntString, isUuidString } from '@/utils/string.util';
-import type { AlojamientoResponseDTO, SucursalPublicDto } from '@/models';
+import { isUuidString } from '@/utils/string.util';
+import type { SucursalPublicDto } from '@/models';
 
 const route = useRoute();
 const loading = ref(true);
 const error = ref<string | undefined>();
 const sucursal = ref<SucursalPublicDto | undefined>();
-const alojamiento = ref<AlojamientoResponseDTO | undefined>();
 const reservarLink = ref('');
 
 onMounted(async () => {
@@ -29,20 +27,7 @@ onMounted(async () => {
     }
     return;
   }
-  if (isPositiveIntString(id)) {
-    try {
-      const res = await alojamientosGetById(Number(id));
-      if (res.success && res.data) {
-        alojamiento.value = res.data;
-      } else {
-        error.value = res.message || 'No se pudo cargar el alojamiento.';
-      }
-    } finally {
-      loading.value = false;
-    }
-    return;
-  }
-  error.value = 'Formato de id no reconocido: use un UUID de sucursal o un id numérico de Alojamiento.';
+  error.value = 'Formato de id no reconocido: usá el UUID de la sucursal.';
   loading.value = false;
 });
 </script>
@@ -106,27 +91,4 @@ onMounted(async () => {
       </div>
     </div>
   </article>
-  <article v-else-if="alojamiento" class="detail-page hl-page">
-    <header class="detail-header">
-      <nav class="detail-breadcrumb">
-        <RouterLink to="/alojamientos" class="detail-breadcrumb__link">
-          <v-icon icon="mdi-arrow-left" size="small" />
-          Alojamientos
-        </RouterLink>
-      </nav>
-      <h1 class="detail-header__title">{{ alojamiento.nombre }}</h1>
-      <p class="detail-header__meta">{{ alojamiento.ciudad }} · Estado: {{ alojamiento.estadoAlojamiento }}</p>
-    </header>
-    <div class="detail-grid detail-grid--single">
-      <div class="detail-body detail-body--wide">
-        <p class="detail-copy">{{ alojamiento.descripcion }}</p>
-        <p class="detail-note">
-          La reserva en línea está disponible para sucursales (detalle con identificador público tipo UUID). Este
-          registro corresponde a un alojamiento administrativo; vuelve al listado para elegir una sucursal reservable.
-        </p>
-        <v-btn variant="outlined" color="primary" to="/alojamientos">Ir al listado</v-btn>
-      </div>
-    </div>
-  </article>
 </template>
-

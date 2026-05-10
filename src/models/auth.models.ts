@@ -2,25 +2,30 @@ import type { ApiResponse } from './api.types';
 
 /** `LoginRequest` schema. */
 export interface LoginRequest {
-  userName?: string | null;
-  password?: string | null;
+  username: string;
+  password: string;
 }
 
-/** `LoginResponse` schema. (El backend real puede añadir campos extra no listados en Swagger). */
+/** `LoginResponse` schema (matches `swaggerjj.json`). */
 export interface LoginResponse {
-  userName?: string | null;
-  nombreCompleto?: string | null;
-  correoElectronico?: string | null;
-  activo: boolean;
-  roles?: string[] | null;
-  token?: string | null;
-  expirationUtc?: string | null;
-  /** Si el token/login incluye el vínculo a cliente. */
+  token: string;
+  refreshToken: string;
+  expiration: string;
+  usuarioId: number;
+  usuarioGuid: string;
+  username: string;
+  email: string;
+  roles: string[];
+  /** Vínculo opcional al cliente — el contrato de referencia no lo expone, pero el front lo conserva si llega del backend (legacy) o de un override local. */
   idCliente?: number;
-  idUsuario?: number;
 }
 
 export type LoginResponseApiResponse = ApiResponse<LoginResponse>;
+
+/** `RefreshTokenRequest` schema. */
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
 
 /** `CambiarPasswordRequest` schema. */
 export interface CambiarPasswordRequest {

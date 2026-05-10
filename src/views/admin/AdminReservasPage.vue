@@ -1,14 +1,14 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { clientesList } from '@/services/clientes';
 import { reservasConfirmar, reservasCreate, reservasDelete, reservasList } from '@/services/reservas';
 import { sucursalesGetInternalPage } from '@/services/sucursales';
 import { useUiStore } from '@/stores/ui';
-import type { ReservaDTO } from '@/models';
+import type { ReservaResponse } from '@/models';
 
 const ui = useUiStore();
 
-const rows = ref<ReservaDTO[]>([]);
+const rows = ref<ReservaResponse[]>([]);
 const total = ref(0);
 const pageIndex = ref(0);
 const pageSize = ref(10);
@@ -23,9 +23,9 @@ const clientesSelect = ref<{ id: number; label: string }[]>([]);
 const sucursalesSelect = ref<{ id: number; label: string }[]>([]);
 
 const canalesOrigen = [
-  { value: 'ADMIN', title: 'Administración / recepción' },
-  { value: 'WEB', title: 'Web (huésped)' },
-  { value: 'TELEFONO', title: 'Teléfono' },
+  { value: 'ADMIN', title: 'AdministraciÃ³n / recepciÃ³n' },
+  { value: 'WEB', title: 'Web (huÃ©sped)' },
+  { value: 'TELEFONO', title: 'TelÃ©fono' },
 ];
 
 const crearForm = reactive({
@@ -77,9 +77,9 @@ async function loadCatalogos(): Promise<void> {
       clientesList({ PageNumber: 1, PageSize: 200 }),
       sucursalesGetInternalPage({ PageNumber: 1, PageSize: 200 }),
     ]);
-    const cr = clientes.data?.data ?? [];
+    const cr = clientes.data?.items ?? [];
     clientesSelect.value = cr.map((c) => ({ id: c.idCliente, label: clienteLabel(c) }));
-    const sr = sucursales.data?.data ?? [];
+    const sr = sucursales.data?.items ?? [];
     sucursalesSelect.value = sr.map((s) => ({
       id: s.idSucursal,
       label: [s.nombreSucursal, s.codigoSucursal ? `(${s.codigoSucursal})` : null].filter(Boolean).join(' '),
@@ -110,14 +110,14 @@ async function crearReservaHuesped(): Promise<void> {
     });
     if (res.success && res.data) {
       ui.showSnack(
-        `Reserva creada (${v.idCliente}). Código: ${res.data.codigoReserva ?? res.data.guidReserva}`,
+        `Reserva creada (${v.idCliente}). CÃ³digo: ${res.data.codigoReserva ?? res.data.guidReserva}`,
         6000,
       );
       crearForm.observaciones = '';
       patchFechasPorDefecto();
       await load();
     } else {
-      ui.showSnack(res.message || 'Respuesta sin éxito', 6000);
+      ui.showSnack(res.message || 'Respuesta sin Ã©xito', 6000);
     }
   } finally {
     crearEnviando.value = false;
@@ -128,8 +128,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await reservasList({ PageNumber: pageIndex.value + 1, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -165,7 +165,7 @@ async function remove(): Promise<void> {
 }
 
 function fmt(iso: string | null | undefined): string {
-  if (!iso) return '—';
+  if (!iso) return 'â€”';
   return new Date(iso).toLocaleString('es');
 }
 
@@ -179,8 +179,8 @@ onMounted(() => {
 <template>
   <div class="admin-reservas-dash">
     <v-card class="mb-4">
-      <v-card-title>Registrar reserva para un huésped</v-card-title>
-      <v-card-subtitle>La reserva usa el mismo modelo que el sitio público.</v-card-subtitle>
+      <v-card-title>Registrar reserva para un huÃ©sped</v-card-title>
+      <v-card-subtitle>La reserva usa el mismo modelo que el sitio pÃºblico.</v-card-subtitle>
       <v-card-text>
         <div v-if="catalogLoading" class="center"><v-progress-circular indeterminate size="36" /></div>
         <template v-else>
@@ -225,7 +225,7 @@ onMounted(() => {
               "
               @click="crearReservaHuesped"
             >
-              {{ crearEnviando ? 'Guardando…' : 'Guardar reserva' }}
+              {{ crearEnviando ? 'Guardandoâ€¦' : 'Guardar reserva' }}
             </v-btn>
             <v-btn class="ms-2" variant="text" @click="loadCatalogos">Recargar listas</v-btn>
           </div>
@@ -243,7 +243,7 @@ onMounted(() => {
     <v-table>
       <thead>
         <tr>
-          <th>Código</th>
+          <th>CÃ³digo</th>
           <th>Id cliente</th>
           <th>Id sucursal</th>
           <th>Inicio</th>
@@ -278,7 +278,7 @@ onMounted(() => {
   <v-dialog v-model="deleteDialog" max-width="400">
     <v-card>
       <v-card-title>Eliminar reserva</v-card-title>
-      <v-card-text>¿Confirmas que deseas eliminar esta reserva? Esta acción no se puede deshacer.</v-card-text>
+      <v-card-text>Â¿Confirmas que deseas eliminar esta reserva? Esta acciÃ³n no se puede deshacer.</v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn variant="text" @click="deleteDialog = false">Cancelar</v-btn>

@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { rolesCreate, rolesDelete, rolesList, rolesUpdate } from '@/services/roles';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtDate } from '@/utils/status.util';
-import type { RolDTO, RolUpsertRequest } from '@/models';
+import type { RolResponse, CrearRolRequest } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<RolDTO[]>([]);
+const rows = ref<RolResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
@@ -15,7 +15,7 @@ const dialog = ref(false);
 const saving = ref(false);
 const editGuid = ref<string | null>(null);
 
-const form = reactive<RolUpsertRequest>({
+const form = reactive<CrearRolRequest>({
   nombreRol: '',
   descripcionRol: '',
   estadoRol: 'ACT',
@@ -29,7 +29,7 @@ function openNew(): void {
   dialog.value = true;
 }
 
-function openEdit(r: RolDTO): void {
+function openEdit(r: RolResponse): void {
   editGuid.value = r.rolGuid;
   Object.assign(form, { nombreRol: r.nombreRol, descripcionRol: r.descripcionRol ?? '', estadoRol: r.estadoRol });
   dialog.value = true;
@@ -39,8 +39,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await rolesList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -68,8 +68,8 @@ async function guardar(): Promise<void> {
   }
 }
 
-async function remove(r: RolDTO): Promise<void> {
-  if (!confirm(`¿Eliminar el rol "${r.nombreRol}"?`)) return;
+async function remove(r: RolResponse): Promise<void> {
+  if (!confirm(`Â¿Eliminar el rol "${r.nombreRol}"?`)) return;
   const res = await rolesDelete(r.rolGuid);
   if (res.success) {
     ui.showSnack('Rol eliminado', 3000);
@@ -95,7 +95,7 @@ onMounted(() => void load());
         <tr>
           <th>Id</th>
           <th>Nombre</th>
-          <th>Descripción</th>
+          <th>DescripciÃ³n</th>
           <th>Estado</th>
           <th>Creado</th>
           <th />
@@ -105,7 +105,7 @@ onMounted(() => void load());
         <tr v-for="r in rows" :key="r.rolGuid">
           <td>{{ r.idRol }}</td>
           <td><strong>{{ r.nombreRol }}</strong></td>
-          <td class="text-medium-emphasis">{{ r.descripcionRol ?? '—' }}</td>
+          <td class="text-medium-emphasis">{{ r.descripcionRol ?? 'â€”' }}</td>
           <td><v-chip :color="statusColor(r.estadoRol)" size="small" label>{{ r.estadoRol }}</v-chip></td>
           <td class="text-no-wrap text-caption">{{ fmtDate(r.fechaRegistroUtc) }}</td>
           <td class="text-no-wrap">
@@ -129,7 +129,7 @@ onMounted(() => void load());
       <v-card-title>{{ editGuid ? 'Editar' : 'Nuevo' }} rol</v-card-title>
       <v-card-text class="d-flex flex-column gap-3">
         <v-text-field v-model="form.nombreRol" label="Nombre *" variant="outlined" density="comfortable" />
-        <v-textarea v-model="form.descripcionRol" label="Descripción" variant="outlined" rows="3" density="comfortable" />
+        <v-textarea v-model="form.descripcionRol" label="DescripciÃ³n" variant="outlined" rows="3" density="comfortable" />
         <v-select v-model="form.estadoRol" :items="estados" label="Estado" variant="outlined" density="comfortable" />
       </v-card-text>
       <v-card-actions>

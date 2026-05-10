@@ -1,10 +1,10 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  CatalogoServicioDTOApiResponse,
-  CatalogoServicioDTODataPageResultApiResponse,
-  CatalogoServicioUpsertRequest,
+  CatalogoResponseApiResponse,
+  CatalogoResponsePaginatedResponseApiResponse,
+  CrearCatalogoRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -15,26 +15,26 @@ export async function catalogoList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<CatalogoServicioDTODataPageResultApiResponse> {
-  const { data } = await api.get<CatalogoServicioDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<CatalogoResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<CatalogoResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function catalogoGetByGuid(guid: string): Promise<CatalogoServicioDTOApiResponse> {
-  const { data } = await api.get<CatalogoServicioDTOApiResponse>(`${base}/${guid}`);
+export async function catalogoGetByGuid(guid: string): Promise<CatalogoResponseApiResponse> {
+  const { data } = await api.get<CatalogoResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function catalogoCreate(body: CatalogoServicioUpsertRequest): Promise<CatalogoServicioDTOApiResponse> {
-  const { data } = await api.post<CatalogoServicioDTOApiResponse>(base, body);
+export async function catalogoCreate(body: CrearCatalogoRequest): Promise<CatalogoResponseApiResponse> {
+  const { data } = await api.post<CatalogoResponseApiResponse>(base, body);
   return data;
 }
 
 export async function catalogoUpdate(
   guid: string,
-  body: CatalogoServicioUpsertRequest,
-): Promise<CatalogoServicioDTOApiResponse> {
-  const { data } = await api.put<CatalogoServicioDTOApiResponse>(`${base}/${guid}`, body);
+  body: CrearCatalogoRequest,
+): Promise<CatalogoResponseApiResponse> {
+  const { data } = await api.put<CatalogoResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 

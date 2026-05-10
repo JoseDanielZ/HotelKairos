@@ -1,6 +1,6 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
-import type { AuditoriaDTODataPageResultApiResponse } from '@/models';
+import type { AuditoriaDTOPaginatedResponseApiResponse } from '@/models';
 import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1/internal/auditoria`;
@@ -11,7 +11,7 @@ export async function auditoriaList(p: {
   usuario?: string;
   pageNumber?: number;
   pageSize?: number;
-}): Promise<AuditoriaDTODataPageResultApiResponse> {
-  const { data } = await api.get<AuditoriaDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<AuditoriaDTOPaginatedResponseApiResponse> {
+  const { data } = await api.get<AuditoriaDTOPaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }

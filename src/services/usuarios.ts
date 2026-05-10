@@ -1,11 +1,11 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  UsuarioCreateRequest,
-  UsuarioDTOApiResponse,
-  UsuarioDTODataPageResultApiResponse,
-  UsuarioUpdateRequest,
+  CrearUsuarioRequest,
+  UsuarioResponseApiResponse,
+  UsuarioResponsePaginatedResponseApiResponse,
+  ActualizarUsuarioRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -16,23 +16,23 @@ export async function usuariosList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<UsuarioDTODataPageResultApiResponse> {
-  const { data } = await api.get<UsuarioDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<UsuarioResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<UsuarioResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function usuariosGetByGuid(guid: string): Promise<UsuarioDTOApiResponse> {
-  const { data } = await api.get<UsuarioDTOApiResponse>(`${base}/${guid}`);
+export async function usuariosGetByGuid(guid: string): Promise<UsuarioResponseApiResponse> {
+  const { data } = await api.get<UsuarioResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function usuariosCreate(body: UsuarioCreateRequest): Promise<UsuarioDTOApiResponse> {
-  const { data } = await api.post<UsuarioDTOApiResponse>(base, body);
+export async function usuariosCreate(body: CrearUsuarioRequest): Promise<UsuarioResponseApiResponse> {
+  const { data } = await api.post<UsuarioResponseApiResponse>(base, body);
   return data;
 }
 
-export async function usuariosUpdate(guid: string, body: UsuarioUpdateRequest): Promise<UsuarioDTOApiResponse> {
-  const { data } = await api.put<UsuarioDTOApiResponse>(`${base}/${guid}`, body);
+export async function usuariosUpdate(guid: string, body: ActualizarUsuarioRequest): Promise<UsuarioResponseApiResponse> {
+  const { data } = await api.put<UsuarioResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 

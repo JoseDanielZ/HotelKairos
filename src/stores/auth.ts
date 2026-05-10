@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
     loginData.value = null;
   }
 
-  const base = `${environment.apiUrl}/api/v1/internal/auth`;
+  const base = `${environment.apiUrl}/api/v1/auth`;
 
   async function login(body: LoginRequest): Promise<LoginResponseApiResponse> {
     const { data } = await api.post<LoginResponseApiResponse>(`${base}/login`, body);

@@ -1,25 +1,25 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { tarifasDelete, tarifasList } from '@/services/tarifas';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtMoney, fmtDate } from '@/utils/status.util';
-import type { TarifaDTO } from '@/models';
+import type { TarifaResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<TarifaDTO[]>([]);
+const rows = ref<TarifaResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
 const loading = ref(false);
 const dialog = ref(false);
-const editItem = ref<TarifaDTO | null>(null);
+const editItem = ref<TarifaResponse | null>(null);
 
 async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await tarifasList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -30,13 +30,13 @@ function openNew(): void {
   dialog.value = true;
 }
 
-function openEdit(r: TarifaDTO): void {
+function openEdit(r: TarifaResponse): void {
   editItem.value = { ...r };
   dialog.value = true;
 }
 
-async function remove(r: TarifaDTO): Promise<void> {
-  if (!confirm(`¿Eliminar la tarifa "${r.nombreTarifa}"?`)) return;
+async function remove(r: TarifaResponse): Promise<void> {
+  if (!confirm(`Â¿Eliminar la tarifa "${r.nombreTarifa}"?`)) return;
   const res = await tarifasDelete(r.tarifaGuid);
   if (res.success) {
     ui.showSnack('Tarifa eliminada', 3000);
@@ -60,7 +60,7 @@ onMounted(() => void load());
     <v-table>
       <thead>
         <tr>
-          <th>Código</th>
+          <th>CÃ³digo</th>
           <th>Nombre</th>
           <th>Sucursal</th>
           <th>Tipo hab.</th>
@@ -77,7 +77,7 @@ onMounted(() => void load());
           <td>{{ r.idSucursal }}</td>
           <td>{{ r.idTipoHabitacion }}</td>
           <td>{{ fmtMoney(r.precioPorNoche) }}</td>
-          <td class="text-no-wrap">{{ r.fechaInicio }} → {{ r.fechaFin }}</td>
+          <td class="text-no-wrap">{{ r.fechaInicio }} â†’ {{ r.fechaFin }}</td>
           <td>
             <v-chip :color="statusColor(r.estadoTarifa)" size="small" label>{{ r.estadoTarifa }}</v-chip>
           </td>

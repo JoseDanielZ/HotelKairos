@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { auditoriaList } from '@/services/auditoria';
 import { fmtDate } from '@/utils/status.util';
@@ -26,8 +26,8 @@ async function load(): Promise<void> {
       pageNumber: page.value,
       pageSize: pageSize.value,
     });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -45,12 +45,12 @@ onMounted(() => void load());
 
 <template>
   <v-card class="mb-4">
-    <v-card-title>Auditoría</v-card-title>
+    <v-card-title>AuditorÃ­a</v-card-title>
     <v-card-subtitle>Registro de operaciones del sistema.</v-card-subtitle>
     <v-card-text>
       <div class="filtros-grid">
         <v-text-field v-model="filtros.tabla" label="Tabla" variant="outlined" density="compact" clearable />
-        <v-select v-model="filtros.operacion" :items="operaciones" label="Operación" variant="outlined" density="compact" clearable />
+        <v-select v-model="filtros.operacion" :items="operaciones" label="OperaciÃ³n" variant="outlined" density="compact" clearable />
         <v-text-field v-model="filtros.usuario" label="Usuario" variant="outlined" density="compact" clearable />
         <v-btn color="primary" @click="buscar">Filtrar</v-btn>
       </div>
@@ -64,7 +64,7 @@ onMounted(() => void load());
         <tr>
           <th>Fecha</th>
           <th>Tabla</th>
-          <th>Operación</th>
+          <th>OperaciÃ³n</th>
           <th>Usuario</th>
           <th>IP</th>
           <th>Valor anterior</th>
@@ -74,20 +74,20 @@ onMounted(() => void load());
       <tbody>
         <tr v-for="(r, i) in rows" :key="r.auditoriaGuid ?? i">
           <td class="text-no-wrap text-caption">{{ fmtDate(r.fechaEventoUtc) }}</td>
-          <td><code class="text-caption">{{ r.tablaAfectada ?? '—' }}</code></td>
+          <td><code class="text-caption">{{ r.tablaAfectada ?? 'â€”' }}</code></td>
           <td>
             <v-chip
               :color="r.operacion === 'DELETE' ? 'error' : r.operacion === 'INSERT' ? 'success' : 'warning'"
               size="x-small"
               label
             >
-              {{ r.operacion ?? '—' }}
+              {{ r.operacion ?? 'â€”' }}
             </v-chip>
           </td>
-          <td class="text-caption">{{ r.usuarioEjecutor ?? '—' }}</td>
-          <td class="text-caption">{{ r.ipOrigen ?? '—' }}</td>
-          <td class="text-caption valor-cell">{{ r.datosAnteriores ?? '—' }}</td>
-          <td class="text-caption valor-cell">{{ r.datosNuevos ?? '—' }}</td>
+          <td class="text-caption">{{ r.usuarioEjecutor ?? 'â€”' }}</td>
+          <td class="text-caption">{{ r.ipOrigen ?? 'â€”' }}</td>
+          <td class="text-caption valor-cell">{{ r.datosAnteriores ?? 'â€”' }}</td>
+          <td class="text-caption valor-cell">{{ r.datosNuevos ?? 'â€”' }}</td>
         </tr>
       </tbody>
     </v-table>

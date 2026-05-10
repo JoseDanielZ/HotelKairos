@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface ValoracionDTO {
+export interface ValoracionResponse {
   idValoracion: number;
   valoracionGuid: string;
   idEstadia: number;
@@ -27,15 +27,15 @@ export interface ValoracionDTO {
   creadoPorUsuario: string;
 }
 
-export interface ValoracionModerarRequest {
+export interface ModerarValoracionRequest {
   estadoValoracion: string;
   publicadaEnPortal?: number;
   motivoModeracion?: string | null;
 }
 
-export interface ValoracionRespuestaRequest {
+export interface ResponderValoracionRequest {
   respuestaHotel: string;
 }
 
-export type ValoracionDTOApiResponse = ApiResponse<ValoracionDTO>;
-export type ValoracionDTODataPageResultApiResponse = ApiResponse<DataPageResult<ValoracionDTO>>;
+export type ValoracionResponseApiResponse = ApiResponse<ValoracionResponse>;
+export type ValoracionResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<ValoracionResponse>>;

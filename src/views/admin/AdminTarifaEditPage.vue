@@ -1,11 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { tarifasCreate, tarifasGetByGuid, tarifasUpdate } from '@/services/tarifas';
 import { sucursalesGetInternalPage } from '@/services/sucursales';
 import { tiposHabitacionList } from '@/services/tiposHabitacion';
 import { useUiStore } from '@/stores/ui';
-import type { SucursalDTO, TipoHabitacionDTO, TarifaUpsertRequest } from '@/models';
+import type { SucursalResponse, TipoHabitacionResponse, CrearTarifaRequest } from '@/models';
 
 const route = useRoute();
 const router = useRouter();
@@ -15,10 +15,10 @@ const isCreate = ref(false);
 const guid = ref<string | undefined>();
 const loading = ref(true);
 const saving = ref(false);
-const sucursales = ref<SucursalDTO[]>([]);
-const tiposHab = ref<TipoHabitacionDTO[]>([]);
+const sucursales = ref<SucursalResponse[]>([]);
+const tiposHab = ref<TipoHabitacionResponse[]>([]);
 
-const form = reactive<TarifaUpsertRequest>({
+const form = reactive<CrearTarifaRequest>({
   codigoTarifa: '',
   idSucursal: 0,
   idTipoHabitacion: 0,
@@ -43,8 +43,8 @@ async function loadCatalogos(): Promise<void> {
     sucursalesGetInternalPage({ PageNumber: 1, PageSize: 200 }),
     tiposHabitacionList({ PageNumber: 1, PageSize: 200 }),
   ]);
-  sucursales.value = s.data?.data ?? [];
-  tiposHab.value = t.data?.data ?? [];
+  sucursales.value = s.data?.items ?? [];
+  tiposHab.value = t.data?.items ?? [];
 }
 
 onMounted(async () => {
@@ -108,7 +108,7 @@ async function guardar(): Promise<void> {
     <v-card>
       <v-card-text class="d-flex flex-column gap-3">
         <div class="form-grid">
-          <v-text-field v-model="form.codigoTarifa" label="Código *" variant="outlined" density="comfortable" />
+          <v-text-field v-model="form.codigoTarifa" label="CÃ³digo *" variant="outlined" density="comfortable" />
           <v-text-field v-model="form.nombreTarifa" label="Nombre *" variant="outlined" density="comfortable" />
           <v-select
             v-model="form.idSucursal"
@@ -124,7 +124,7 @@ async function guardar(): Promise<void> {
             :items="tiposHab"
             :item-title="(t) => `${t.nombreTipoHabitacion} (${t.codigoTipoHabitacion})`"
             item-value="idTipoHabitacion"
-            label="Tipo habitación *"
+            label="Tipo habitaciÃ³n *"
             variant="outlined"
             density="comfortable"
           />
@@ -133,12 +133,12 @@ async function guardar(): Promise<void> {
           <v-text-field v-model="form.fechaFin" label="Fecha fin *" type="date" variant="outlined" density="comfortable" />
           <v-text-field v-model.number="form.precioPorNoche" label="Precio / noche *" type="number" step="0.01" min="0" variant="outlined" density="comfortable" />
           <v-text-field v-model.number="form.porcentajeIva" label="% IVA" type="number" min="0" max="100" variant="outlined" density="comfortable" />
-          <v-text-field v-model.number="form.minNoches" label="Mín. noches" type="number" min="1" variant="outlined" density="comfortable" />
-          <v-text-field v-model.number="form.maxNoches" label="Máx. noches" type="number" min="1" variant="outlined" density="comfortable" />
+          <v-text-field v-model.number="form.minNoches" label="MÃ­n. noches" type="number" min="1" variant="outlined" density="comfortable" />
+          <v-text-field v-model.number="form.maxNoches" label="MÃ¡x. noches" type="number" min="1" variant="outlined" density="comfortable" />
           <v-text-field v-model.number="form.prioridad" label="Prioridad" type="number" min="1" variant="outlined" density="comfortable" />
           <v-select v-model="form.estadoTarifa" :items="estados" label="Estado" variant="outlined" density="comfortable" />
         </div>
-        <v-checkbox v-model="form.permitePortalPublico" :true-value="1" :false-value="0" label="Permitir en portal público" />
+        <v-checkbox v-model="form.permitePortalPublico" :true-value="1" :false-value="0" label="Permitir en portal pÃºblico" />
         <div class="d-flex gap-2">
           <v-btn color="primary" :loading="saving" @click="guardar">Guardar</v-btn>
           <v-btn variant="text" to="/admin/tarifas">Cancelar</v-btn>

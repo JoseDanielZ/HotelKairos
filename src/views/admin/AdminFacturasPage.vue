@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { facturasAnular, facturasList } from '@/services/facturas';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtMoney, fmtDate } from '@/utils/status.util';
-import type { FacturaDTO } from '@/models';
+import type { FacturaResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<FacturaDTO[]>([]);
+const rows = ref<FacturaResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
@@ -21,8 +21,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await facturasList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -36,7 +36,7 @@ function openAnular(guid: string): void {
 
 async function doAnular(): Promise<void> {
   if (!anularMotivo.value.trim()) {
-    ui.showSnack('Indica el motivo de anulación', 4000, 'error');
+    ui.showSnack('Indica el motivo de anulaciÃ³n', 4000, 'error');
     return;
   }
   anularBusy.value = true;
@@ -60,7 +60,7 @@ onMounted(() => void load());
 <template>
   <v-card class="mb-4">
     <v-card-title>Facturas</v-card-title>
-    <v-card-subtitle>Listado y gestión de facturas emitidas.</v-card-subtitle>
+    <v-card-subtitle>Listado y gestiÃ³n de facturas emitidas.</v-card-subtitle>
   </v-card>
 
   <div v-if="loading" class="center"><v-progress-circular indeterminate /></div>
@@ -68,13 +68,13 @@ onMounted(() => void load());
     <v-table>
       <thead>
         <tr>
-          <th>Número</th>
+          <th>NÃºmero</th>
           <th>Tipo</th>
           <th>Cliente</th>
           <th>Reserva</th>
           <th>Total</th>
           <th>Saldo</th>
-          <th>Emisión</th>
+          <th>EmisiÃ³n</th>
           <th>Estado</th>
           <th />
         </tr>
@@ -116,7 +116,7 @@ onMounted(() => void load());
     <v-card>
       <v-card-title>Anular factura</v-card-title>
       <v-card-text>
-        <v-textarea v-model="anularMotivo" label="Motivo de anulación *" variant="outlined" rows="3" />
+        <v-textarea v-model="anularMotivo" label="Motivo de anulaciÃ³n *" variant="outlined" rows="3" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />

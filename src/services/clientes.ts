@@ -1,11 +1,11 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  ClienteCreateRequest,
-  ClienteDTOApiResponse,
-  ClienteDTODataPageResultApiResponse,
-  ClienteUpdateRequest,
+  CrearClienteRequest,
+  ClienteResponseApiResponse,
+  ClienteResponsePaginatedResponseApiResponse,
+  ActualizarClienteRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -17,23 +17,23 @@ export async function clientesList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<ClienteDTODataPageResultApiResponse> {
-  const { data } = await api.get<ClienteDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<ClienteResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<ClienteResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function clientesGetByGuid(guid: string): Promise<ClienteDTOApiResponse> {
-  const { data } = await api.get<ClienteDTOApiResponse>(`${base}/${guid}`);
+export async function clientesGetByGuid(guid: string): Promise<ClienteResponseApiResponse> {
+  const { data } = await api.get<ClienteResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function clientesCreate(body: ClienteCreateRequest): Promise<ClienteDTOApiResponse> {
-  const { data } = await api.post<ClienteDTOApiResponse>(base, body);
+export async function clientesCreate(body: CrearClienteRequest): Promise<ClienteResponseApiResponse> {
+  const { data } = await api.post<ClienteResponseApiResponse>(base, body);
   return data;
 }
 
-export async function clientesUpdate(guid: string, body: ClienteUpdateRequest): Promise<ClienteDTOApiResponse> {
-  const { data } = await api.put<ClienteDTOApiResponse>(`${base}/${guid}`, body);
+export async function clientesUpdate(guid: string, body: ActualizarClienteRequest): Promise<ClienteResponseApiResponse> {
+  const { data } = await api.put<ClienteResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 

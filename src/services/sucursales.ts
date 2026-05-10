@@ -1,23 +1,18 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  SucursalDTOApiResponse,
-  SucursalDTODataPageResultApiResponse,
+  SucursalResponseApiResponse,
+  SucursalResponsePaginatedResponseApiResponse,
   SucursalPublicDtoApiResponse,
-  SucursalUpsertRequest,
+  CrearSucursalRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1`;
 
-export async function sucursalesGetPublicoByGuid(sucursalGuid: string): Promise<SucursalPublicDtoApiResponse> {
-  const { data } = await api.get<SucursalPublicDtoApiResponse>(`${base}/public/sucursales/${sucursalGuid}`);
-  return data;
-}
-
-export async function sucursalesGetInternalByGuid(guid: string): Promise<SucursalDTOApiResponse> {
-  const { data } = await api.get<SucursalDTOApiResponse>(`${base}/internal/sucursales/${guid}`);
+export async function sucursalesGetInternalByGuid(guid: string): Promise<SucursalResponseApiResponse> {
+  const { data } = await api.get<SucursalResponseApiResponse>(`${base}/internal/sucursales/${guid}`);
   return data;
 }
 
@@ -29,20 +24,20 @@ export async function sucursalesGetInternalPage(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<SucursalDTODataPageResultApiResponse> {
-  const { data } = await api.get<SucursalDTODataPageResultApiResponse>(`${base}/internal/sucursales`, {
+}): Promise<SucursalResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<SucursalResponsePaginatedResponseApiResponse>(`${base}/internal/sucursales`, {
     params: toParams(p),
   });
   return data;
 }
 
-export async function sucursalesCreate(body: SucursalUpsertRequest): Promise<SucursalDTOApiResponse> {
-  const { data } = await api.post<SucursalDTOApiResponse>(`${base}/internal/sucursales`, body);
+export async function sucursalesCreate(body: CrearSucursalRequest): Promise<SucursalResponseApiResponse> {
+  const { data } = await api.post<SucursalResponseApiResponse>(`${base}/internal/sucursales`, body);
   return data;
 }
 
-export async function sucursalesUpdate(guid: string, body: SucursalUpsertRequest): Promise<SucursalDTOApiResponse> {
-  const { data } = await api.put<SucursalDTOApiResponse>(`${base}/internal/sucursales/${guid}`, body);
+export async function sucursalesUpdate(guid: string, body: CrearSucursalRequest): Promise<SucursalResponseApiResponse> {
+  const { data } = await api.put<SucursalResponseApiResponse>(`${base}/internal/sucursales/${guid}`, body);
   return data;
 }
 

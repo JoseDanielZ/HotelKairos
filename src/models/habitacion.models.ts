@@ -1,7 +1,7 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-/** `HabitacionCreateRequest` schema. */
-export interface HabitacionCreateRequest {
+/** `CrearHabitacionRequest` schema. */
+export interface CrearHabitacionRequest {
   idSucursal: number;
   idTipoHabitacion: number;
   numeroHabitacion: string;
@@ -12,8 +12,8 @@ export interface HabitacionCreateRequest {
   estadoHabitacion?: string | null;
 }
 
-/** `HabitacionUpdateRequest` schema. */
-export interface HabitacionUpdateRequest {
+/** `ActualizarHabitacionRequest` schema. */
+export interface ActualizarHabitacionRequest {
   idSucursal?: number | null;
   idTipoHabitacion?: number | null;
   numeroHabitacion?: string | null;
@@ -24,8 +24,8 @@ export interface HabitacionUpdateRequest {
   estadoHabitacion?: string | null;
 }
 
-/** `HabitacionDTO` schema. */
-export interface HabitacionDTO {
+/** `HabitacionResponse` schema. */
+export interface HabitacionResponse {
   idHabitacion: number;
   habitacionGuid: string;
   idSucursal: number;
@@ -48,8 +48,8 @@ export interface HabitacionDTO {
   rowVersion: number;
 }
 
-export type HabitacionDTOApiResponse = ApiResponse<HabitacionDTO>;
-export type HabitacionDTODataPageResultApiResponse = ApiResponse<DataPageResult<HabitacionDTO>>;
+export type HabitacionResponseApiResponse = ApiResponse<HabitacionResponse>;
+export type HabitacionResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<HabitacionResponse>>;
 
 export interface TipoHabitacionRef {
   /** OpenAPI: ref object with additional fields; extend when needed. */

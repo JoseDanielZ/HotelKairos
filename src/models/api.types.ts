@@ -1,4 +1,4 @@
-/** Matches `ProblemDetails` from OpenAPI. */
+/** Matches `ProblemDetails` from OpenAPI (legacy / framework default). */
 export interface ProblemDetails {
   type?: string | null;
   title?: string | null;
@@ -15,12 +15,24 @@ export interface ApiResponse<T> {
   errors?: string[] | null;
 }
 
-export interface DataPageResult<T> {
-  data?: T[] | null;
-  totalRecords: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages?: number;
-  hasPreviousPage?: boolean;
-  hasNextPage?: boolean;
+/**
+ * Estructura uniforme de error del backend (matches `ApiErrorResponse` in `swaggerjj.json`).
+ * Reemplaza al uso de `ProblemDetails` para errores controlados.
+ */
+export interface ApiErrorResponse {
+  status: number;
+  message: string;
+  detail?: string | null;
+  errors?: Record<string, string[]> | null;
+}
+
+/** Wrapper paginado (matches `XxxPaginatedResponse` in `swaggerjj.json`). */
+export interface PaginatedResponse<T> {
+  items: T[];
+  paginaActual: number;
+  limite: number;
+  totalResultados: number;
+  totalPaginas: number;
+  tieneSiguiente: boolean;
+  tieneAnterior: boolean;
 }

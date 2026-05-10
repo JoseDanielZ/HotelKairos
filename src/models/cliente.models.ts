@@ -1,7 +1,7 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-/** `ClienteDTO` (subset; internal list). */
-export interface ClienteDTO {
+/** `ClienteResponse` (subset; internal list). */
+export interface ClienteResponse {
   idCliente: number;
   clienteGuid: string;
   tipoIdentificacion?: string | null;
@@ -15,11 +15,11 @@ export interface ClienteDTO {
   estado?: string | null;
 }
 
-export type ClienteDTODataPageResultApiResponse = ApiResponse<DataPageResult<ClienteDTO>>;
-export type ClienteDTOApiResponse = ApiResponse<ClienteDTO>;
+export type ClienteResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<ClienteResponse>>;
+export type ClienteResponseApiResponse = ApiResponse<ClienteResponse>;
 
-/** `ClienteCreateRequest` (OpenAPI). */
-export interface ClienteCreateRequest {
+/** `CrearClienteRequest` (OpenAPI). */
+export interface CrearClienteRequest {
   tipoIdentificacion: string;
   numeroIdentificacion: string;
   nombres: string;
@@ -31,8 +31,8 @@ export interface ClienteCreateRequest {
   estado?: string | null;
 }
 
-/** `ClienteUpdateRequest` (OpenAPI). */
-export interface ClienteUpdateRequest {
+/** `ActualizarClienteRequest` (OpenAPI). */
+export interface ActualizarClienteRequest {
   nombres?: string | null;
   apellidos?: string | null;
   razonSocial?: string | null;

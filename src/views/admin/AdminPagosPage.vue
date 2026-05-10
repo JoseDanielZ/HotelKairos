@@ -1,13 +1,13 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { pagosActualizarEstado, pagosCreate, pagosList } from '@/services/pagos';
 import { facturasList } from '@/services/facturas';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtMoney, fmtDate } from '@/utils/status.util';
-import type { FacturaDTO, PagoCreateRequest, PagoDTO } from '@/models';
+import type { FacturaResponse, CrearPagoRequest, PagoResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<PagoDTO[]>([]);
+const rows = ref<PagoResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
@@ -15,12 +15,12 @@ const loading = ref(false);
 
 const registrarDialog = ref(false);
 const registrarBusy = ref(false);
-const facturas = ref<FacturaDTO[]>([]);
+const facturas = ref<FacturaResponse[]>([]);
 
 const metodos = ['EFECTIVO', 'TARJETA', 'TRANSFERENCIA', 'PSE', 'NEQUI', 'DAVIPLATA', 'OTRO'];
 const estadosPago = ['PEN', 'APR', 'REC', 'ANU'];
 
-const form = reactive<PagoCreateRequest>({
+const form = reactive<CrearPagoRequest>({
   idFactura: 0,
   idReserva: 0,
   monto: 0,
@@ -34,8 +34,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await pagosList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -43,7 +43,7 @@ async function load(): Promise<void> {
 
 async function openRegistrar(): Promise<void> {
   const r = await facturasList({ PageNumber: 1, PageSize: 200 });
-  facturas.value = r.data?.data ?? [];
+  facturas.value = r.data?.items ?? [];
   Object.assign(form, { idFactura: 0, idReserva: 0, monto: 0, metodoPago: 'EFECTIVO', estadoPago: 'APR', moneda: 'USD', tipoCambio: 1 });
   registrarDialog.value = true;
 }
@@ -104,7 +104,7 @@ onMounted(() => void load());
           <th>Factura</th>
           <th>Reserva</th>
           <th>Monto</th>
-          <th>Método</th>
+          <th>MÃ©todo</th>
           <th>Fecha</th>
           <th>Estado</th>
           <th />
@@ -149,7 +149,7 @@ onMounted(() => void load());
         <v-select
           v-model="form.idFactura"
           :items="facturas"
-          :item-title="(f) => `#${f.numeroFactura} — ${f.idCliente} (saldo: ${f.saldoPendiente})`"
+          :item-title="(f) => `#${f.numeroFactura} â€” ${f.idCliente} (saldo: ${f.saldoPendiente})`"
           item-value="idFactura"
           label="Factura *"
           variant="outlined"
@@ -157,10 +157,10 @@ onMounted(() => void load());
           @update:model-value="onFacturaChange"
         />
         <v-text-field v-model.number="form.monto" label="Monto *" type="number" step="0.01" variant="outlined" density="comfortable" />
-        <v-select v-model="form.metodoPago" :items="metodos" label="Método de pago" variant="outlined" density="comfortable" />
+        <v-select v-model="form.metodoPago" :items="metodos" label="MÃ©todo de pago" variant="outlined" density="comfortable" />
         <v-select v-model="form.estadoPago" :items="estadosPago" label="Estado inicial" variant="outlined" density="comfortable" />
         <v-text-field v-model="form.referencia" label="Referencia" variant="outlined" density="comfortable" />
-        <v-text-field v-model="form.codigoAutorizacion" label="Código autorización" variant="outlined" density="comfortable" />
+        <v-text-field v-model="form.codigoAutorizacion" label="CÃ³digo autorizaciÃ³n" variant="outlined" density="comfortable" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />

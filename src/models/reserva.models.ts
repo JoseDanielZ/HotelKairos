@@ -1,12 +1,12 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-/** `ReservaHabitacionIdRequest` schema. */
-export interface ReservaHabitacionIdRequest {
+/** `ReservaHabitacionIdBody` schema. */
+export interface ReservaHabitacionIdBody {
   idHabitacion?: number;
 }
 
-/** `ReservaCreateRequest` schema. */
-export interface ReservaCreateRequest {
+/** `CrearReservaRequest` schema. */
+export interface CrearReservaRequest {
   idCliente: number;
   idSucursal: number;
   fechaInicio: string;
@@ -20,11 +20,11 @@ export interface ReservaCreateRequest {
   estadoReserva?: string | null;
   observaciones?: string | null;
   esWalkin?: number;
-  habitaciones?: ReservaHabitacionIdRequest[] | null;
+  habitaciones?: ReservaHabitacionIdBody[] | null;
 }
 
-/** `ReservaUpdateRequest` schema. */
-export interface ReservaUpdateRequest {
+/** `ActualizarReservaRequest` schema. */
+export interface ActualizarReservaRequest {
   fechaInicio?: string | null;
   fechaFin?: string | null;
   subtotalReserva?: number | null;
@@ -36,13 +36,13 @@ export interface ReservaUpdateRequest {
   observaciones?: string | null;
 }
 
-/** `CancelarReservaRequest` schema. */
-export interface CancelarReservaRequest {
+/** `CancelarReservaBody` schema. */
+export interface CancelarReservaBody {
   motivo: string;
 }
 
-/** `ReservaDTO` schema (subset used in UI). */
-export interface ReservaDTO {
+/** `ReservaResponse` schema (subset used in UI). */
+export interface ReservaResponse {
   idReserva: number;
   guidReserva: string;
   codigoReserva?: string | null;
@@ -61,5 +61,5 @@ export interface ReservaDTO {
   observaciones?: string | null;
 }
 
-export type ReservaDTOApiResponse = ApiResponse<ReservaDTO>;
-export type ReservaDTODataPageResultApiResponse = ApiResponse<DataPageResult<ReservaDTO>>;
+export type ReservaResponseApiResponse = ApiResponse<ReservaResponse>;
+export type ReservaResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<ReservaResponse>>;

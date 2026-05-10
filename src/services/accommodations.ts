@@ -1,6 +1,6 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
-import type { SucursalPublicDtoApiResponse, SucursalPublicDtoDataPageResultApiResponse } from '@/models';
+import type { SucursalPublicDtoApiResponse, SucursalPublicDtoPaginatedResponseApiResponse } from '@/models';
 
 const base = `${environment.apiUrl}/api/v1/accommodations`;
 
@@ -9,8 +9,8 @@ export async function accommodationsSearch(params: {
   ciudad?: string;
   pageNumber?: number;
   pageSize?: number;
-}): Promise<SucursalPublicDtoDataPageResultApiResponse> {
-  const { data } = await api.get<SucursalPublicDtoDataPageResultApiResponse>(`${base}/search`, { params });
+}): Promise<SucursalPublicDtoPaginatedResponseApiResponse> {
+  const { data } = await api.get<SucursalPublicDtoPaginatedResponseApiResponse>(`${base}/search`, { params });
   return data;
 }
 

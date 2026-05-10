@@ -1,11 +1,11 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  FacturaCreateRequest,
-  FacturaDTOApiResponse,
-  FacturaDTODataPageResultApiResponse,
-  FacturaUpdateRequest,
+  GenerarFacturaBody,
+  FacturaResponseApiResponse,
+  FacturaResponsePaginatedResponseApiResponse,
+  ActualizarFacturaRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -17,23 +17,23 @@ export async function facturasList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<FacturaDTODataPageResultApiResponse> {
-  const { data } = await api.get<FacturaDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<FacturaResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<FacturaResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function facturasGetByGuid(guid: string): Promise<FacturaDTOApiResponse> {
-  const { data } = await api.get<FacturaDTOApiResponse>(`${base}/${guid}`);
+export async function facturasGetByGuid(guid: string): Promise<FacturaResponseApiResponse> {
+  const { data } = await api.get<FacturaResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function facturasCreate(body: FacturaCreateRequest): Promise<FacturaDTOApiResponse> {
-  const { data } = await api.post<FacturaDTOApiResponse>(base, body);
+export async function facturasCreate(body: GenerarFacturaBody): Promise<FacturaResponseApiResponse> {
+  const { data } = await api.post<FacturaResponseApiResponse>(base, body);
   return data;
 }
 
-export async function facturasUpdate(guid: string, body: FacturaUpdateRequest): Promise<FacturaDTOApiResponse> {
-  const { data } = await api.put<FacturaDTOApiResponse>(`${base}/${guid}`, body);
+export async function facturasUpdate(guid: string, body: ActualizarFacturaRequest): Promise<FacturaResponseApiResponse> {
+  const { data } = await api.put<FacturaResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 
@@ -50,7 +50,7 @@ export async function facturasAnular(
   return data;
 }
 
-export async function facturasGenerarDesdeReserva(reservaGuid: string): Promise<FacturaDTOApiResponse> {
-  const { data } = await api.post<FacturaDTOApiResponse>(`${base}/generar-reserva/${reservaGuid}`, {});
+export async function facturasGenerarDesdeReserva(reservaGuid: string): Promise<FacturaResponseApiResponse> {
+  const { data } = await api.post<FacturaResponseApiResponse>(`${base}/generar-reserva/${reservaGuid}`, {});
   return data;
 }

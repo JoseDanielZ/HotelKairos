@@ -1,13 +1,14 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { habitacionesList, habitacionesListPublico } from '@/services/habitaciones';
+import { habitacionesList } from '@/services/habitaciones';
 import { reservasCreate } from '@/services/reservas';
-import { sucursalesGetInternalByGuid, sucursalesGetPublicoByGuid } from '@/services/sucursales';
+import { sucursalesGetInternalByGuid } from '@/services/sucursales';
+import { accommodationsGetByGuid } from '@/services/accommodations';
 import { useUiStore } from '@/stores/ui';
 import { useUserContextStore } from '@/stores/userContext';
 import { isUuidString } from '@/utils/string.util';
-import type { HabitacionDTO } from '@/models';
+import type { HabitacionResponse } from '@/models';
 
 const route = useRoute();
 const router = useRouter();
@@ -19,7 +20,7 @@ const sucursalGuid = ref<string | null>(null);
 const sucursalNombre = ref('');
 const idSucursalResuelto = ref(false);
 const idClienteResuelto = ref(false);
-const habitacionesRows = ref<HabitacionDTO[]>([]);
+const habitacionesRows = ref<HabitacionResponse[]>([]);
 const loadingHab = ref(false);
 const submitiendo = ref(false);
 const step = ref(1);
@@ -40,7 +41,7 @@ const payForm = ref({
   acepto: false,
 });
 
-function filtrarHabitacionesVisibles(rows: HabitacionDTO[] | null | undefined): HabitacionDTO[] {
+function filtrarHabitacionesVisibles(rows: HabitacionResponse[] | null | undefined): HabitacionResponse[] {
   const list = rows ?? [];
   return list.filter(
     (h) =>
@@ -64,14 +65,9 @@ async function loadHabitaciones(): Promise<void> {
   loadingHab.value = true;
   try {
     const r = await habitacionesList({ SucursalGuid: sucursalGuid.value, PageSize: 100 });
-    habitacionesRows.value = filtrarHabitacionesVisibles(r.data?.data);
+    habitacionesRows.value = filtrarHabitacionesVisibles(r.data?.items);
   } catch {
-    try {
-      const r2 = await habitacionesListPublico({ SucursalGuid: sucursalGuid.value!, PageSize: 100 });
-      habitacionesRows.value = filtrarHabitacionesVisibles(r2.data?.data);
-    } catch {
-      ui.showSnack('No se pudieron cargar habitaciones para esta sucursal.', 6000);
-    }
+    ui.showSnack('No se pudieron cargar habitaciones para esta sucursal.', 6000);
   } finally {
     loadingHab.value = false;
   }
@@ -93,7 +89,7 @@ function onDatesNext(): void {
 
 function onRoomNext(): void {
   if (roomForm.value.idHabitacion == null || habitacionesRows.value.length === 0) {
-    ui.showSnack('Selecciona una habitación.', 4000);
+    ui.showSnack('Selecciona una habitaciÃ³n.', 4000);
     return;
   }
   step.value = 3;
@@ -112,11 +108,11 @@ async function submit(): Promise<void> {
   const v = form.value;
   const hab = habitacionSeleccionada.value;
   if (!hab) {
-    ui.showSnack('Selecciona una habitación.', 4000);
+    ui.showSnack('Selecciona una habitaciÃ³n.', 4000);
     return;
   }
   const num = hab.numeroHabitacion?.trim() || String(hab.idHabitacion);
-  const extraLine = `[KAIROS] Habitación: ${num} (id ${hab.idHabitacion})`;
+  const extraLine = `[KAIROS] HabitaciÃ³n: ${num} (id ${hab.idHabitacion})`;
   const obsBase = v.observaciones?.trim() ?? '';
   const observaciones = [obsBase, extraLine].filter(Boolean).join('\n');
 
@@ -134,7 +130,7 @@ async function submit(): Promise<void> {
     });
     if (res.success && res.data) {
       ui.showSnack(
-        `Reserva creada — habitación ${num}. Código: ${res.data.codigoReserva ?? res.data.guidReserva}`,
+        `Reserva creada â€” habitaciÃ³n ${num}. CÃ³digo: ${res.data.codigoReserva ?? res.data.guidReserva}`,
         6000,
       );
       void router.push('/mis-reservas');
@@ -160,7 +156,7 @@ onMounted(async () => {
   const qFf = typeof qp.fechaFin === 'string' ? qp.fechaFin : null;
 
   const [publico, interno] = await Promise.all([
-    sucursalesGetPublicoByGuid(guid),
+    accommodationsGetByGuid(guid),
     sucursalesGetInternalByGuid(guid).catch(() => null),
   ]);
 
@@ -189,19 +185,19 @@ onMounted(async () => {
 <template>
   <div class="reserva-page hl-page">
     <header class="reserva-page__head">
-      <p class="reserva-page__eyebrow">Marketplace · checkout</p>
-      <h1 class="reserva-page__title">Reserva con habitación y pago simulado</h1>
+      <p class="reserva-page__eyebrow">Marketplace Â· checkout</p>
+      <h1 class="reserva-page__title">Reserva con habitaciÃ³n y pago simulado</h1>
       <p class="reserva-page__lede">
-        Flujo en pasos: fechas → habitación en la sucursal → pasarela de demostración → confirmación. La reserva queda
+        Flujo en pasos: fechas â†’ habitaciÃ³n en la sucursal â†’ pasarela de demostraciÃ³n â†’ confirmaciÃ³n. La reserva queda
         vinculada a tu <strong>id cliente</strong> y se lista en
-        <RouterLink to="/mis-reservas">Mis reservas</RouterLink> con el número de habitación.
+        <RouterLink to="/mis-reservas">Mis reservas</RouterLink> con el nÃºmero de habitaciÃ³n.
       </p>
     </header>
 
     <div v-if="loading" class="reserva-center">
       <v-progress-circular indeterminate />
     </div>
-    <v-card v-else-if="!sucursalGuid" class="reserva-card pa-4">Ruta inválida: falta UUID de sucursal.</v-card>
+    <v-card v-else-if="!sucursalGuid" class="reserva-card pa-4">Ruta invÃ¡lida: falta UUID de sucursal.</v-card>
     <v-card v-else class="reserva-card reserva-card--wide">
       <v-card-title>{{ sucursalNombre || 'Sucursal' }}</v-card-title>
       <v-card-subtitle>Identificadores internos se completan cuando el API lo permite.</v-card-subtitle>
@@ -209,7 +205,7 @@ onMounted(async () => {
         <v-stepper v-model="step" class="bg-transparent elevation-0" flat>
           <v-stepper-header>
             <v-stepper-item :value="1" title="Estancia" />
-            <v-stepper-item :value="2" title="Habitación" />
+            <v-stepper-item :value="2" title="HabitaciÃ³n" />
             <v-stepper-item :value="3" title="Pago (simulado)" />
             <v-stepper-item :value="4" title="Confirmar" />
           </v-stepper-header>
@@ -223,11 +219,11 @@ onMounted(async () => {
                   class="mb-4"
                   density="compact"
                 >
-                  <span v-if="!idClienteResuelto">No se pudo vincular tu cuenta de cliente. Inicia sesión de nuevo o contacta recepción. </span>
+                  <span v-if="!idClienteResuelto">No se pudo vincular tu cuenta de cliente. Inicia sesiÃ³n de nuevo o contacta recepciÃ³n. </span>
                   <span v-if="!idSucursalResuelto">No se pudo resolver la sucursal desde la URL.</span>
                 </v-alert>
                 <v-alert v-else type="success" variant="tonal" class="mb-4" density="compact">
-                  Sesión vinculada · {{ sucursalNombre }}
+                  SesiÃ³n vinculada Â· {{ sucursalNombre }}
                 </v-alert>
                 <v-text-field v-model="form.fechaInicio" label="Fecha inicio" type="datetime-local" variant="outlined" />
                 <v-text-field v-model="form.fechaFin" label="Fecha fin" type="datetime-local" variant="outlined" />
@@ -239,7 +235,7 @@ onMounted(async () => {
                     :disabled="!idClienteResuelto || !idSucursalResuelto"
                     @click="onDatesNext"
                   >
-                    Continuar a habitación
+                    Continuar a habitaciÃ³n
                   </v-btn>
                 </div>
               </div>
@@ -249,7 +245,7 @@ onMounted(async () => {
                 <v-progress-circular indeterminate />
               </div>
               <template v-else-if="habitacionesRows.length === 0">
-                <p class="reserva-note">No hay habitaciones disponibles en el catálogo para esta sucursal.</p>
+                <p class="reserva-note">No hay habitaciones disponibles en el catÃ¡logo para esta sucursal.</p>
                 <v-btn variant="text" @click="step = 1">Volver</v-btn>
               </template>
               <template v-else>
@@ -257,7 +253,7 @@ onMounted(async () => {
                   <v-radio
                     v-for="h in habitacionesRows"
                     :key="h.habitacionGuid"
-                    :label="`Habitación ${h.numeroHabitacion ?? h.idHabitacion} · Cap. ${h.capacidadHabitacion} · desde ${(h.precioBase ?? 0).toFixed(2)}`"
+                    :label="`HabitaciÃ³n ${h.numeroHabitacion ?? h.idHabitacion} Â· Cap. ${h.capacidadHabitacion} Â· desde ${(h.precioBase ?? 0).toFixed(2)}`"
                     :value="h.idHabitacion"
                   />
                 </v-radio-group>
@@ -274,7 +270,7 @@ onMounted(async () => {
               <v-text-field v-model="payForm.titular" label="Titular de la tarjeta" variant="outlined" autocomplete="off" />
               <v-text-field
                 v-model="payForm.pan"
-                label="Número de tarjeta"
+                label="NÃºmero de tarjeta"
                 variant="outlined"
                 placeholder="0000 0000 0000 0000"
                 autocomplete="off"
@@ -283,8 +279,8 @@ onMounted(async () => {
                 <v-text-field v-model="payForm.expira" label="Vencimiento (MM/AA)" variant="outlined" placeholder="12/28" />
                 <v-text-field v-model="payForm.cvv" label="CVV" type="password" variant="outlined" autocomplete="off" />
               </div>
-              <p class="reserva-pay-total">Total estimado (precio base habitación): <strong>{{ precioEstimado.toFixed(2) }}</strong></p>
-              <v-checkbox v-model="payForm.acepto" label="Acepto que simulo el cargo para efectos académicos / demo" />
+              <p class="reserva-pay-total">Total estimado (precio base habitaciÃ³n): <strong>{{ precioEstimado.toFixed(2) }}</strong></p>
+              <v-checkbox v-model="payForm.acepto" label="Acepto que simulo el cargo para efectos acadÃ©micos / demo" />
               <div class="reserva-form__actions">
                 <v-btn variant="text" @click="step = 2">Volver</v-btn>
                 <v-btn color="primary" variant="outlined" type="button" @click="onPayNext">Marcar pago como aprobado</v-btn>
@@ -293,14 +289,14 @@ onMounted(async () => {
             <v-stepper-window-item :value="4">
               <div class="reserva-summary">
                 <p>
-                  <strong>Habitación:</strong>
+                  <strong>HabitaciÃ³n:</strong>
                   {{ habitacionSeleccionada?.numeroHabitacion ?? habitacionSeleccionada?.idHabitacion }}
                 </p>
                 <p>
-                  <strong>Cliente:</strong> {{ form.idCliente }} · <strong>Sucursal:</strong> {{ form.idSucursal }}
+                  <strong>Cliente:</strong> {{ form.idCliente }} Â· <strong>Sucursal:</strong> {{ form.idSucursal }}
                 </p>
                 <p>
-                  <strong>Estancia:</strong> {{ form.fechaInicio }} → {{ form.fechaFin }}
+                  <strong>Estancia:</strong> {{ form.fechaInicio }} â†’ {{ form.fechaFin }}
                 </p>
               </div>
               <div class="reserva-form__actions">
@@ -311,7 +307,7 @@ onMounted(async () => {
                   :disabled="submitiendo"
                   @click="submit()"
                 >
-                  {{ submitiendo ? 'Enviando…' : 'Confirmar reserva en el sistema' }}
+                  {{ submitiendo ? 'Enviandoâ€¦' : 'Confirmar reserva en el sistema' }}
                 </v-btn>
               </div>
             </v-stepper-window-item>

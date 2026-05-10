@@ -1,10 +1,10 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { clientesCreate, clientesGetByGuid, clientesUpdate } from '@/services/clientes';
 import { useUiStore } from '@/stores/ui';
 import { isUuidString } from '@/utils/string.util';
-import type { ClienteCreateRequest, ClienteUpdateRequest } from '@/models';
+import type { CrearClienteRequest, ActualizarClienteRequest } from '@/models';
 
 const route = useRoute();
 const router = useRouter();
@@ -44,7 +44,7 @@ onMounted(async () => {
   }
   const id = String(route.params.guid ?? '');
   if (!isUuidString(id)) {
-    ui.showSnack('GUID inválido', 4000);
+    ui.showSnack('GUID invÃ¡lido', 4000);
     void router.push('/admin/clientes');
     return;
   }
@@ -72,7 +72,7 @@ async function saveCreate(): Promise<void> {
     ui.showSnack('Completa obligatorios.', 4000);
     return;
   }
-  const body: ClienteCreateRequest = {
+  const body: CrearClienteRequest = {
     tipoIdentificacion: v.tipoIdentificacion.trim(),
     numeroIdentificacion: v.numeroIdentificacion.trim(),
     nombres: v.nombres.trim(),
@@ -93,7 +93,7 @@ async function saveCreate(): Promise<void> {
 async function saveEdit(): Promise<void> {
   if (!clienteGuid.value) return;
   const v = editForm;
-  const body: ClienteUpdateRequest = {
+  const body: ActualizarClienteRequest = {
     nombres: v.nombres || undefined,
     apellidos: v.apellidos || undefined,
     razonSocial: v.razonSocial || undefined,
@@ -115,14 +115,14 @@ async function saveEdit(): Promise<void> {
   <v-card v-else-if="isCreate">
     <v-card-title>Nuevo cliente</v-card-title>
     <v-card-text>
-      <v-text-field v-model="createForm.tipoIdentificacion" label="Tipo identificación" variant="outlined" />
-      <v-text-field v-model="createForm.numeroIdentificacion" label="Número identificación" variant="outlined" />
+      <v-text-field v-model="createForm.tipoIdentificacion" label="Tipo identificaciÃ³n" variant="outlined" />
+      <v-text-field v-model="createForm.numeroIdentificacion" label="NÃºmero identificaciÃ³n" variant="outlined" />
       <v-text-field v-model="createForm.nombres" label="Nombres" variant="outlined" />
       <v-text-field v-model="createForm.apellidos" label="Apellidos" variant="outlined" />
-      <v-text-field v-model="createForm.razonSocial" label="Razón social" variant="outlined" />
+      <v-text-field v-model="createForm.razonSocial" label="RazÃ³n social" variant="outlined" />
       <v-text-field v-model="createForm.correo" label="Correo" type="email" variant="outlined" />
-      <v-text-field v-model="createForm.telefono" label="Teléfono" variant="outlined" />
-      <v-text-field v-model="createForm.direccion" label="Dirección" variant="outlined" />
+      <v-text-field v-model="createForm.telefono" label="TelÃ©fono" variant="outlined" />
+      <v-text-field v-model="createForm.direccion" label="DirecciÃ³n" variant="outlined" />
       <v-text-field v-model="createForm.estado" label="Estado" variant="outlined" />
       <v-btn color="primary" class="mt-2" @click="saveCreate">Crear</v-btn>
       <v-btn class="mt-2 ms-2" variant="text" to="/admin/clientes">Cancelar</v-btn>
@@ -133,10 +133,10 @@ async function saveEdit(): Promise<void> {
     <v-card-text>
       <v-text-field v-model="editForm.nombres" label="Nombres" variant="outlined" />
       <v-text-field v-model="editForm.apellidos" label="Apellidos" variant="outlined" />
-      <v-text-field v-model="editForm.razonSocial" label="Razón social" variant="outlined" />
+      <v-text-field v-model="editForm.razonSocial" label="RazÃ³n social" variant="outlined" />
       <v-text-field v-model="editForm.correo" label="Correo" variant="outlined" />
-      <v-text-field v-model="editForm.telefono" label="Teléfono" variant="outlined" />
-      <v-text-field v-model="editForm.direccion" label="Dirección" variant="outlined" />
+      <v-text-field v-model="editForm.telefono" label="TelÃ©fono" variant="outlined" />
+      <v-text-field v-model="editForm.direccion" label="DirecciÃ³n" variant="outlined" />
       <v-text-field v-model="editForm.estado" label="Estado" variant="outlined" />
       <v-btn color="primary" class="mt-2" @click="saveEdit">Guardar</v-btn>
       <v-btn class="mt-2 ms-2" variant="text" to="/admin/clientes">Volver</v-btn>

@@ -36,7 +36,7 @@ function logout(): void {
       </div>
       <div class="nav-actions">
         <span v-if="auth.isAuthenticated" class="client-nav-user">{{
-          auth.getLoginSnapshot()?.userName
+          auth.getLoginSnapshot()?.username
         }}</span>
         <v-btn v-if="auth.isAuthenticated" variant="outlined" class="btn-outline text-none" @click="logout">
           Salir

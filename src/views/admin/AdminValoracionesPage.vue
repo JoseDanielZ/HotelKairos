@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { valoracionesList, valoracionesModerar } from '@/services/valoraciones';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtDate } from '@/utils/status.util';
-import type { ValoracionDTO } from '@/models';
+import type { ValoracionResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<ValoracionDTO[]>([]);
+const rows = ref<ValoracionResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
@@ -29,14 +29,14 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await valoracionesList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
 }
 
-function openModerar(r: ValoracionDTO): void {
+function openModerar(r: ValoracionResponse): void {
   moderarGuid.value = r.valoracionGuid;
   moderarEstado.value = 'APR';
   moderarPublicar.value = 1;
@@ -53,7 +53,7 @@ async function doModerar(): Promise<void> {
       motivoModeracion: moderarMotivo.value || null,
     });
     if (res.success) {
-      ui.showSnack('Valoración moderada', 3000);
+      ui.showSnack('ValoraciÃ³n moderada', 3000);
       moderarDialog.value = false;
       void load();
     } else {
@@ -70,7 +70,7 @@ onMounted(() => void load());
 <template>
   <v-card class="mb-4">
     <v-card-title>Valoraciones</v-card-title>
-    <v-card-subtitle>Moderación de reseñas de huéspedes.</v-card-subtitle>
+    <v-card-subtitle>ModeraciÃ³n de reseÃ±as de huÃ©spedes.</v-card-subtitle>
   </v-card>
 
   <div v-if="loading" class="center"><v-progress-circular indeterminate /></div>
@@ -81,7 +81,7 @@ onMounted(() => void load());
           <th>Id</th>
           <th>Cliente</th>
           <th>Sucursal</th>
-          <th>Puntuación</th>
+          <th>PuntuaciÃ³n</th>
           <th>Tipo viaje</th>
           <th>Fecha</th>
           <th>Estado</th>
@@ -98,12 +98,12 @@ onMounted(() => void load());
             <v-rating :model-value="r.puntuacionGeneral" density="compact" readonly half-increments size="small" color="amber" />
             <span class="text-caption ml-1">{{ r.puntuacionGeneral }}</span>
           </td>
-          <td>{{ r.tipoViaje ?? '—' }}</td>
+          <td>{{ r.tipoViaje ?? 'â€”' }}</td>
           <td class="text-no-wrap">{{ fmtDate(r.fechaRegistroUtc) }}</td>
           <td><v-chip :color="statusColor(r.estadoValoracion)" size="small" label>{{ r.estadoValoracion }}</v-chip></td>
           <td>
             <v-chip :color="r.publicadaEnPortal ? 'success' : 'default'" size="x-small" label>
-              {{ r.publicadaEnPortal ? 'Sí' : 'No' }}
+              {{ r.publicadaEnPortal ? 'SÃ­' : 'No' }}
             </v-chip>
           </td>
           <td>
@@ -123,7 +123,7 @@ onMounted(() => void load());
 
   <v-dialog v-model="moderarDialog" max-width="460">
     <v-card>
-      <v-card-title>Moderar valoración</v-card-title>
+      <v-card-title>Moderar valoraciÃ³n</v-card-title>
       <v-card-text class="d-flex flex-column gap-3">
         <v-select v-model="moderarEstado" :items="estadosModerar" item-title="title" item-value="value" label="Nuevo estado" variant="outlined" density="comfortable" />
         <v-checkbox v-model="moderarPublicar" :true-value="1" :false-value="0" label="Publicar en portal" />

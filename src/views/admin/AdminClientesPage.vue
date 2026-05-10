@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { clientesDelete, clientesInhabilitar, clientesList } from '@/services/clientes';
 import { useUiStore } from '@/stores/ui';
 import { statusColor } from '@/utils/status.util';
-import type { ClienteDTO } from '@/models';
+import type { ClienteResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<ClienteDTO[]>([]);
+const rows = ref<ClienteResponse[]>([]);
 const total = ref(0);
 const pageIndex = ref(0);
 const pageSize = ref(15);
@@ -26,8 +26,8 @@ async function load(): Promise<void> {
       PageNumber: pageIndex.value + 1,
       PageSize: pageSize.value,
     });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -38,9 +38,9 @@ function onPage(p: number): void {
   void load();
 }
 
-async function remove(r: ClienteDTO): Promise<void> {
+async function remove(r: ClienteResponse): Promise<void> {
   const nombre = [r.nombres, r.apellidos].filter(Boolean).join(' ') || r.correo || String(r.idCliente);
-  if (!confirm(`¿Eliminar al cliente "${nombre}"?`)) return;
+  if (!confirm(`Â¿Eliminar al cliente "${nombre}"?`)) return;
   const res = await clientesDelete(r.clienteGuid!);
   if (res.success) {
     ui.showSnack('Cliente eliminado', 3000);
@@ -83,7 +83,7 @@ onMounted(() => void load());
     <v-card-actions>
       <v-text-field
         v-model="filtroTexto"
-        placeholder="Buscar por nombre, correo o ID…"
+        placeholder="Buscar por nombre, correo o IDâ€¦"
         variant="outlined"
         density="compact"
         hide-details
@@ -105,10 +105,10 @@ onMounted(() => void load());
       <thead>
         <tr>
           <th>Id</th>
-          <th>Identificación</th>
+          <th>IdentificaciÃ³n</th>
           <th>Nombres</th>
           <th>Correo</th>
-          <th>Teléfono</th>
+          <th>TelÃ©fono</th>
           <th>Estado</th>
           <th />
         </tr>
@@ -117,11 +117,11 @@ onMounted(() => void load());
         <tr v-for="r in rows" :key="r.clienteGuid ?? String(r.idCliente)">
           <td>{{ r.idCliente }}</td>
           <td class="text-caption">{{ r.tipoIdentificacion }} {{ r.numeroIdentificacion }}</td>
-          <td>{{ [r.nombres, r.apellidos].filter(Boolean).join(' ') || r.razonSocial || '—' }}</td>
+          <td>{{ [r.nombres, r.apellidos].filter(Boolean).join(' ') || r.razonSocial || 'â€”' }}</td>
           <td>{{ r.correo }}</td>
           <td>{{ r.telefono }}</td>
           <td>
-            <v-chip :color="statusColor(r.estado)" size="small" label>{{ r.estado ?? '—' }}</v-chip>
+            <v-chip :color="statusColor(r.estado)" size="small" label>{{ r.estado ?? 'â€”' }}</v-chip>
           </td>
           <td class="text-no-wrap">
             <v-btn v-if="r.clienteGuid" size="small" variant="text" icon="mdi-pencil" :to="'/admin/clientes/' + r.clienteGuid" />

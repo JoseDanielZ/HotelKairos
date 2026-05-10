@@ -1,13 +1,13 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  CargoEstadiaCreateRequest,
-  CargoEstadiaDTO,
-  EstadiaDTOApiResponse,
-  EstadiaDTODataPageResultApiResponse,
-  EstadiaCheckinRequest,
-  EstadiaCheckoutRequest,
+  CargoEstadiaRequest,
+  CargoEstadiaResponse,
+  EstadiaResponseApiResponse,
+  EstadiaResponsePaginatedResponseApiResponse,
+  CheckinRequest,
+  CheckoutRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -19,36 +19,36 @@ export async function estadiasList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<EstadiaDTODataPageResultApiResponse> {
-  const { data } = await api.get<EstadiaDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<EstadiaResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<EstadiaResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function estadiasGetByGuid(guid: string): Promise<EstadiaDTOApiResponse> {
-  const { data } = await api.get<EstadiaDTOApiResponse>(`${base}/${guid}`);
+export async function estadiasGetByGuid(guid: string): Promise<EstadiaResponseApiResponse> {
+  const { data } = await api.get<EstadiaResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
 export async function estadiasCheckin(
   reservaHabitacionGuid: string,
-  body: EstadiaCheckinRequest,
-): Promise<EstadiaDTOApiResponse> {
-  const { data } = await api.post<EstadiaDTOApiResponse>(`${base}/checkin/${reservaHabitacionGuid}`, body);
+  body: CheckinRequest,
+): Promise<EstadiaResponseApiResponse> {
+  const { data } = await api.post<EstadiaResponseApiResponse>(`${base}/checkin/${reservaHabitacionGuid}`, body);
   return data;
 }
 
 export async function estadiasCheckout(
   guid: string,
-  body: EstadiaCheckoutRequest,
-): Promise<EstadiaDTOApiResponse> {
-  const { data } = await api.patch<EstadiaDTOApiResponse>(`${base}/${guid}/checkout`, body);
+  body: CheckoutRequest,
+): Promise<EstadiaResponseApiResponse> {
+  const { data } = await api.patch<EstadiaResponseApiResponse>(`${base}/${guid}/checkout`, body);
   return data;
 }
 
 export async function estadiasAgregarCargo(
   guid: string,
-  body: CargoEstadiaCreateRequest,
-): Promise<ApiResponse<CargoEstadiaDTO>> {
-  const { data } = await api.post<ApiResponse<CargoEstadiaDTO>>(`${base}/${guid}/cargos`, body);
+  body: CargoEstadiaRequest,
+): Promise<ApiResponse<CargoEstadiaResponse>> {
+  const { data } = await api.post<ApiResponse<CargoEstadiaResponse>>(`${base}/${guid}/cargos`, body);
   return data;
 }

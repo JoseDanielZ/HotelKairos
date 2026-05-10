@@ -1,8 +1,8 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
 /** `SucursalPublicDto` schema (marketplace / public). */
 export interface SucursalPublicDto {
-  /** No está en el fragmento de Swagger; algunos despliegues lo incluyen. */
+  /** No estÃ¡ en el fragmento de Swagger; algunos despliegues lo incluyen. */
   idSucursal?: number;
   sucursalGuid: string;
   codigoSucursal?: string | null;
@@ -28,4 +28,4 @@ export interface SucursalPublicDto {
 }
 
 export type SucursalPublicDtoApiResponse = ApiResponse<SucursalPublicDto>;
-export type SucursalPublicDtoDataPageResultApiResponse = ApiResponse<DataPageResult<SucursalPublicDto>>;
+export type SucursalPublicDtoPaginatedResponseApiResponse = ApiResponse<PaginatedResponse<SucursalPublicDto>>;

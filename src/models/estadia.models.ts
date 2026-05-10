@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface CargoEstadiaDTO {
+export interface CargoEstadiaResponse {
   idCargoEstadia: number;
   cargoGuid: string;
   idEstadia: number;
@@ -17,7 +17,7 @@ export interface CargoEstadiaDTO {
   creadoPorUsuario: string;
 }
 
-export interface EstadiaDTO {
+export interface EstadiaResponse {
   idEstadia: number;
   estadiaGuid: string;
   idReservaHabitacion: number;
@@ -31,26 +31,26 @@ export interface EstadiaDTO {
   requiereMantenimiento: number;
   fechaRegistroUtc: string;
   creadoPorUsuario: string;
-  cargos: CargoEstadiaDTO[];
+  cargos: CargoEstadiaResponse[];
 }
 
-export interface EstadiaCheckinRequest {
+export interface CheckinRequest {
   idCliente: number;
   idHabitacion: number;
   observacionesCheckin?: string | null;
 }
 
-export interface EstadiaCheckoutRequest {
+export interface CheckoutRequest {
   observaciones?: string | null;
   requiereMantenimiento?: number;
 }
 
-export interface CargoEstadiaCreateRequest {
+export interface CargoEstadiaRequest {
   idCatalogo?: number | null;
   descripcionCargo: string;
   cantidad: number;
   precioUnitario: number;
 }
 
-export type EstadiaDTOApiResponse = ApiResponse<EstadiaDTO>;
-export type EstadiaDTODataPageResultApiResponse = ApiResponse<DataPageResult<EstadiaDTO>>;
+export type EstadiaResponseApiResponse = ApiResponse<EstadiaResponse>;
+export type EstadiaResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<EstadiaResponse>>;

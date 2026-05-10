@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { estadiasCheckout, estadiasList } from '@/services/estadias';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtDate } from '@/utils/status.util';
-import type { EstadiaDTO } from '@/models';
+import type { EstadiaResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<EstadiaDTO[]>([]);
+const rows = ref<EstadiaResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
@@ -22,8 +22,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await estadiasList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -60,8 +60,8 @@ onMounted(() => void load());
 
 <template>
   <v-card class="mb-4">
-    <v-card-title>Estadías</v-card-title>
-    <v-card-subtitle>Check-in y check-out de huéspedes.</v-card-subtitle>
+    <v-card-title>EstadÃ­as</v-card-title>
+    <v-card-subtitle>Check-in y check-out de huÃ©spedes.</v-card-subtitle>
   </v-card>
 
   <div v-if="loading" class="center"><v-progress-circular indeterminate /></div>
@@ -71,7 +71,7 @@ onMounted(() => void load());
         <tr>
           <th>Id</th>
           <th>Cliente</th>
-          <th>Habitación</th>
+          <th>HabitaciÃ³n</th>
           <th>Check-in</th>
           <th>Check-out</th>
           <th>Estado</th>

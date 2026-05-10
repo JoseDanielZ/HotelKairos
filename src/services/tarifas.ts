@@ -1,10 +1,10 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  TarifaDTOApiResponse,
-  TarifaDTODataPageResultApiResponse,
-  TarifaUpsertRequest,
+  TarifaResponseApiResponse,
+  TarifaResponsePaginatedResponseApiResponse,
+  CrearTarifaRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -16,23 +16,23 @@ export async function tarifasList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<TarifaDTODataPageResultApiResponse> {
-  const { data } = await api.get<TarifaDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<TarifaResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<TarifaResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function tarifasGetByGuid(guid: string): Promise<TarifaDTOApiResponse> {
-  const { data } = await api.get<TarifaDTOApiResponse>(`${base}/${guid}`);
+export async function tarifasGetByGuid(guid: string): Promise<TarifaResponseApiResponse> {
+  const { data } = await api.get<TarifaResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function tarifasCreate(body: TarifaUpsertRequest): Promise<TarifaDTOApiResponse> {
-  const { data } = await api.post<TarifaDTOApiResponse>(base, body);
+export async function tarifasCreate(body: CrearTarifaRequest): Promise<TarifaResponseApiResponse> {
+  const { data } = await api.post<TarifaResponseApiResponse>(base, body);
   return data;
 }
 
-export async function tarifasUpdate(guid: string, body: TarifaUpsertRequest): Promise<TarifaDTOApiResponse> {
-  const { data } = await api.put<TarifaDTOApiResponse>(`${base}/${guid}`, body);
+export async function tarifasUpdate(guid: string, body: CrearTarifaRequest): Promise<TarifaResponseApiResponse> {
+  const { data } = await api.put<TarifaResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 

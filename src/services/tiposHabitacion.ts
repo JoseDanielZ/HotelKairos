@@ -1,6 +1,6 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
-import type { TipoHabitacionDTODataPageResultApiResponse } from '@/models';
+import type { TipoHabitacionResponsePaginatedResponseApiResponse } from '@/models';
 import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1/internal/tipos-habitacion`;
@@ -10,7 +10,7 @@ export async function tiposHabitacionList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<TipoHabitacionDTODataPageResultApiResponse> {
-  const { data } = await api.get<TipoHabitacionDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<TipoHabitacionResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<TipoHabitacionResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }

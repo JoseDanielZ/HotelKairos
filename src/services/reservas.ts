@@ -1,13 +1,13 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  CancelarReservaRequest,
+  CancelarReservaBody,
   InhabilitarRequest,
-  ReservaCreateRequest,
-  ReservaDTOApiResponse,
-  ReservaDTODataPageResultApiResponse,
-  ReservaUpdateRequest,
+  CrearReservaRequest,
+  ReservaResponseApiResponse,
+  ReservaResponsePaginatedResponseApiResponse,
+  ActualizarReservaRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -21,23 +21,23 @@ export async function reservasList(p: {
   FechaHasta?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<ReservaDTODataPageResultApiResponse> {
-  const { data } = await api.get<ReservaDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<ReservaResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<ReservaResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function reservasGetByGuid(guid: string): Promise<ReservaDTOApiResponse> {
-  const { data } = await api.get<ReservaDTOApiResponse>(`${base}/${guid}`);
+export async function reservasGetByGuid(guid: string): Promise<ReservaResponseApiResponse> {
+  const { data } = await api.get<ReservaResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function reservasCreate(body: ReservaCreateRequest): Promise<ReservaDTOApiResponse> {
-  const { data } = await api.post<ReservaDTOApiResponse>(base, body);
+export async function reservasCreate(body: CrearReservaRequest): Promise<ReservaResponseApiResponse> {
+  const { data } = await api.post<ReservaResponseApiResponse>(base, body);
   return data;
 }
 
-export async function reservasUpdate(guid: string, body: ReservaUpdateRequest): Promise<ReservaDTOApiResponse> {
-  const { data } = await api.put<ReservaDTOApiResponse>(`${base}/${guid}`, body);
+export async function reservasUpdate(guid: string, body: ActualizarReservaRequest): Promise<ReservaResponseApiResponse> {
+  const { data } = await api.put<ReservaResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 
@@ -53,7 +53,7 @@ export async function reservasConfirmar(guid: string): Promise<ApiResponse<boole
 
 export async function reservasCancelar(
   guid: string,
-  body: CancelarReservaRequest,
+  body: CancelarReservaBody,
 ): Promise<ApiResponse<boolean>> {
   const { data } = await api.patch<ApiResponse<boolean>>(`${base}/${guid}/cancelar`, body);
   return data;

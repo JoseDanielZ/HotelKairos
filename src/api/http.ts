@@ -26,7 +26,7 @@ export const api = axios.create();
 
 api.interceptors.request.use((config) => {
   const u = config.url ?? '';
-  if (u.includes('/api/v1/internal/auth/login')) {
+  if (u.includes('/api/v1/auth/login') || u.includes('/api/v1/auth/refresh')) {
     return config;
   }
   const token = readToken();

@@ -12,17 +12,17 @@ const ui = useUiStore();
 const router = useRouter();
 const route = useRoute();
 
-const form = reactive({ userName: '', password: '' });
+const form = reactive({ username: '', password: '' });
 const busy = ref(false);
 
 function submit(): void {
-  if (!form.userName || !form.password) {
+  if (!form.username || !form.password) {
     ui.showSnack('Ingresa usuario y contraseña', 5000, 'error');
     return;
   }
   busy.value = true;
   void auth
-    .login({ userName: form.userName, password: form.password })
+    .login({ username: form.username, password: form.password })
     .then((res) => {
       busy.value = false;
       if (res.success) {
@@ -62,7 +62,7 @@ function submit(): void {
 
       <form class="login-form" @submit.prevent="submit()">
         <v-text-field
-          v-model="form.userName"
+          v-model="form.username"
           class="login-form__field"
           label="Usuario"
           variant="outlined"

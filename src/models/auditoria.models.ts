@@ -1,4 +1,4 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
 export interface AuditoriaDTO {
   idAuditoria?: number;
@@ -14,4 +14,4 @@ export interface AuditoriaDTO {
   fechaEventoUtc: string;
 }
 
-export type AuditoriaDTODataPageResultApiResponse = ApiResponse<DataPageResult<AuditoriaDTO>>;
+export type AuditoriaDTOPaginatedResponseApiResponse = ApiResponse<PaginatedResponse<AuditoriaDTO>>;

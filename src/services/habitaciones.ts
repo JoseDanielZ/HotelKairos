@@ -1,12 +1,12 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  HabitacionCreateRequest,
-  HabitacionDTOApiResponse,
-  HabitacionDTODataPageResultApiResponse,
+  CrearHabitacionRequest,
+  HabitacionResponseApiResponse,
+  HabitacionResponsePaginatedResponseApiResponse,
   HabitacionDetalleResponseApiResponse,
-  HabitacionUpdateRequest,
+  ActualizarHabitacionRequest,
   InhabilitarRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
@@ -19,21 +19,8 @@ export async function habitacionesList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<HabitacionDTODataPageResultApiResponse> {
-  const { data } = await api.get<HabitacionDTODataPageResultApiResponse>(base, { params: toParams(p) });
-  return data;
-}
-
-export async function habitacionesListPublico(p: {
-  SucursalGuid?: string;
-  TipoHabitacionGuid?: string;
-  Estado?: string;
-  PageNumber?: number;
-  PageSize?: number;
-}): Promise<HabitacionDTODataPageResultApiResponse> {
-  const { data } = await api.get<HabitacionDTODataPageResultApiResponse>(`${base}/publico`, {
-    params: toParams(p),
-  });
+}): Promise<HabitacionResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<HabitacionResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
@@ -42,16 +29,16 @@ export async function habitacionesGetByGuid(guid: string): Promise<HabitacionDet
   return data;
 }
 
-export async function habitacionesCreate(body: HabitacionCreateRequest): Promise<HabitacionDTOApiResponse> {
-  const { data } = await api.post<HabitacionDTOApiResponse>(base, body);
+export async function habitacionesCreate(body: CrearHabitacionRequest): Promise<HabitacionResponseApiResponse> {
+  const { data } = await api.post<HabitacionResponseApiResponse>(base, body);
   return data;
 }
 
 export async function habitacionesUpdate(
   guid: string,
-  body: HabitacionUpdateRequest,
-): Promise<HabitacionDTOApiResponse> {
-  const { data } = await api.put<HabitacionDTOApiResponse>(`${base}/${guid}`, body);
+  body: ActualizarHabitacionRequest,
+): Promise<HabitacionResponseApiResponse> {
+  const { data } = await api.put<HabitacionResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 
@@ -63,8 +50,8 @@ export async function habitacionesDelete(guid: string): Promise<ApiResponse<bool
 export async function habitacionesPatchEstado(
   guid: string,
   body: { nuevoEstado: string },
-): Promise<HabitacionDTOApiResponse> {
-  const { data } = await api.patch<HabitacionDTOApiResponse>(`${base}/${guid}/estado`, body);
+): Promise<HabitacionResponseApiResponse> {
+  const { data } = await api.patch<HabitacionResponseApiResponse>(`${base}/${guid}/estado`, body);
   return data;
 }
 

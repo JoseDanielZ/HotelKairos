@@ -1,6 +1,5 @@
 export * from './api.types';
 export * from './auth.models';
-export * from './alojamiento.models';
 export * from './sucursal.models';
 export * from './habitacion.models';
 export * from './reserva.models';

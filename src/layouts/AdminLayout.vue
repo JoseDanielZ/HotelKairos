@@ -59,7 +59,7 @@ function logout(): void {
           <div v-if="auth.getLoginSnapshot()" class="admin-topbar__user">
             <v-icon class="text-primary" size="small">mdi-account-circle</v-icon>
             <span class="admin-topbar__name">
-              {{ auth.getLoginSnapshot()?.nombreCompleto || auth.getLoginSnapshot()?.userName }}
+              {{ auth.getLoginSnapshot()?.username }}
             </span>
           </div>
           <v-btn variant="outlined" @click="logout">

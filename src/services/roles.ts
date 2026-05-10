@@ -1,10 +1,10 @@
-import { api } from '@/api/http';
+﻿import { api } from '@/api/http';
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
-  RolDTOApiResponse,
-  RolDTODataPageResultApiResponse,
-  RolUpsertRequest,
+  RolResponseApiResponse,
+  RolResponsePaginatedResponseApiResponse,
+  CrearRolRequest,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -15,28 +15,23 @@ export async function rolesList(p: {
   Estado?: string;
   PageNumber?: number;
   PageSize?: number;
-}): Promise<RolDTODataPageResultApiResponse> {
-  const { data } = await api.get<RolDTODataPageResultApiResponse>(base, { params: toParams(p) });
+}): Promise<RolResponsePaginatedResponseApiResponse> {
+  const { data } = await api.get<RolResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
   return data;
 }
 
-export async function rolesListActivos(): Promise<ApiResponse<import('@/models').RolDTO[]>> {
-  const { data } = await api.get<ApiResponse<import('@/models').RolDTO[]>>(`${base}/activos`);
+export async function rolesGetByGuid(guid: string): Promise<RolResponseApiResponse> {
+  const { data } = await api.get<RolResponseApiResponse>(`${base}/${guid}`);
   return data;
 }
 
-export async function rolesGetByGuid(guid: string): Promise<RolDTOApiResponse> {
-  const { data } = await api.get<RolDTOApiResponse>(`${base}/${guid}`);
+export async function rolesCreate(body: CrearRolRequest): Promise<RolResponseApiResponse> {
+  const { data } = await api.post<RolResponseApiResponse>(base, body);
   return data;
 }
 
-export async function rolesCreate(body: RolUpsertRequest): Promise<RolDTOApiResponse> {
-  const { data } = await api.post<RolDTOApiResponse>(base, body);
-  return data;
-}
-
-export async function rolesUpdate(guid: string, body: RolUpsertRequest): Promise<RolDTOApiResponse> {
-  const { data } = await api.put<RolDTOApiResponse>(`${base}/${guid}`, body);
+export async function rolesUpdate(guid: string, body: CrearRolRequest): Promise<RolResponseApiResponse> {
+  const { data } = await api.put<RolResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 

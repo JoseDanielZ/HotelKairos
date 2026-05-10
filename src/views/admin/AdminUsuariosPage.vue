@@ -1,27 +1,27 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import { rolesListActivos } from '@/services/roles';
+import { rolesList } from '@/services/roles';
 import { usuariosCreate, usuariosDelete, usuariosInhabilitar, usuariosList } from '@/services/usuarios';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtDate } from '@/utils/status.util';
-import type { RolDTO, UsuarioCreateRequest, UsuarioDTO } from '@/models';
+import type { RolResponse, CrearUsuarioRequest, UsuarioResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<UsuarioDTO[]>([]);
+const rows = ref<UsuarioResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
 const loading = ref(false);
 const dialog = ref(false);
 const saving = ref(false);
-const rolesAll = ref<RolDTO[]>([]);
+const rolesAll = ref<RolResponse[]>([]);
 
 const inhabDialog = ref(false);
 const inhabGuid = ref('');
 const inhabMotivo = ref('');
 const inhabBusy = ref(false);
 
-const form = reactive<UsuarioCreateRequest>({
+const form = reactive<CrearUsuarioRequest>({
   username: '',
   correo: '',
   nombres: '',
@@ -35,8 +35,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await usuariosList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -44,8 +44,8 @@ async function load(): Promise<void> {
 
 async function openNew(): Promise<void> {
   if (!rolesAll.value.length) {
-    const r = await rolesListActivos();
-    rolesAll.value = r.data ?? [];
+    const r = await rolesList({ Estado: 'ACT', PageSize: 100 });
+    rolesAll.value = r.data?.items ?? [];
   }
   Object.assign(form, { username: '', correo: '', nombres: '', apellidos: '', password: '', estadoUsuario: 'ACT', idRoles: [] });
   dialog.value = true;
@@ -53,7 +53,7 @@ async function openNew(): Promise<void> {
 
 async function guardar(): Promise<void> {
   if (!form.username || !form.correo || !form.nombres || !form.password) {
-    ui.showSnack('Username, correo, nombres y contraseña son obligatorios', 4000, 'error');
+    ui.showSnack('Username, correo, nombres y contraseÃ±a son obligatorios', 4000, 'error');
     return;
   }
   saving.value = true;
@@ -71,8 +71,8 @@ async function guardar(): Promise<void> {
   }
 }
 
-async function remove(r: UsuarioDTO): Promise<void> {
-  if (!confirm(`¿Eliminar al usuario "${r.username}"?`)) return;
+async function remove(r: UsuarioResponse): Promise<void> {
+  if (!confirm(`Â¿Eliminar al usuario "${r.username}"?`)) return;
   const res = await usuariosDelete(r.usuarioGuid);
   if (res.success) {
     ui.showSnack('Usuario eliminado', 3000);
@@ -167,7 +167,7 @@ onMounted(() => void load());
           <v-text-field v-model="form.nombres" label="Nombres *" variant="outlined" density="comfortable" class="flex-1" />
           <v-text-field v-model="form.apellidos" label="Apellidos" variant="outlined" density="comfortable" class="flex-1" />
         </div>
-        <v-text-field v-model="form.password" label="Contraseña *" type="password" variant="outlined" density="comfortable" autocomplete="new-password" />
+        <v-text-field v-model="form.password" label="ContraseÃ±a *" type="password" variant="outlined" density="comfortable" autocomplete="new-password" />
         <v-select
           v-model="form.idRoles"
           :items="rolesAll"

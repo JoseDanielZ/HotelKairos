@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { catalogoCreate, catalogoDelete, catalogoList, catalogoUpdate } from '@/services/catalogo';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtMoney } from '@/utils/status.util';
-import type { CatalogoServicioDTO, CatalogoServicioUpsertRequest } from '@/models';
+import type { CatalogoResponse, CrearCatalogoRequest } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<CatalogoServicioDTO[]>([]);
+const rows = ref<CatalogoResponse[]>([]);
 const total = ref(0);
 const page = ref(1);
 const pageSize = ref(15);
@@ -15,7 +15,7 @@ const dialog = ref(false);
 const saving = ref(false);
 const editGuid = ref<string | null>(null);
 
-const form = reactive<CatalogoServicioUpsertRequest>({
+const form = reactive<CrearCatalogoRequest>({
   codigoCatalogo: '',
   nombreCatalogo: '',
   tipoCatalogo: 'SRV',
@@ -46,7 +46,7 @@ function openNew(): void {
   dialog.value = true;
 }
 
-function openEdit(r: CatalogoServicioDTO): void {
+function openEdit(r: CatalogoResponse): void {
   editGuid.value = r.catalogoGuid;
   Object.assign(form, {
     codigoCatalogo: r.codigoCatalogo,
@@ -66,8 +66,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await catalogoList({ PageNumber: page.value, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -75,7 +75,7 @@ async function load(): Promise<void> {
 
 async function guardar(): Promise<void> {
   if (!form.codigoCatalogo || !form.nombreCatalogo) {
-    ui.showSnack('Código y nombre son obligatorios', 4000, 'error');
+    ui.showSnack('CÃ³digo y nombre son obligatorios', 4000, 'error');
     return;
   }
   saving.value = true;
@@ -95,8 +95,8 @@ async function guardar(): Promise<void> {
   }
 }
 
-async function remove(r: CatalogoServicioDTO): Promise<void> {
-  if (!confirm(`¿Eliminar "${r.nombreCatalogo}"?`)) return;
+async function remove(r: CatalogoResponse): Promise<void> {
+  if (!confirm(`Â¿Eliminar "${r.nombreCatalogo}"?`)) return;
   const res = await catalogoDelete(r.catalogoGuid);
   if (res.success) {
     ui.showSnack('Eliminado', 3000);
@@ -109,9 +109,9 @@ onMounted(() => void load());
 
 <template>
   <v-card class="mb-4">
-    <v-card-title>Catálogo de servicios</v-card-title>
+    <v-card-title>CatÃ¡logo de servicios</v-card-title>
     <v-card-actions>
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="openNew">Nuevo ítem</v-btn>
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="openNew">Nuevo Ã­tem</v-btn>
     </v-card-actions>
   </v-card>
 
@@ -120,10 +120,10 @@ onMounted(() => void load());
     <v-table>
       <thead>
         <tr>
-          <th>Código</th>
+          <th>CÃ³digo</th>
           <th>Nombre</th>
           <th>Tipo</th>
-          <th>Categoría</th>
+          <th>CategorÃ­a</th>
           <th>Precio base</th>
           <th>Estado</th>
           <th />
@@ -155,13 +155,13 @@ onMounted(() => void load());
 
   <v-dialog v-model="dialog" max-width="560">
     <v-card>
-      <v-card-title>{{ editGuid ? 'Editar' : 'Nuevo' }} ítem de catálogo</v-card-title>
+      <v-card-title>{{ editGuid ? 'Editar' : 'Nuevo' }} Ã­tem de catÃ¡logo</v-card-title>
       <v-card-text class="d-flex flex-column gap-3">
-        <v-text-field v-model="form.codigoCatalogo" label="Código *" variant="outlined" density="comfortable" />
+        <v-text-field v-model="form.codigoCatalogo" label="CÃ³digo *" variant="outlined" density="comfortable" />
         <v-text-field v-model="form.nombreCatalogo" label="Nombre *" variant="outlined" density="comfortable" />
         <v-select v-model="form.tipoCatalogo" :items="tiposCatalogo" label="Tipo (SRV/AME)" variant="outlined" density="comfortable" />
-        <v-text-field v-model="form.categoriaCatalogo" label="Categoría" variant="outlined" density="comfortable" />
-        <v-textarea v-model="form.descripcionCatalogo" label="Descripción" variant="outlined" density="comfortable" rows="2" />
+        <v-text-field v-model="form.categoriaCatalogo" label="CategorÃ­a" variant="outlined" density="comfortable" />
+        <v-textarea v-model="form.descripcionCatalogo" label="DescripciÃ³n" variant="outlined" density="comfortable" rows="2" />
         <v-text-field v-model.number="form.precioBase" label="Precio base" type="number" step="0.01" variant="outlined" density="comfortable" />
         <v-select v-model="form.estadoCatalogo" :items="estados" label="Estado" variant="outlined" density="comfortable" />
         <div class="d-flex gap-3">

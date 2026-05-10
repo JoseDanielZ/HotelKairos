@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { habitacionesDelete, habitacionesList, habitacionesPatchEstado } from '@/services/habitaciones';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtMoney } from '@/utils/status.util';
-import type { HabitacionDTO } from '@/models';
+import type { HabitacionResponse } from '@/models';
 
 const ui = useUiStore();
-const rows = ref<HabitacionDTO[]>([]);
+const rows = ref<HabitacionResponse[]>([]);
 const total = ref(0);
 const pageIndex = ref(0);
 const pageSize = ref(15);
@@ -18,8 +18,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await habitacionesList({ PageNumber: pageIndex.value + 1, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -33,13 +33,13 @@ function onPage(p: number): void {
 async function cambiarEstado(guid: string, nuevoEstado: string): Promise<void> {
   const res = await habitacionesPatchEstado(guid, { nuevoEstado });
   if (res.success) {
-    ui.showSnack(`Estado → ${nuevoEstado}`, 3000);
+    ui.showSnack(`Estado â†’ ${nuevoEstado}`, 3000);
     void load();
   }
 }
 
 async function remove(guid: string): Promise<void> {
-  if (!confirm('¿Eliminar habitación?')) return;
+  if (!confirm('Â¿Eliminar habitaciÃ³n?')) return;
   await habitacionesDelete(guid);
   void load();
 }
@@ -60,7 +60,7 @@ onMounted(() => void load());
     <v-table>
       <thead>
         <tr>
-          <th>Número</th>
+          <th>NÃºmero</th>
           <th>Piso</th>
           <th>Sucursal</th>
           <th>Tipo</th>
@@ -73,7 +73,7 @@ onMounted(() => void load());
       <tbody>
         <tr v-for="r in rows" :key="r.habitacionGuid">
           <td><strong>{{ r.numeroHabitacion }}</strong></td>
-          <td>{{ r.piso ?? '—' }}</td>
+          <td>{{ r.piso ?? 'â€”' }}</td>
           <td>{{ r.idSucursal }}</td>
           <td>{{ r.idTipoHabitacion }}</td>
           <td>{{ r.capacidadHabitacion }}</td>

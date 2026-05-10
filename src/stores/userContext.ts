@@ -1,31 +1,30 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { api } from '@/api/http';
-import { environment } from '@/environments/environment';
 import { useAuthStore } from '@/stores/auth';
 
 const ID_CLIENTE_KEY = 'booking.idClienteOverride';
 
+/**
+ * Recorre un objeto buscando un `idCliente` numérico — soporta wrappers `{ data: ... }`
+ * para compatibilidad con respuestas legacy que vinieran del antiguo `/auth/me`.
+ */
 function extractIdCliente(node: unknown): number | null {
-  if (node == null) {
-    return null;
-  }
-  if (
-    typeof node === 'object' &&
-    'idCliente' in node &&
-    typeof (node as { idCliente: unknown }).idCliente === 'number'
-  ) {
-    return (node as { idCliente: number }).idCliente;
-  }
-  if (typeof node === 'object' && 'data' in node) {
-    return extractIdCliente((node as { data: unknown }).data);
-  }
+  if (node == null) return null;
+  if (typeof node !== 'object') return null;
+  const obj = node as Record<string, unknown>;
+  if (typeof obj.idCliente === 'number') return obj.idCliente;
+  if ('data' in obj) return extractIdCliente(obj.data);
   return null;
 }
 
+/**
+ * En el contrato de referencia (`swaggerjj.json`) ya no existe `/auth/me`: toda la
+ * información del usuario llega en `LoginResponse`. Este store mantiene la API pública
+ * (`refreshMe`, `getIdCliente`, etc.) para no obligar a cambiar las vistas todavía,
+ * pero `refreshMe` es ahora un noop que devuelve el snapshot del login.
+ */
 export const useUserContextStore = defineStore('userContext', () => {
   const mePayload = ref<unknown | null>(null);
-  const meUrl = `${environment.apiUrl}/api/v1/internal/auth/me`;
 
   async function refreshMe(): Promise<unknown | null> {
     const auth = useAuthStore();
@@ -33,17 +32,13 @@ export const useUserContextStore = defineStore('userContext', () => {
       mePayload.value = null;
       return null;
     }
-    try {
-      const { data } = await api.get<unknown>(meUrl, { skipErrorSnack: true });
-      mePayload.value = data;
-      return data;
-    } catch {
-      return null;
-    }
+    const snapshot = auth.getLoginSnapshot();
+    mePayload.value = snapshot;
+    return snapshot;
   }
 
   function getMeSnapshot(): unknown {
-    return mePayload.value;
+    return mePayload.value ?? useAuthStore().getLoginSnapshot();
   }
 
   function getStoredIdClienteOverride(): number | null {
@@ -63,18 +58,8 @@ export const useUserContextStore = defineStore('userContext', () => {
 
   function getIdCliente(): number | null {
     const override = getStoredIdClienteOverride();
-    if (override != null) {
-      return override;
-    }
-    const fromLogin = useAuthStore().getLoginSnapshot();
-    if (
-      fromLogin &&
-      'idCliente' in fromLogin &&
-      typeof (fromLogin as { idCliente?: unknown }).idCliente === 'number'
-    ) {
-      return (fromLogin as { idCliente: number }).idCliente;
-    }
-    return extractIdCliente(mePayload.value) ?? extractIdCliente(useAuthStore().getLoginSnapshot());
+    if (override != null) return override;
+    return extractIdCliente(useAuthStore().getLoginSnapshot());
   }
 
   return {

@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface CatalogoServicioDTO {
+export interface CatalogoResponse {
   idCatalogo: number;
   catalogoGuid: string;
   idSucursal?: number | null;
@@ -21,7 +21,7 @@ export interface CatalogoServicioDTO {
   creadoPorUsuario: string;
 }
 
-export interface CatalogoServicioUpsertRequest {
+export interface CrearCatalogoRequest {
   idSucursal?: number | null;
   codigoCatalogo: string;
   nombreCatalogo: string;
@@ -37,5 +37,5 @@ export interface CatalogoServicioUpsertRequest {
   estadoCatalogo?: string;
 }
 
-export type CatalogoServicioDTOApiResponse = ApiResponse<CatalogoServicioDTO>;
-export type CatalogoServicioDTODataPageResultApiResponse = ApiResponse<DataPageResult<CatalogoServicioDTO>>;
+export type CatalogoResponseApiResponse = ApiResponse<CatalogoResponse>;
+export type CatalogoResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<CatalogoResponse>>;

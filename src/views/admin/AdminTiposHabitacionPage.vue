@@ -1,9 +1,9 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { tiposHabitacionList } from '@/services/tiposHabitacion';
-import type { TipoHabitacionDTO } from '@/models';
+import type { TipoHabitacionResponse } from '@/models';
 
-const rows = ref<TipoHabitacionDTO[]>([]);
+const rows = ref<TipoHabitacionResponse[]>([]);
 const total = ref(0);
 const pageIndex = ref(0);
 const pageSize = ref(15);
@@ -13,8 +13,8 @@ async function load(): Promise<void> {
   loading.value = true;
   try {
     const r = await tiposHabitacionList({ PageNumber: pageIndex.value + 1, PageSize: pageSize.value });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -30,8 +30,8 @@ onMounted(() => void load());
 
 <template>
   <v-card class="mb-4">
-    <v-card-title>Tipos de habitación</v-card-title>
-    <v-card-subtitle>Catálogo maestro (solo lectura en esta vista).</v-card-subtitle>
+    <v-card-title>Tipos de habitaciÃ³n</v-card-title>
+    <v-card-subtitle>CatÃ¡logo maestro (solo lectura en esta vista).</v-card-subtitle>
   </v-card>
   <div v-if="loading" class="center"><v-progress-circular indeterminate /></div>
   <template v-else>
@@ -39,7 +39,7 @@ onMounted(() => void load());
       <thead>
         <tr>
           <th>Id</th>
-          <th>Código</th>
+          <th>CÃ³digo</th>
           <th>Nombre</th>
         </tr>
       </thead>

@@ -1,17 +1,17 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { habitacionDesdeObservaciones } from '@/utils/reserva-display.util';
 import { reservasCancelar, reservasList } from '@/services/reservas';
 import { useUserContextStore } from '@/stores/userContext';
 import { useUiStore } from '@/stores/ui';
-import type { ReservaDTO } from '@/models';
+import type { ReservaResponse } from '@/models';
 
 const user = useUserContextStore();
 const ui = useUiStore();
 
 const columnLabels: Record<string, string> = {
-  codigo: 'Código',
-  habitacion: 'Habitación',
+  codigo: 'CÃ³digo',
+  habitacion: 'HabitaciÃ³n',
   sucursal: 'Sucursal',
   inicio: 'Check-in',
   fin: 'Check-out',
@@ -25,7 +25,7 @@ const cancelDialog = ref(false);
 const cancelGuid = ref<string | null>(null);
 const cancelMotivo = ref('');
 const cancelBusy = ref(false);
-const rows = ref<ReservaDTO[]>([]);
+const rows = ref<ReservaResponse[]>([]);
 const total = ref(0);
 const pageIndex = ref(0);
 const pageSize = ref(10);
@@ -42,7 +42,7 @@ function syncIdClienteYLista(): void {
     void load();
   } else {
     ui.showSnack(
-      'No pudimos vincular tu cuenta de cliente automáticamente. Indica el identificador que te dio recepción.',
+      'No pudimos vincular tu cuenta de cliente automÃ¡ticamente. Indica el identificador que te dio recepciÃ³n.',
       8000,
     );
   }
@@ -84,8 +84,8 @@ async function load(): Promise<void> {
       PageNumber: pageIndex.value + 1,
       PageSize: pageSize.value,
     });
-    rows.value = r.data?.data ?? [];
-    total.value = r.data?.totalRecords ?? 0;
+    rows.value = r.data?.items ?? [];
+    total.value = r.data?.totalResultados ?? 0;
   } finally {
     loading.value = false;
   }
@@ -96,12 +96,12 @@ function onPage(p: number): void {
   void load();
 }
 
-function habitacionEtiqueta(r: ReservaDTO): string {
-  return habitacionDesdeObservaciones(r.observaciones) ?? '—';
+function habitacionEtiqueta(r: ReservaResponse): string {
+  return habitacionDesdeObservaciones(r.observaciones) ?? 'â€”';
 }
 
 function fmtDate(iso: string | null | undefined): string {
-  if (!iso) return '—';
+  if (!iso) return 'â€”';
   return new Date(iso).toLocaleString('es');
 }
 
@@ -116,7 +116,7 @@ function abrirCancelar(guid: string | null | undefined): void {
 
 async function confirmarCancelacion(): Promise<void> {
   if (!cancelGuid.value || !cancelMotivo.value.trim()) {
-    ui.showSnack('Indica el motivo de la cancelación.', 4000, 'error');
+    ui.showSnack('Indica el motivo de la cancelaciÃ³n.', 4000, 'error');
     return;
   }
   cancelBusy.value = true;
@@ -140,14 +140,14 @@ async function confirmarCancelacion(): Promise<void> {
     <header class="mis-reservas__head">
       <h1>Mis reservas</h1>
       <p class="mis-reservas__lede">
-        Aquí aparecen las reservas asociadas a tu perfil de cliente. Si el sistema no reconoce tu identificador, puedes
-        indicar el que te entregó recepción para esta sesión.
+        AquÃ­ aparecen las reservas asociadas a tu perfil de cliente. Si el sistema no reconoce tu identificador, puedes
+        indicar el que te entregÃ³ recepciÃ³n para esta sesiÃ³n.
       </p>
     </header>
 
     <v-card class="mis-reservas__panel mb-4">
-      <v-card-title>Identificación</v-card-title>
-      <v-card-subtitle>Vínculo con tu cuenta de huésped</v-card-subtitle>
+      <v-card-title>IdentificaciÃ³n</v-card-title>
+      <v-card-subtitle>VÃ­nculo con tu cuenta de huÃ©sped</v-card-subtitle>
       <v-card-text>
         <p v-if="idClienteEfectivo != null" class="mis-reservas__status">
           Cliente activo:
@@ -197,7 +197,7 @@ async function confirmarCancelacion(): Promise<void> {
                 size="small"
                 variant="tonal"
               >
-                {{ r.estadoReserva ?? '—' }}
+                {{ r.estadoReserva ?? 'â€”' }}
               </v-chip>
             </td>
             <td>
@@ -222,7 +222,7 @@ async function confirmarCancelacion(): Promise<void> {
           <v-card-text>
             <v-textarea
               v-model="cancelMotivo"
-              label="Motivo de cancelación *"
+              label="Motivo de cancelaciÃ³n *"
               variant="outlined"
               rows="3"
               autofocus
@@ -232,7 +232,7 @@ async function confirmarCancelacion(): Promise<void> {
             <v-spacer />
             <v-btn variant="text" @click="cancelDialog = false">Volver</v-btn>
             <v-btn color="error" :loading="cancelBusy" :disabled="!cancelMotivo.trim()" @click="confirmarCancelacion">
-              Confirmar cancelación
+              Confirmar cancelaciÃ³n
             </v-btn>
           </v-card-actions>
         </v-card>

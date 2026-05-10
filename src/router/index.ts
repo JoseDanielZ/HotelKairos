@@ -105,12 +105,6 @@ const router = createRouter({
 
         // Auditoría
         { path: 'auditoria', component: () => import('@/views/admin/AdminAuditoriaPage.vue') },
-
-        // Legacy / alojamientos
-        { path: 'alojamientos', component: () => import('@/views/admin/AdminAlojamientosPage.vue') },
-        { path: 'alojamientos/:id', component: () => import('@/views/admin/AdminAlojamientoEditPage.vue') },
-        { path: 'hoteles', component: () => import('@/views/admin/AdminHotelesPage.vue') },
-        { path: 'hoteles/:id', component: () => import('@/views/admin/AdminHotelEditPage.vue') },
       ],
     },
     { path: '/:pathMatch(.*)*', redirect: '/' },

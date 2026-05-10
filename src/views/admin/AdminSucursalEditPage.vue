@@ -1,10 +1,10 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { sucursalesCreate, sucursalesGetInternalByGuid, sucursalesUpdate } from '@/services/sucursales';
 import { useUiStore } from '@/stores/ui';
 import { isUuidString } from '@/utils/string.util';
-import type { SucursalDTO, SucursalUpsertRequest } from '@/models';
+import type { SucursalResponse, CrearSucursalRequest } from '@/models';
 
 const route = useRoute();
 const router = useRouter();
@@ -44,7 +44,7 @@ const form = reactive({
   estadoSucursal: 'ACTIVO',
 });
 
-function patchFormFromDto(s: SucursalDTO): void {
+function patchFormFromDto(s: SucursalResponse): void {
   form.codigoSucursal = s.codigoSucursal ?? '';
   form.nombreSucursal = s.nombreSucursal ?? '';
   form.descripcionSucursal = s.descripcionSucursal ?? '';
@@ -73,7 +73,7 @@ function patchFormFromDto(s: SucursalDTO): void {
   form.estadoSucursal = s.estadoSucursal ?? 'ACTIVO';
 }
 
-function buildBody(): SucursalUpsertRequest | null {
+function buildBody(): CrearSucursalRequest | null {
   const v = form;
   const codigo = v.codigoSucursal.trim();
   const nombre = v.nombreSucursal.trim();
@@ -84,7 +84,7 @@ function buildBody(): SucursalUpsertRequest | null {
   const telefono = v.telefono.trim();
   const correo = v.correo.trim();
   if (!codigo || !nombre || !pais || !ciudad || !direccion || !telefono || !correo) {
-    ui.showSnack('Obligatorios: código, nombre, país, ciudad, dirección, teléfono y correo.', 6000);
+    ui.showSnack('Obligatorios: cÃ³digo, nombre, paÃ­s, ciudad, direcciÃ³n, telÃ©fono y correo.', 6000);
     return null;
   }
   if (!ubicacion) ubicacion = ciudad;
@@ -131,7 +131,7 @@ onMounted(async () => {
   }
   const id = String(route.params.guid ?? '');
   if (!isUuidString(id)) {
-    ui.showSnack('GUID de sucursal inválido', 4000);
+    ui.showSnack('GUID de sucursal invÃ¡lido', 4000);
     void router.push('/admin/sucursales');
     return;
   }
@@ -179,38 +179,38 @@ async function guardar(): Promise<void> {
   <div v-else>
     <h1 class="mb-2">{{ isCreate ? 'Nueva sucursal' : 'Editar sucursal' }}</h1>
     <p class="text-medium-emphasis mb-4">
-      Obligatorios según API: código, nombre, país, ciudad, ubicación, dirección, teléfono y correo.
+      Obligatorios segÃºn API: cÃ³digo, nombre, paÃ­s, ciudad, ubicaciÃ³n, direcciÃ³n, telÃ©fono y correo.
     </p>
     <v-card>
       <v-card-text class="d-flex flex-column gap-2">
-        <v-text-field v-model="form.codigoSucursal" label="Código sucursal" variant="outlined" />
+        <v-text-field v-model="form.codigoSucursal" label="CÃ³digo sucursal" variant="outlined" />
         <v-text-field v-model="form.nombreSucursal" label="Nombre" variant="outlined" />
-        <v-textarea v-model="form.descripcionSucursal" label="Descripción" variant="outlined" />
-        <v-text-field v-model="form.descripcionCorta" label="Descripción corta" variant="outlined" />
+        <v-textarea v-model="form.descripcionSucursal" label="DescripciÃ³n" variant="outlined" />
+        <v-text-field v-model="form.descripcionCorta" label="DescripciÃ³n corta" variant="outlined" />
         <v-text-field v-model="form.tipoAlojamiento" label="Tipo alojamiento" variant="outlined" />
       <v-text-field v-model.number="form.estrellas" label="Estrellas" type="number" variant="outlined" />
-        <v-text-field v-model="form.categoriaViaje" label="Categoría viaje" variant="outlined" />
+        <v-text-field v-model="form.categoriaViaje" label="CategorÃ­a viaje" variant="outlined" />
         <v-divider class="my-2" />
-        <v-text-field v-model="form.pais" label="País" variant="outlined" />
+        <v-text-field v-model="form.pais" label="PaÃ­s" variant="outlined" />
         <v-text-field v-model="form.provincia" label="Provincia" variant="outlined" />
         <v-text-field v-model="form.ciudad" label="Ciudad" variant="outlined" />
         <div class="d-flex gap-2 align-center flex-wrap">
-          <v-text-field v-model="form.ubicacion" label="Ubicación (texto)" variant="outlined" class="flex-grow-1" />
+          <v-text-field v-model="form.ubicacion" label="UbicaciÃ³n (texto)" variant="outlined" class="flex-grow-1" />
           <v-btn variant="outlined" @click="copiarCiudadAUbicacion">Igual que ciudad</v-btn>
         </div>
-        <v-text-field v-model="form.direccion" label="Dirección" variant="outlined" />
-        <v-text-field v-model="form.codigoPostal" label="Código postal" variant="outlined" />
+        <v-text-field v-model="form.direccion" label="DirecciÃ³n" variant="outlined" />
+        <v-text-field v-model="form.codigoPostal" label="CÃ³digo postal" variant="outlined" />
         <v-text-field v-model.number="form.latitud" label="Latitud" type="number" step="any" variant="outlined" />
         <v-text-field v-model.number="form.longitud" label="Longitud" type="number" step="any" variant="outlined" />
-        <v-text-field v-model="form.telefono" label="Teléfono" variant="outlined" />
+        <v-text-field v-model="form.telefono" label="TelÃ©fono" variant="outlined" />
         <v-text-field v-model="form.correo" label="Correo" type="email" variant="outlined" />
         <v-text-field v-model="form.horaCheckin" label="Hora check-in" variant="outlined" />
         <v-text-field v-model="form.horaCheckout" label="Hora check-out" variant="outlined" />
         <v-text-field v-model.number="form.checkinAnticipado" label="Check-in anticipado" type="number" variant="outlined" />
-        <v-text-field v-model.number="form.checkoutTardio" label="Check-out tardío" type="number" variant="outlined" />
-        <v-text-field v-model.number="form.edadMinimaHuesped" label="Edad mínima huésped" type="number" variant="outlined" />
+        <v-text-field v-model.number="form.checkoutTardio" label="Check-out tardÃ­o" type="number" variant="outlined" />
+        <v-text-field v-model.number="form.edadMinimaHuesped" label="Edad mÃ­nima huÃ©sped" type="number" variant="outlined" />
         <v-text-field v-model="form.estadoSucursal" label="Estado operativo" variant="outlined" />
-        <v-checkbox v-model="form.aceptaNinos" label="Acepta niños" />
+        <v-checkbox v-model="form.aceptaNinos" label="Acepta niÃ±os" />
         <v-checkbox v-model="form.permiteMascotas" label="Permite mascotas" />
         <v-checkbox v-model="form.sePermiteFumar" label="Se permite fumar" />
         <v-btn color="primary" :loading="guardando" @click="guardar">Guardar</v-btn>

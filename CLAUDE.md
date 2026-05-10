@@ -22,8 +22,8 @@ Vue 3 (Composition API) · Vite · TypeScript · Vuetify 3 · Pinia · Vue Route
 ### HTTP layer (`src/api/http.ts`)
 
 Single Axios instance (`api`) shared by all services. Two interceptors:
-- **Request**: attaches `Authorization: Bearer <token>` from `localStorage['booking.jwt']` (skipped on the login endpoint).
-- **Response**: reads `ProblemDetails` from error bodies, shows a `useUiStore().showSnack()` notification, and hard-redirects to `/login?returnUrl=...` on 401. Pass `{ skipErrorSnack: true }` in the request config to suppress the snack for a specific call.
+- **Request**: attaches `Authorization: Bearer <token>` from `localStorage['booking.jwt']` (skipped on `/api/v1/auth/login` and `/api/v1/auth/refresh`).
+- **Response**: reads `ProblemDetails`/`ApiErrorResponse` from error bodies, shows a `useUiStore().showSnack()` notification, and hard-redirects to `/login?returnUrl=...` on 401. Pass `{ skipErrorSnack: true }` in the request config to suppress the snack for a specific call.
 
 ### Services (`src/services/`)
 
@@ -35,12 +35,12 @@ Every backend response is wrapped in `ApiResponse<T>` (`src/models/api.types.ts`
 ```ts
 { success: boolean; message?: string | null; data?: T; errors?: string[] | null }
 ```
-Paginated lists use `DataPageResult<T>` inside that wrapper. All model types are barrel-exported from `src/models/index.ts`.
+Paginated lists use `PaginatedResponse<T>` (`{ items, paginaActual, limite, totalResultados, totalPaginas, tieneSiguiente, tieneAnterior }`) inside that wrapper. Errores controlados llegan como `ApiErrorResponse` (`{ status, message, detail?, errors? }`). El alias `DataPageResult<T>` queda marcado `@deprecated` mientras se migran los services entidad por entidad. All model types are barrel-exported from `src/models/index.ts`.
 
 ### Pinia stores (`src/stores/`)
 
-- **`auth`** — login/logout, JWT persisted to `localStorage['booking.jwt']`, full login payload in `localStorage['booking.login']`. `isAuthenticated()`, `getRoles()`, `hasAnyRole(roles[])` are the main helpers.
-- **`userContext`** — fetches `/api/v1/internal/auth/me` after login; resolves `idCliente` with localStorage override support (`booking.idClienteOverride`).
+- **`auth`** — login (`POST /api/v1/auth/login`), refresh (`POST /api/v1/auth/refresh`), logout, JWT persisted to `localStorage['booking.jwt']`, full `LoginResponse` payload (incluye `usuarioGuid`, `username`, `email`, `refreshToken`, `expiration`, `roles[]`) en `localStorage['booking.login']`. `isAuthenticated()`, `getRoles()`, `hasAnyRole(roles[])` son los helpers principales.
+- **`userContext`** — el endpoint `/auth/me` ya no existe; el store conserva la API (`refreshMe()`, `getIdCliente()`, etc.) leyendo del `LoginResponse` persistido. Soporta override por localStorage (`booking.idClienteOverride`).
 - **`ui`** — snack bar state. Call `useUiStore().showSnack(text, ms, variant)` from anywhere for feedback.
 
 ### Routing (`src/router/index.ts`)

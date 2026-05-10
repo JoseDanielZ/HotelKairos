@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface TipoHabitacionDTO {
+export interface TipoHabitacionResponse {
   idTipoHabitacion: number;
   tipoHabitacionGuid: string;
   slug?: string | null;
@@ -20,4 +20,4 @@ export interface TipoHabitacionDTO {
   creadoPorUsuario?: string | null;
 }
 
-export type TipoHabitacionDTODataPageResultApiResponse = ApiResponse<DataPageResult<TipoHabitacionDTO>>;
+export type TipoHabitacionResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<TipoHabitacionResponse>>;

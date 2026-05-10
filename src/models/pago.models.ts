@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface PagoDTO {
+export interface PagoResponse {
   idPago: number;
   pagoGuid: string;
   idFactura: number;
@@ -20,7 +20,7 @@ export interface PagoDTO {
   fechaRegistroUtc: string;
 }
 
-export interface PagoCreateRequest {
+export interface CrearPagoRequest {
   idFactura: number;
   idReserva: number;
   monto: number;
@@ -36,12 +36,12 @@ export interface PagoCreateRequest {
   tipoCambio?: number;
 }
 
-export interface PagoUpdateRequest {
+export interface CambiarEstadoPagoBody {
   estadoPago?: string | null;
   codigoAutorizacion?: string | null;
   transaccionExterna?: string | null;
   respuestaPasarela?: string | null;
 }
 
-export type PagoDTOApiResponse = ApiResponse<PagoDTO>;
-export type PagoDTODataPageResultApiResponse = ApiResponse<DataPageResult<PagoDTO>>;
+export type PagoResponseApiResponse = ApiResponse<PagoResponse>;
+export type PagoResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<PagoResponse>>;

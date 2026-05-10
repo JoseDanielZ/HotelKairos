@@ -1,6 +1,6 @@
-import type { ApiResponse, DataPageResult } from './api.types';
+﻿import type { ApiResponse, PaginatedResponse } from './api.types';
 
-export interface UsuarioDTO {
+export interface UsuarioResponse {
   idUsuario: number;
   usuarioGuid: string;
   idCliente?: number | null;
@@ -18,7 +18,7 @@ export interface UsuarioDTO {
   roles: string[];
 }
 
-export interface UsuarioCreateRequest {
+export interface CrearUsuarioRequest {
   idCliente?: number | null;
   username: string;
   correo: string;
@@ -29,12 +29,12 @@ export interface UsuarioCreateRequest {
   idRoles?: number[];
 }
 
-export interface UsuarioUpdateRequest {
+export interface ActualizarUsuarioRequest {
   correo?: string | null;
   nombres?: string | null;
   apellidos?: string | null;
   estadoUsuario?: string | null;
 }
 
-export type UsuarioDTOApiResponse = ApiResponse<UsuarioDTO>;
-export type UsuarioDTODataPageResultApiResponse = ApiResponse<DataPageResult<UsuarioDTO>>;
+export type UsuarioResponseApiResponse = ApiResponse<UsuarioResponse>;
+export type UsuarioResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<UsuarioResponse>>;

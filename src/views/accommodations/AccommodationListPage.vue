@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { accommodationsSearch } from '@/services/accommodations';
@@ -58,14 +58,14 @@ function fechasResumen(): string {
   if (checkOut.value.getTime() <= checkIn.value.getTime()) {
     return 'Agrega fechas';
   }
-  return `${formatFechaCorta(checkIn.value)} – ${formatFechaCorta(checkOut.value)}`;
+  return `${formatFechaCorta(checkIn.value)} â€“ ${formatFechaCorta(checkOut.value)}`;
 }
 
 function huespedesResumen(): string {
   const n = adultos.value + ninos.value;
-  const p = n === 1 ? 'huésped' : 'huéspedes';
+  const p = n === 1 ? 'huÃ©sped' : 'huÃ©spedes';
   const h = habitaciones.value === 1 ? '1 hab.' : `${habitaciones.value} hab.`;
-  return `${n} ${p} · ${h}`;
+  return `${n} ${p} Â· ${h}`;
 }
 
 function formatFechaCorta(d: Date): string {
@@ -74,13 +74,13 @@ function formatFechaCorta(d: Date): string {
 
 function estrellas(n: number | null | undefined): string {
   if (n == null || n <= 0) return '';
-  return '★'.repeat(Math.min(5, Math.round(n)));
+  return 'â˜…'.repeat(Math.min(5, Math.round(n)));
 }
 
 function resumenTexto(r: SucursalPublicDto, max = 120): string {
   const t = (r.descripcionSucursal ?? '').trim();
   if (t.length <= max) return t;
-  return t.slice(0, max).trimEnd() + '…';
+  return t.slice(0, max).trimEnd() + 'â€¦';
 }
 
 function reservaQueryParams(): Record<string, string> {
@@ -115,8 +115,8 @@ async function load(): Promise<void> {
       pageNumber: pageIndex.value + 1,
       pageSize: pageSize.value,
     });
-    rows.value = res.data?.data ?? [];
-    total.value = res.data?.totalRecords ?? 0;
+    rows.value = res.data?.items ?? [];
+    total.value = res.data?.totalResultados ?? 0;
   } catch {
     loadError.value = true;
   } finally {
@@ -143,18 +143,18 @@ onMounted(() => {
   <div class="list-page">
     <section class="hero" aria-labelledby="accom-hero-title">
       <div class="hero__inner">
-        <h1 id="accom-hero-title">Encuentra tu próxima estancia</h1>
+        <h1 id="accom-hero-title">Encuentra tu prÃ³xima estancia</h1>
         <p class="hero__sub">
-          Explora destinos por nombre o ciudad. Los datos de fechas y huéspedes acompañan tu reserva; el calendario del
+          Explora destinos por nombre o ciudad. Los datos de fechas y huÃ©spedes acompaÃ±an tu reserva; el calendario del
           alojamiento confirma la disponibilidad.
         </p>
       </div>
     </section>
 
     <div class="search-sticky">
-      <div class="search-pill" role="search" aria-label="Búsqueda de alojamientos">
+      <div class="search-pill" role="search" aria-label="BÃºsqueda de alojamientos">
         <div class="search-pill__segment search-pill__segment--where">
-          <span class="search-pill__kicker">Dónde</span>
+          <span class="search-pill__kicker">DÃ³nde</span>
           <v-text-field
             v-model="destino"
             class="search-pill__field"
@@ -197,9 +197,9 @@ onMounted(() => {
         </div>
         <span class="search-pill__divider" aria-hidden="true" />
         <div class="search-pill__segment search-pill__segment--who">
-          <span class="search-pill__kicker">Quién</span>
+          <span class="search-pill__kicker">QuiÃ©n</span>
           <p class="search-pill__hint">{{ huespedesResumen() }}</p>
-          <div class="search-pill__guest-row" aria-label="Ocupación">
+          <div class="search-pill__guest-row" aria-label="OcupaciÃ³n">
             <v-select
               v-model="adultos"
               class="search-pill__field search-pill__mini"
@@ -213,7 +213,7 @@ onMounted(() => {
               v-model="ninos"
               class="search-pill__field search-pill__mini"
               :items="ninosOptions"
-              label="Niños"
+              label="NiÃ±os"
               variant="outlined"
               density="compact"
               hide-details
@@ -245,13 +245,13 @@ onMounted(() => {
         <v-progress-circular indeterminate />
       </div>
       <v-alert v-else-if="loadError" type="error" variant="tonal" class="my-4">
-        No se pudieron cargar los alojamientos. Verifica tu conexión e intenta de nuevo.
+        No se pudieron cargar los alojamientos. Verifica tu conexiÃ³n e intenta de nuevo.
         <template #append>
           <v-btn variant="text" @click="load">Reintentar</v-btn>
         </template>
       </v-alert>
       <v-card v-else-if="rows.length === 0" class="empty-card pa-4">
-        <p>No hay alojamientos con esos criterios. Prueba con otro destino o amplía la búsqueda.</p>
+        <p>No hay alojamientos con esos criterios. Prueba con otro destino o amplÃ­a la bÃºsqueda.</p>
       </v-card>
       <template v-else>
         <div class="card-grid">
@@ -267,14 +267,14 @@ onMounted(() => {
             </div>
             <div class="property-card__body">
               <div class="property-card__title-row">
-                <h3 class="property-card__name">{{ r.nombreSucursal ?? '—' }}</h3>
+                <h3 class="property-card__name">{{ r.nombreSucursal ?? 'â€”' }}</h3>
                 <span v-if="r.estrellas" class="property-card__stars" :aria-label="'Estrellas: ' + r.estrellas">
                   {{ estrellas(r.estrellas) }}
                 </span>
               </div>
               <p class="property-card__location">
                 <v-icon class="inline-icon" icon="mdi-map-marker" size="small" aria-hidden="true" />
-                {{ r.ciudad ?? '—' }}{{ r.pais ? ', ' + r.pais : '' }}
+                {{ r.ciudad ?? 'â€”' }}{{ r.pais ? ', ' + r.pais : '' }}
               </p>
               <p v-if="r.tipoAlojamiento" class="property-card__meta">{{ r.tipoAlojamiento }}</p>
               <p v-if="r.descripcionSucursal" class="property-card__desc">{{ resumenTexto(r) }}</p>
