@@ -2,7 +2,9 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
-  tiposHabitacionList,
+  tiposHabitacionGetByGuid,
+  tiposHabitacionCreate,
+  tiposHabitacionUpdate,
   tiposHabitacionGetAmenidades,
   tiposHabitacionAddAmenidad,
   tiposHabitacionRemoveAmenidad,
@@ -20,6 +22,7 @@ import type {
   TipoHabitacionImagenResponse,
   AgregarAmenidadRequest,
   AgregarTipoHabitacionImagenRequest,
+  CrearTipoHabitacionRequest,
 } from '@/models';
 import type { CatalogoResponse } from '@/models/catalogo.models';
 
@@ -205,15 +208,8 @@ onMounted(async () => {
   }
   tipoGuid.value = id;
   try {
-    const r = await tiposHabitacionList({ PageSize: 1 });
-    // Fetch by guid — need to iterate since there's no getByGuid exposed yet
-    // We load via the list page with a broad fetch and find the item
-    // Actually there IS no getByGuid in the frontend service; patch form from what we have
-    // For now load list to find the item by guid
-    const rAll = await tiposHabitacionList({ PageSize: 200 });
-    const found = (rAll.data?.items ?? []).find(t => t.tipoHabitacionGuid === id);
-    if (found) patchForm(found);
-    void r; // suppress unused
+    const r = await tiposHabitacionGetByGuid(id);
+    if (r.success && r.data) patchForm(r.data);
     await Promise.all([loadAmenidades(), loadImagenes()]);
   } finally {
     loading.value = false;
@@ -227,10 +223,28 @@ async function guardar(): Promise<void> {
   }
   guardando.value = true;
   try {
-    // NOTE: TiposHabitacion CRUD endpoints exist but we don't have a dedicated service
-    // function for create/update yet — using direct import from the service file
-    // For now show a placeholder message until create/update services are added
-    ui.showSnack('Guardado (función de guardado pendiente de implementar en servicio)', 5000);
+    const body: CrearTipoHabitacionRequest = {
+      codigoTipoHabitacion: form.codigoTipoHabitacion.trim(),
+      nombreTipoHabitacion: form.nombreTipoHabitacion.trim(),
+      descripcion: form.descripcion || null,
+      capacidadAdultos: form.capacidadAdultos,
+      capacidadNinos: form.capacidadNinos,
+      capacidadTotal: Math.max(1, form.capacidadAdultos + form.capacidadNinos),
+      tipoCama: form.tipoCama || null,
+      areaM2: form.areaM2 ?? null,
+      permiteEventos: form.permiteEventos,
+      permiteReservaPublica: form.permiteReservaPublica,
+      estadoTipoHabitacion: form.estadoTipoHabitacion,
+    };
+    const res = isCreate.value
+      ? await tiposHabitacionCreate(body)
+      : await tiposHabitacionUpdate(tipoGuid.value!, body);
+    if (res.success) {
+      ui.showSnack(isCreate.value ? 'Tipo de habitación creado' : 'Tipo de habitación actualizado', 3000);
+      void router.push('/admin/tipos-habitacion');
+    } else {
+      ui.showSnack(res.message || 'Error al guardar', 5000, 'error');
+    }
   } finally {
     guardando.value = false;
   }

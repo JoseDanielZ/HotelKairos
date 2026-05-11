@@ -95,7 +95,11 @@ async function doCierreFinal(): Promise<void> {
   if (!confirm('¿Generar cierre final y pago simulado para la reserva de esta factura?')) return;
   cierreBusy.value = true;
   try {
-    const reservaGuid = String(detalleFactura.value.idReserva);
+    const reservaGuid = detalleFactura.value.guidReserva;
+    if (!reservaGuid) {
+      ui.showSnack('GUID de reserva no disponible en esta factura', 4000, 'error');
+      return;
+    }
     const res = await facturasGenerarFinalYPago(reservaGuid);
     if (res.success) {
       ui.showSnack('Cierre y pago simulado generados', 3000);

@@ -3,6 +3,7 @@ import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
   CrearHabitacionRequest,
+  HabitacionResponse,
   HabitacionResponseApiResponse,
   HabitacionResponsePaginatedResponseApiResponse,
   HabitacionDetalleResponseApiResponse,
@@ -60,5 +61,29 @@ export async function habitacionesPatchInhabilitar(
   body: InhabilitarRequest,
 ): Promise<ApiResponse<boolean>> {
   const { data } = await api.patch<ApiResponse<boolean>>(`${base}/${guid}/inhabilitar`, body);
+  return data;
+}
+
+export async function habitacionesGetDisponibles(p: {
+  SucursalGuid?: string;
+  TipoHabitacionGuid?: string;
+  FechaEntrada?: string;
+  FechaSalida?: string;
+  NumAdultos?: number;
+  NumNinos?: number;
+}): Promise<ApiResponse<HabitacionResponse[]>> {
+  const { data } = await api.get<ApiResponse<HabitacionResponse[]>>(`${base}/disponibles`, { params: toParams(p) });
+  return data;
+}
+
+export async function habitacionesGetDisponibilidad(p: {
+  SucursalGuid?: string;
+  TipoHabitacionGuid?: string;
+  FechaEntrada?: string;
+  FechaSalida?: string;
+  NumAdultos?: number;
+  NumNinos?: number;
+}): Promise<ApiResponse<HabitacionResponse[]>> {
+  const { data } = await api.get<ApiResponse<HabitacionResponse[]>>(`${base}/disponibilidad`, { params: toParams(p) });
   return data;
 }

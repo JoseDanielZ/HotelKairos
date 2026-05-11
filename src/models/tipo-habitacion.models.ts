@@ -57,3 +57,19 @@ export type TipoHabitacionCatalogoListApiResponse = ApiResponse<readonly TipoHab
 export type TipoHabitacionCatalogoApiResponse = ApiResponse<TipoHabitacionCatalogoResponse>;
 export type TipoHabitacionImagenListApiResponse = ApiResponse<readonly TipoHabitacionImagenResponse[]>;
 export type TipoHabitacionImagenApiResponse = ApiResponse<TipoHabitacionImagenResponse>;
+
+export interface CrearTipoHabitacionRequest {
+  codigoTipoHabitacion: string;
+  nombreTipoHabitacion: string;
+  descripcion?: string | null;
+  capacidadAdultos: number;
+  capacidadNinos?: number;
+  capacidadTotal: number;
+  tipoCama?: string | null;
+  areaM2?: number | null;
+  permiteEventos?: number;
+  permiteReservaPublica?: number;
+  estadoTipoHabitacion?: string;
+}
+
+export type TipoHabitacionResponseApiResponse = ApiResponse<TipoHabitacionResponse>;

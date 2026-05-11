@@ -13,6 +13,7 @@ export interface FacturaResponse {
   guidFactura: string;
   idCliente: number;
   idReserva: number;
+  guidReserva?: string | null;
   idSucursal: number;
   numeroFactura: string;
   tipoFactura: string;

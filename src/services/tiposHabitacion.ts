@@ -2,12 +2,14 @@
 import { environment } from '@/environments/environment';
 import type {
   TipoHabitacionResponsePaginatedResponseApiResponse,
+  TipoHabitacionResponseApiResponse,
   TipoHabitacionCatalogoListApiResponse,
   TipoHabitacionCatalogoApiResponse,
   TipoHabitacionImagenListApiResponse,
   TipoHabitacionImagenApiResponse,
   AgregarAmenidadRequest,
   AgregarTipoHabitacionImagenRequest,
+  CrearTipoHabitacionRequest,
 } from '@/models';
 import type { ApiResponse } from '@/models/api.types';
 import { toParams } from '@/utils/params.util';
@@ -21,6 +23,21 @@ export async function tiposHabitacionList(p: {
   PageSize?: number;
 }): Promise<TipoHabitacionResponsePaginatedResponseApiResponse> {
   const { data } = await api.get<TipoHabitacionResponsePaginatedResponseApiResponse>(base, { params: toParams(p) });
+  return data;
+}
+
+export async function tiposHabitacionGetByGuid(guid: string): Promise<TipoHabitacionResponseApiResponse> {
+  const { data } = await api.get<TipoHabitacionResponseApiResponse>(`${base}/${guid}`);
+  return data;
+}
+
+export async function tiposHabitacionCreate(body: CrearTipoHabitacionRequest): Promise<TipoHabitacionResponseApiResponse> {
+  const { data } = await api.post<TipoHabitacionResponseApiResponse>(base, body);
+  return data;
+}
+
+export async function tiposHabitacionUpdate(guid: string, body: CrearTipoHabitacionRequest): Promise<TipoHabitacionResponseApiResponse> {
+  const { data } = await api.put<TipoHabitacionResponseApiResponse>(`${base}/${guid}`, body);
   return data;
 }
 
