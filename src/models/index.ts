@@ -15,3 +15,4 @@ export * from './valoracion.models';
 export * from './rol.models';
 export * from './usuario.models';
 export * from './auditoria.models';
+export * from './image.models';

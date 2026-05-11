@@ -3,8 +3,13 @@ import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
   CancelarReservaBody,
+  CrearReservaPublicRequest,
   InhabilitarRequest,
   CrearReservaRequest,
+  ReservaHabitacionListApiResponse,
+  ReservaHabitacionRequest,
+  ReservaHabitacionResponseApiResponse,
+  ReservaPublicResponseApiResponse,
   ReservaResponseApiResponse,
   ReservaResponsePaginatedResponseApiResponse,
   ActualizarReservaRequest,
@@ -12,6 +17,7 @@ import type {
 import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1/internal/reservas`;
+const publicBase = `${environment.apiUrl}/api/v1/public/reservas`;
 
 export async function reservasList(p: {
   IdCliente?: number;
@@ -61,5 +67,25 @@ export async function reservasCancelar(
 
 export async function reservasInhabilitar(guid: string, body: InhabilitarRequest): Promise<ApiResponse<boolean>> {
   const { data } = await api.patch<ApiResponse<boolean>>(`${base}/${guid}/inhabilitar`, body);
+  return data;
+}
+
+export async function reservasGetHabitaciones(reservaGuid: string): Promise<ReservaHabitacionListApiResponse> {
+  const { data } = await api.get<ReservaHabitacionListApiResponse>(`${base}/${reservaGuid}/habitaciones`);
+  return data;
+}
+
+export async function reservasAgregarHabitacion(reservaGuid: string, body: ReservaHabitacionRequest): Promise<ReservaHabitacionResponseApiResponse> {
+  const { data } = await api.post<ReservaHabitacionResponseApiResponse>(`${base}/${reservaGuid}/habitaciones`, body);
+  return data;
+}
+
+export async function reservasEliminarHabitacion(reservaGuid: string, id: number): Promise<ApiResponse<boolean>> {
+  const { data } = await api.delete<ApiResponse<boolean>>(`${base}/${reservaGuid}/habitaciones/${id}`);
+  return data;
+}
+
+export async function reservasCrearPublica(body: CrearReservaPublicRequest): Promise<ReservaPublicResponseApiResponse> {
+  const { data } = await api.post<ReservaPublicResponseApiResponse>(publicBase, body);
   return data;
 }

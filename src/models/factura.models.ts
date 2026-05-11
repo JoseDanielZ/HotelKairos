@@ -50,3 +50,5 @@ export interface ActualizarFacturaRequest {
 
 export type FacturaResponseApiResponse = ApiResponse<FacturaResponse>;
 export type FacturaResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<FacturaResponse>>;
+export type FacturaResponseListApiResponse = ApiResponse<readonly FacturaResponse[]>;
+export type FacturaDetalleListApiResponse = ApiResponse<readonly FacturaDetalleResponse[]>;

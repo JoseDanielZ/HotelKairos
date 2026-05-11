@@ -6,6 +6,8 @@ import type {
   ClienteResponseApiResponse,
   ClienteResponsePaginatedResponseApiResponse,
   ActualizarClienteRequest,
+  ReservaResponse,
+  ValoracionResponse,
 } from '@/models';
 import { toParams } from '@/utils/params.util';
 
@@ -47,5 +49,15 @@ export async function clientesInhabilitar(
   body: { motivo: string },
 ): Promise<ApiResponse<boolean>> {
   const { data } = await api.patch<ApiResponse<boolean>>(`${base}/${guid}/inhabilitar`, body);
+  return data;
+}
+
+export async function clientesGetReservas(guid: string): Promise<ApiResponse<ReservaResponse[]>> {
+  const { data } = await api.get<ApiResponse<ReservaResponse[]>>(`${base}/${guid}/reservas`);
+  return data;
+}
+
+export async function clientesGetValoraciones(guid: string): Promise<ApiResponse<ValoracionResponse[]>> {
+  const { data } = await api.get<ApiResponse<ValoracionResponse[]>>(`${base}/${guid}/valoraciones`);
   return data;
 }

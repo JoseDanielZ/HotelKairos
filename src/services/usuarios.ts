@@ -2,7 +2,10 @@
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
+  AsignarRolRequest,
   CrearUsuarioRequest,
+  RolAsignadoListApiResponse,
+  RolAsignadoResponseApiResponse,
   UsuarioResponseApiResponse,
   UsuarioResponsePaginatedResponseApiResponse,
   ActualizarUsuarioRequest,
@@ -46,5 +49,20 @@ export async function usuariosInhabilitar(
   body: { motivo: string },
 ): Promise<ApiResponse<boolean>> {
   const { data } = await api.patch<ApiResponse<boolean>>(`${base}/${guid}/inhabilitar`, body);
+  return data;
+}
+
+export async function usuariosGetRoles(usuarioGuid: string): Promise<RolAsignadoListApiResponse> {
+  const { data } = await api.get<RolAsignadoListApiResponse>(`${base}/${usuarioGuid}/roles`);
+  return data;
+}
+
+export async function usuariosAsignarRol(usuarioGuid: string, body: AsignarRolRequest): Promise<RolAsignadoResponseApiResponse> {
+  const { data } = await api.post<RolAsignadoResponseApiResponse>(`${base}/${usuarioGuid}/roles`, body);
+  return data;
+}
+
+export async function usuariosQuitarRol(usuarioGuid: string, idRol: number): Promise<ApiResponse<boolean>> {
+  const { data } = await api.delete<ApiResponse<boolean>>(`${base}/${usuarioGuid}/roles/${idRol}`);
   return data;
 }

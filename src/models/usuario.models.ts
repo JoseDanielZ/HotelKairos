@@ -38,3 +38,22 @@ export interface ActualizarUsuarioRequest {
 
 export type UsuarioResponseApiResponse = ApiResponse<UsuarioResponse>;
 export type UsuarioResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<UsuarioResponse>>;
+
+/** `RolAsignadoResponse` — rol asignado a un usuario. */
+export interface RolAsignadoResponse {
+  idUsuarioRol: number;
+  idRol: number;
+  rolGuid: string;
+  nombreRol: string;
+  estadoUsuarioRol: string;
+  activo: number;
+  fechaRegistroUtc: string;
+}
+
+/** `AsignarRolRequest` — cuerpo POST `/usuarios/{usuarioGuid}/roles`. */
+export interface AsignarRolRequest {
+  rolGuid: string;
+}
+
+export type RolAsignadoResponseApiResponse = ApiResponse<RolAsignadoResponse>;
+export type RolAsignadoListApiResponse = ApiResponse<RolAsignadoResponse[]>;

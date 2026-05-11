@@ -54,3 +54,10 @@ export interface CargoEstadiaRequest {
 
 export type EstadiaResponseApiResponse = ApiResponse<EstadiaResponse>;
 export type EstadiaResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<EstadiaResponse>>;
+export type CargoEstadiaResponseApiResponse = ApiResponse<CargoEstadiaResponse>;
+export type CargoEstadiaListApiResponse = ApiResponse<CargoEstadiaResponse[]>;
+
+/** `AnularCargoBody` — cuerpo PATCH `/cargos-estadia/{guid}/anular`. */
+export interface AnularCargoBody {
+  motivo: string;
+}

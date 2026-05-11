@@ -68,3 +68,40 @@ export interface CrearSucursalRequest {
 
 /** Same shape as public DTO envelope for `/api/v1/internal/sucursales/{guid}/publico`. */
 export type SucursalPublicDtoFromInternalApiResponse = ApiResponse<SucursalPublicDto>;
+
+/** `SucursalImagenResponse` — imagen de sucursal. */
+export interface SucursalImagenResponse {
+  idSucursalImagen: number;
+  sucursalImagenGuid: string;
+  idSucursal: number;
+  urlImagen: string;
+  descripcionImagen?: string | null;
+  ordenVisualizacion: number;
+  esPrincipal: number;
+  fechaRegistroUtc: string;
+}
+
+/** `CrearSucursalImagenRequest` — cuerpo POST `/sucursales/{guid}/imagenes`. */
+export interface CrearSucursalImagenRequest {
+  urlImagen: string;
+  descripcionImagen?: string | null;
+  ordenVisualizacion?: number;
+  esPrincipal?: number;
+}
+
+/** `ResumenRatingResponse` — promedios de valoraciones de la sucursal. */
+export interface ResumenRatingResponse {
+  sucursalGuid: string;
+  totalValoraciones: number;
+  promedioGeneral?: number | null;
+  promedioLimpieza?: number | null;
+  promedioConfort?: number | null;
+  promedioUbicacion?: number | null;
+  promedioInstalaciones?: number | null;
+  promedioPersonal?: number | null;
+  promedioCalidadPrecio?: number | null;
+}
+
+export type SucursalImagenResponseApiResponse = ApiResponse<SucursalImagenResponse>;
+export type SucursalImagenListApiResponse = ApiResponse<SucursalImagenResponse[]>;
+export type ResumenRatingResponseApiResponse = ApiResponse<ResumenRatingResponse>;

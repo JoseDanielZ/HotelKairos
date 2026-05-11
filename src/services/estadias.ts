@@ -2,8 +2,10 @@
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
+  AnularCargoBody,
   CargoEstadiaRequest,
   CargoEstadiaResponse,
+  CargoEstadiaResponseApiResponse,
   EstadiaResponseApiResponse,
   EstadiaResponsePaginatedResponseApiResponse,
   CheckinRequest,
@@ -12,6 +14,7 @@ import type {
 import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1/internal/estadias`;
+const cargosBase = `${environment.apiUrl}/api/v1/internal/cargos-estadia`;
 
 export async function estadiasList(p: {
   IdCliente?: number;
@@ -50,5 +53,20 @@ export async function estadiasAgregarCargo(
   body: CargoEstadiaRequest,
 ): Promise<ApiResponse<CargoEstadiaResponse>> {
   const { data } = await api.post<ApiResponse<CargoEstadiaResponse>>(`${base}/${guid}/cargos`, body);
+  return data;
+}
+
+export async function estadiasGetCargo(cargoGuid: string): Promise<CargoEstadiaResponseApiResponse> {
+  const { data } = await api.get<CargoEstadiaResponseApiResponse>(`${base}/cargos/${cargoGuid}`);
+  return data;
+}
+
+export async function estadiasMantenimiento(estadiaGuid: string): Promise<EstadiaResponseApiResponse> {
+  const { data } = await api.patch<EstadiaResponseApiResponse>(`${base}/${estadiaGuid}/mantenimiento`, {});
+  return data;
+}
+
+export async function cargosAnular(cargoGuid: string, body: AnularCargoBody): Promise<CargoEstadiaResponseApiResponse> {
+  const { data } = await api.patch<CargoEstadiaResponseApiResponse>(`${cargosBase}/${cargoGuid}/anular`, body);
   return data;
 }

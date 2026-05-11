@@ -62,6 +62,8 @@ const router = createRouter({
 
         // Tipos habitación
         { path: 'tipos-habitacion', component: () => import('@/views/admin/AdminTiposHabitacionPage.vue') },
+        { path: 'tipos-habitacion/nuevo', component: () => import('@/views/admin/AdminTipoHabitacionEditPage.vue') },
+        { path: 'tipos-habitacion/:guid', component: () => import('@/views/admin/AdminTipoHabitacionEditPage.vue') },
 
         // Habitaciones
         { path: 'habitaciones', component: () => import('@/views/admin/AdminHabitacionesPage.vue') },

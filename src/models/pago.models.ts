@@ -45,3 +45,4 @@ export interface CambiarEstadoPagoBody {
 
 export type PagoResponseApiResponse = ApiResponse<PagoResponse>;
 export type PagoResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<PagoResponse>>;
+export type PagoResponseListApiResponse = ApiResponse<readonly PagoResponse[]>;

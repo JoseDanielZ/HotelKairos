@@ -1,9 +1,10 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import { rolesCreate, rolesDelete, rolesList, rolesUpdate } from '@/services/roles';
+import { rolesCreate, rolesDelete, rolesList, rolesUpdate, rolesGetPermisos, rolesAsignarPermiso, rolesQuitarPermiso } from '@/services/roles';
+import { permisosGetAll, type PermisoDto } from '@/services/permisos';
 import { useUiStore } from '@/stores/ui';
 import { statusColor, fmtDate } from '@/utils/status.util';
-import type { RolResponse, CrearRolRequest } from '@/models';
+import type { RolResponse, CrearRolRequest, PermisoResponse } from '@/models';
 
 const ui = useUiStore();
 const rows = ref<RolResponse[]>([]);
@@ -22,6 +23,15 @@ const form = reactive<CrearRolRequest>({
 });
 
 const estados = ['ACT', 'INA'];
+
+// ── Permisos picker ───────────────────────────────────────────────────────────
+const permisosDialog = ref(false);
+const permisosRolGuid = ref('');
+const permisosRolNombre = ref('');
+const permisosAsignados = ref<PermisoResponse[]>([]);
+const permisosAll = ref<PermisoDto[]>([]);
+const loadingPermisos = ref(false);
+const savingPermiso = ref<Record<string, boolean>>({});
 
 function openNew(): void {
   editGuid.value = null;
@@ -69,13 +79,63 @@ async function guardar(): Promise<void> {
 }
 
 async function remove(r: RolResponse): Promise<void> {
-  if (!confirm(`Â¿Eliminar el rol "${r.nombreRol}"?`)) return;
+  if (!confirm(`¿Eliminar el rol "${r.nombreRol}"?`)) return;
   const res = await rolesDelete(r.rolGuid);
   if (res.success) {
     ui.showSnack('Rol eliminado', 3000);
     void load();
   }
 }
+
+async function openPermisos(r: RolResponse): Promise<void> {
+  permisosRolGuid.value = r.rolGuid;
+  permisosRolNombre.value = r.nombreRol;
+  permisosAsignados.value = [];
+  permisosDialog.value = true;
+  loadingPermisos.value = true;
+  try {
+    const [rAsig, rAll] = await Promise.all([
+      rolesGetPermisos(r.rolGuid),
+      permisosAll.value.length ? Promise.resolve({ data: permisosAll.value }) : permisosGetAll(),
+    ]);
+    permisosAsignados.value = rAsig.data ?? [];
+    if (!permisosAll.value.length) permisosAll.value = (rAll as { data: PermisoDto[] }).data ?? [];
+  } finally {
+    loadingPermisos.value = false;
+  }
+}
+
+function isAsignado(codigo: string): boolean {
+  return permisosAsignados.value.some(p => p.idPermiso === codigo);
+}
+
+async function togglePermiso(codigo: string): Promise<void> {
+  savingPermiso.value[codigo] = true;
+  try {
+    if (isAsignado(codigo)) {
+      const res = await rolesQuitarPermiso(permisosRolGuid.value, codigo);
+      if (res.success) {
+        permisosAsignados.value = permisosAsignados.value.filter(p => p.idPermiso !== codigo);
+        ui.showSnack('Permiso removido', 2000);
+      }
+    } else {
+      const res = await rolesAsignarPermiso(permisosRolGuid.value, { idPermiso: codigo });
+      if (res.success && res.data) {
+        permisosAsignados.value = [...permisosAsignados.value, res.data];
+        ui.showSnack('Permiso asignado', 2000);
+      }
+    }
+  } finally {
+    savingPermiso.value[codigo] = false;
+  }
+}
+
+const permisosGrouped = (): Record<string, PermisoDto[]> => {
+  return permisosAll.value.reduce((acc, p) => {
+    (acc[p.modulo] ??= []).push(p);
+    return acc;
+  }, {} as Record<string, PermisoDto[]>);
+};
 
 onMounted(() => void load());
 </script>
@@ -95,7 +155,7 @@ onMounted(() => void load());
         <tr>
           <th>Id</th>
           <th>Nombre</th>
-          <th>DescripciÃ³n</th>
+          <th>Descripción</th>
           <th>Estado</th>
           <th>Creado</th>
           <th />
@@ -105,10 +165,11 @@ onMounted(() => void load());
         <tr v-for="r in rows" :key="r.rolGuid">
           <td>{{ r.idRol }}</td>
           <td><strong>{{ r.nombreRol }}</strong></td>
-          <td class="text-medium-emphasis">{{ r.descripcionRol ?? 'â€”' }}</td>
+          <td class="text-medium-emphasis">{{ r.descripcionRol ?? '—' }}</td>
           <td><v-chip :color="statusColor(r.estadoRol)" size="small" label>{{ r.estadoRol }}</v-chip></td>
           <td class="text-no-wrap text-caption">{{ fmtDate(r.fechaRegistroUtc) }}</td>
           <td class="text-no-wrap">
+            <v-btn size="small" variant="text" color="info" icon="mdi-shield-key" title="Gestionar permisos" @click="openPermisos(r)" />
             <v-btn size="small" variant="text" icon="mdi-pencil" @click="openEdit(r)" />
             <v-btn size="small" variant="text" color="error" icon="mdi-delete" @click="remove(r)" />
           </td>
@@ -124,18 +185,58 @@ onMounted(() => void load());
     />
   </template>
 
+  <!-- ── Dialog crear / editar rol ────────────────────────────────────────── -->
   <v-dialog v-model="dialog" max-width="480">
     <v-card>
       <v-card-title>{{ editGuid ? 'Editar' : 'Nuevo' }} rol</v-card-title>
       <v-card-text class="d-flex flex-column gap-3">
         <v-text-field v-model="form.nombreRol" label="Nombre *" variant="outlined" density="comfortable" />
-        <v-textarea v-model="form.descripcionRol" label="DescripciÃ³n" variant="outlined" rows="3" density="comfortable" />
+        <v-textarea v-model="form.descripcionRol" label="Descripción" variant="outlined" rows="3" density="comfortable" />
         <v-select v-model="form.estadoRol" :items="estados" label="Estado" variant="outlined" density="comfortable" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn variant="text" @click="dialog = false">Cancelar</v-btn>
         <v-btn color="primary" :loading="saving" @click="guardar">Guardar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- ── Dialog permisos ───────────────────────────────────────────────────── -->
+  <v-dialog v-model="permisosDialog" max-width="600">
+    <v-card>
+      <v-card-title>Permisos — <span class="text-primary">{{ permisosRolNombre }}</span></v-card-title>
+      <v-card-subtitle class="pb-0">Activa o desactiva permisos para este rol.</v-card-subtitle>
+      <v-card-text style="max-height: 520px; overflow-y: auto;">
+        <div v-if="loadingPermisos" class="center"><v-progress-circular indeterminate /></div>
+        <template v-else>
+          <div v-for="(perms, modulo) in permisosGrouped()" :key="modulo" class="mb-3">
+            <div class="text-overline text-primary mb-1">{{ modulo }}</div>
+            <v-row dense>
+              <v-col
+                v-for="p in perms"
+                :key="p.codigo"
+                cols="12"
+                sm="6"
+              >
+                <v-switch
+                  :model-value="isAsignado(p.codigo)"
+                  :label="p.descripcion"
+                  color="primary"
+                  density="compact"
+                  hide-details
+                  :loading="savingPermiso[p.codigo]"
+                  @update:model-value="() => togglePermiso(p.codigo)"
+                />
+              </v-col>
+            </v-row>
+            <v-divider class="mt-2" />
+          </div>
+        </template>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn variant="text" @click="permisosDialog = false">Cerrar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

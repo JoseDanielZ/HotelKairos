@@ -21,3 +21,39 @@ export interface TipoHabitacionResponse {
 }
 
 export type TipoHabitacionResponsePaginatedResponseApiResponse = ApiResponse<PaginatedResponse<TipoHabitacionResponse>>;
+
+export interface TipoHabitacionCatalogoResponse {
+  idTipoHabCatalogo: number;
+  idTipoHabitacion: number;
+  idCatalogo: number;
+  nombreCatalogo?: string | null;
+  fechaRegistroUtc?: string | null;
+  creadoPorUsuario?: string | null;
+}
+
+export interface AgregarAmenidadRequest {
+  idCatalogo: number;
+}
+
+export interface TipoHabitacionImagenResponse {
+  idTipoHabitacionImagen: number;
+  idTipoHabitacion: number;
+  urlImagen: string;
+  descripcionImagen?: string | null;
+  ordenVisualizacion: number;
+  esPrincipal: number;
+  fechaRegistroUtc?: string | null;
+  creadoPorUsuario?: string | null;
+}
+
+export interface AgregarTipoHabitacionImagenRequest {
+  urlImagen: string;
+  descripcionImagen?: string | null;
+  ordenVisualizacion?: number;
+  esPrincipal?: number;
+}
+
+export type TipoHabitacionCatalogoListApiResponse = ApiResponse<readonly TipoHabitacionCatalogoResponse[]>;
+export type TipoHabitacionCatalogoApiResponse = ApiResponse<TipoHabitacionCatalogoResponse>;
+export type TipoHabitacionImagenListApiResponse = ApiResponse<readonly TipoHabitacionImagenResponse[]>;
+export type TipoHabitacionImagenApiResponse = ApiResponse<TipoHabitacionImagenResponse>;

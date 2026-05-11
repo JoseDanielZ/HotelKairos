@@ -5,8 +5,11 @@ import type {
   GenerarFacturaBody,
   FacturaResponseApiResponse,
   FacturaResponsePaginatedResponseApiResponse,
+  FacturaResponseListApiResponse,
+  FacturaDetalleListApiResponse,
   ActualizarFacturaRequest,
 } from '@/models';
+import type { PagoResponseListApiResponse } from '@/models/pago.models';
 import { toParams } from '@/utils/params.util';
 
 const base = `${environment.apiUrl}/api/v1/internal/facturas`;
@@ -52,5 +55,25 @@ export async function facturasAnular(
 
 export async function facturasGenerarDesdeReserva(reservaGuid: string): Promise<FacturaResponseApiResponse> {
   const { data } = await api.post<FacturaResponseApiResponse>(`${base}/generar-reserva/${reservaGuid}`, {});
+  return data;
+}
+
+export async function facturasGetPorReserva(idReserva: number): Promise<FacturaResponseListApiResponse> {
+  const { data } = await api.get<FacturaResponseListApiResponse>(`${base}/reserva/${idReserva}`);
+  return data;
+}
+
+export async function facturasGetDetalle(facturaGuid: string): Promise<FacturaDetalleListApiResponse> {
+  const { data } = await api.get<FacturaDetalleListApiResponse>(`${base}/${facturaGuid}/detalle`);
+  return data;
+}
+
+export async function facturasGetPagos(facturaGuid: string): Promise<PagoResponseListApiResponse> {
+  const { data } = await api.get<PagoResponseListApiResponse>(`${base}/${facturaGuid}/pagos`);
+  return data;
+}
+
+export async function facturasGenerarFinalYPago(reservaGuid: string): Promise<FacturaResponseApiResponse> {
+  const { data } = await api.post<FacturaResponseApiResponse>(`${base}/final-y-pago-simulado/${reservaGuid}`, {});
   return data;
 }

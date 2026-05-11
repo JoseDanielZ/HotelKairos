@@ -2,6 +2,10 @@
 import { environment } from '@/environments/environment';
 import type {
   ApiResponse,
+  CrearSucursalImagenRequest,
+  ResumenRatingResponseApiResponse,
+  SucursalImagenListApiResponse,
+  SucursalImagenResponseApiResponse,
   SucursalResponseApiResponse,
   SucursalResponsePaginatedResponseApiResponse,
   SucursalPublicDtoApiResponse,
@@ -43,5 +47,25 @@ export async function sucursalesUpdate(guid: string, body: CrearSucursalRequest)
 
 export async function sucursalesDelete(guid: string): Promise<ApiResponse<boolean>> {
   const { data } = await api.delete<ApiResponse<boolean>>(`${base}/internal/sucursales/${guid}`);
+  return data;
+}
+
+export async function sucursalesGetResumenRating(guid: string): Promise<ResumenRatingResponseApiResponse> {
+  const { data } = await api.get<ResumenRatingResponseApiResponse>(`${base}/internal/sucursales/${guid}/resumen-rating`);
+  return data;
+}
+
+export async function sucursalesGetImagenes(guid: string): Promise<SucursalImagenListApiResponse> {
+  const { data } = await api.get<SucursalImagenListApiResponse>(`${base}/internal/sucursales/${guid}/imagenes`);
+  return data;
+}
+
+export async function sucursalesAddImagen(guid: string, body: CrearSucursalImagenRequest): Promise<SucursalImagenResponseApiResponse> {
+  const { data } = await api.post<SucursalImagenResponseApiResponse>(`${base}/internal/sucursales/${guid}/imagenes`, body);
+  return data;
+}
+
+export async function sucursalesDeleteImagen(guid: string, idSucursalImagen: number): Promise<ApiResponse<boolean>> {
+  const { data } = await api.delete<ApiResponse<boolean>>(`${base}/internal/sucursales/${guid}/imagenes/${idSucursalImagen}`);
   return data;
 }
